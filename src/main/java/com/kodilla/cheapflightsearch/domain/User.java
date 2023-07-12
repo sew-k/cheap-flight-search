@@ -32,6 +32,7 @@ public class User {
     private String email;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "calendar_id")
     private Calendar calendar;
 
     public User(String username, String email) {

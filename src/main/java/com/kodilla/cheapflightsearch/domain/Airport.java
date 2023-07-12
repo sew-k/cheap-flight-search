@@ -27,6 +27,6 @@ public class Airport {
     @Column(name = "city_name")
     private String cityName;
     @NotNull
-    @Column(name = "iata")
-    private String iata;
+    @Column(name = "iata_code")
+    private String iataCode;
 }

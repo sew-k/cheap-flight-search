@@ -20,14 +20,14 @@ public class Route {
     @GeneratedValue
     @Column(name = "route_id", unique = true)
     private Long routeId;
-//    @NotNull
-//    @OneToOne
-//    @Column(name = "origin_id")
-//    private Origin origin;
-//    @NotNull
-//    @OneToOne
-//    @Column(name = "destination_id")
-//    private Destination destination;
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "origin_id")
+    private Origin origin;
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "destination_id")
+    private Destination destination;
     @NotNull
     @OneToMany
     @Column(name = "days_of_week")

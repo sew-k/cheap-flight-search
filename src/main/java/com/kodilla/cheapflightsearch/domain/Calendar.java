@@ -21,6 +21,7 @@ public class Calendar {
     @GeneratedValue
     @Column(name = "calendar_id", unique = true)
     private Long calendarId;
-    @OneToMany(mappedBy = "calendar")
+    @OneToMany( mappedBy = "calendar",
+                cascade = CascadeType.ALL)
     private List<HolidayPlan> holidayPlanList;
 }
