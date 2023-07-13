@@ -24,7 +24,7 @@ public class Day {
     @Column(name = "day_name")
     private DayOfWeek dayName;
     @NotNull
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "route_id")
     private Route route;
 }

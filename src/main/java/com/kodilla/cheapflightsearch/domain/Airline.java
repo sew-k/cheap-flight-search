@@ -21,11 +21,16 @@ public class Airline {
     @Column(name = "airline_id", unique = true)
     private Long airlineId;
     @NotNull
-    @Column(name = "airline_name")
+    @Column(name = "airline_name", unique = true)
     private String airlineName;
     @NotNull
-    @Column(name = "carrier_id")
+    @Column(name = "carrier_id", unique = true)
     private String carrierId;
-    @OneToMany
+    @OneToMany(
+            targetEntity = Route.class,
+            mappedBy = "airline",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
     private List<Route> routes;
 }

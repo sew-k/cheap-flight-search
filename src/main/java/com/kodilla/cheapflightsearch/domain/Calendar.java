@@ -21,7 +21,11 @@ public class Calendar {
     @GeneratedValue
     @Column(name = "calendar_id", unique = true)
     private Long calendarId;
-    @OneToMany( mappedBy = "calendar",
-                cascade = CascadeType.ALL)
+    @OneToMany(
+            targetEntity = HolidayPlan.class,
+            mappedBy = "calendar",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
+    )
     private List<HolidayPlan> holidayPlanList;
 }
