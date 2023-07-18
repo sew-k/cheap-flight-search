@@ -83,6 +83,48 @@ class UserRepositoryTestSuite {
         Assertions.assertFalse(userRepository.findById(-1L).isPresent());
     }
     @Test
+    void testFindByUsernameWhenExisting() {
+        //Given
+        User user = new User("John", "john@test.com");
+        userRepository.save(user);
+        Long id = user.getUserId();
+
+        //When
+        User retrievedUser = userRepository.findByUsername(user.getUsername()).orElse(null);
+
+        //Then
+        Assertions.assertEquals(user, retrievedUser);
+
+        //CleanUp
+        userRepository.deleteById(id);
+    }
+    @Test
+    void testFindByUsernameWhenNotExisting() {
+        //Given & When & Then
+        Assertions.assertFalse(userRepository.findByUsername("NameUserNotExisting").isPresent());
+    }
+    @Test
+    void testFindByEmailWhenExisting() {
+        //Given
+        User user = new User("John", "john@test.com");
+        userRepository.save(user);
+        Long id = user.getUserId();
+
+        //When
+        User retrievedUser = userRepository.findByEmail(user.getEmail()).orElse(null);
+
+        //Then
+        Assertions.assertEquals(user, retrievedUser);
+
+        //CleanUp
+        userRepository.deleteById(id);
+    }
+    @Test
+    void testFindByEmailWhenNotExisting() {
+        //Given & When & Then
+        Assertions.assertFalse(userRepository.findByUsername("EmailUserNotExisting").isPresent());
+    }
+    @Test
     void testDeleteById() {
         //Given
         User user = new User("TestUser7", "testUser7@test.com");

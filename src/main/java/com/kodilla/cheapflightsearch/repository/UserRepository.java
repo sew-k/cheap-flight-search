@@ -19,4 +19,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findById(Long id);
     @Override
     void deleteById(Long id);
+    Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String email);
+
 }
