@@ -1,15 +1,8 @@
 package com.kodilla.cheapflightsearch.controller;
 
-import com.kodilla.cheapflightsearch.dto.ItineraryDto;
-import com.kodilla.cheapflightsearch.dto.TripPlanDto;
-import com.kodilla.cheapflightsearch.skyscanner.client.SkyscannerClient;
+import com.kodilla.cheapflightsearch.webclient.skyscanner.SkyscannerClient;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collections;
-import java.util.List;
 
 @RestController
 @RequestMapping("/search")
@@ -18,10 +11,10 @@ import java.util.List;
 public class SkyscannerController {
     private final SkyscannerClient skyscannerClient;
 
-    @PostMapping(path = {"/create"}, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ItineraryDto>> createIniteraries(@RequestBody TripPlanDto tripPlanDto) {
-
-        return ResponseEntity.ok(Collections.emptyList());  //TODO TEMPORARILY
-    }
+//    @PostMapping(path = {"/create"}, consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<List<ItineraryDto>> createItinerariesSearch(@RequestBody TripPlanDto tripPlanDto) {
+//
+//        return ResponseEntity.ok(Collections.emptyList());  //TODO TEMPORARILY
+//    }
 
 }
