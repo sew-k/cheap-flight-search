@@ -1,13 +1,12 @@
 package com.kodilla.cheapflightsearch.mapper;
 
-import com.kodilla.cheapflightsearch.domain.User;
-import com.kodilla.cheapflightsearch.dto.UserDto;
+import com.kodilla.cheapflightsearch.domain.user.User;
+import com.kodilla.cheapflightsearch.domain.user.UserDto;
 import com.kodilla.cheapflightsearch.repository.CalendarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

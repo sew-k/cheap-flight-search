@@ -1,7 +1,7 @@
 package com.kodilla.cheapflightsearch.webclient.weather;
 
 import com.kodilla.cheapflightsearch.config.OpenWeatherConfig;
-import com.kodilla.cheapflightsearch.domain.weather.dto.WeatherDto;
+import com.kodilla.cheapflightsearch.domain.weather.WeatherDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;

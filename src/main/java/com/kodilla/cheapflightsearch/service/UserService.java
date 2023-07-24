@@ -1,14 +1,12 @@
 package com.kodilla.cheapflightsearch.service;
 
 import com.kodilla.cheapflightsearch.controller.UserNotFoundException;
-import com.kodilla.cheapflightsearch.domain.User;
+import com.kodilla.cheapflightsearch.domain.user.User;
 import com.kodilla.cheapflightsearch.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor

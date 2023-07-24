@@ -1,5 +1,6 @@
-package com.kodilla.cheapflightsearch.domain;
+package com.kodilla.cheapflightsearch.domain.user;
 
+import com.kodilla.cheapflightsearch.domain.calendar.Calendar;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +8,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @NoArgsConstructor

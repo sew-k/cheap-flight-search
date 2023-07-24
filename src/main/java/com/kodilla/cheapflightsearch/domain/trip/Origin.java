@@ -1,5 +1,6 @@
-package com.kodilla.cheapflightsearch.domain;
+package com.kodilla.cheapflightsearch.domain.trip;
 
+import com.kodilla.cheapflightsearch.domain.trip.Airport;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

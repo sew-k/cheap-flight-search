@@ -1,6 +1,6 @@
 package com.kodilla.cheapflightsearch.repository;
 
-import com.kodilla.cheapflightsearch.domain.User;
+import com.kodilla.cheapflightsearch.domain.user.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -21,5 +21,4 @@ public interface UserRepository extends CrudRepository<User, Long> {
     void deleteById(Long id);
     Optional<User> findByUsername(String username);
     Optional<User> findByEmail(String email);
-
 }

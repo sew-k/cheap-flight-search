@@ -1,6 +1,6 @@
 package com.kodilla.cheapflightsearch.repository;
 
-import com.kodilla.cheapflightsearch.domain.User;
+import com.kodilla.cheapflightsearch.domain.user.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class UserRepositoryTestSuite {
     @Autowired

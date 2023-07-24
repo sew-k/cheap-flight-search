@@ -1,5 +1,6 @@
-package com.kodilla.cheapflightsearch.domain;
+package com.kodilla.cheapflightsearch.domain.calendar;
 
+import com.kodilla.cheapflightsearch.domain.calendar.HolidayPlan;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

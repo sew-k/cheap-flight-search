@@ -1,16 +1,12 @@
-package com.kodilla.cheapflightsearch.dto;
+package com.kodilla.cheapflightsearch.domain.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
+@Data
 public class UserDto {
     private long userId;
     private String username;
@@ -19,6 +15,11 @@ public class UserDto {
 
     public UserDto(Long userId, String username, String email, Long calendarId) {
         this.userId = userId;
+        this.username = username;
+        this.email = email;
+        this.calendarId = calendarId;
+    }
+    public UserDto(String username, String email, Long calendarId) {
         this.username = username;
         this.email = email;
         this.calendarId = calendarId;

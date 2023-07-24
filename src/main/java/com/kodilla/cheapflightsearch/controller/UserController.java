@@ -1,8 +1,7 @@
 package com.kodilla.cheapflightsearch.controller;
 
-import com.kodilla.cheapflightsearch.dto.UserDto;
+import com.kodilla.cheapflightsearch.domain.user.UserDto;
 import com.kodilla.cheapflightsearch.mapper.UserMapper;
-import com.kodilla.cheapflightsearch.repository.UserRepository;
 import com.kodilla.cheapflightsearch.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;

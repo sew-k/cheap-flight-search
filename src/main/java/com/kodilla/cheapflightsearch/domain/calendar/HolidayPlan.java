@@ -1,4 +1,4 @@
-package com.kodilla.cheapflightsearch.domain;
+package com.kodilla.cheapflightsearch.domain.calendar;
 
 import lombok.*;
 

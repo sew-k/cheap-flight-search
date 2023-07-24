@@ -1,4 +1,4 @@
-package com.kodilla.cheapflightsearch.domain.weather.dto;
+package com.kodilla.cheapflightsearch.domain.weather;
 
 import lombok.Builder;
 import lombok.Getter;
