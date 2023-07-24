@@ -1,5 +1,6 @@
 package com.kodilla.cheapflightsearch.skyscanner.client;
 
+import com.kodilla.cheapflightsearch.domain.skyscanner.ItineraryDto;
 import com.kodilla.cheapflightsearch.webclient.skyscanner.SkyscannerClient;
 import com.kodilla.cheapflightsearch.webclient.skyscanner.SkyscannerItineraryCreateDto;
 import org.junit.jupiter.api.Test;
@@ -60,7 +61,6 @@ class SkyscannerClientTestSuite {
 
         //When
         String s = skyscannerClient.getItinerariesV1("/search/create", jsonRequest);
-//        ItineraryDto s = skyscannerClient.getItineraries("/search/create", jsonRequest);
 
         //Then
         System.out.println(s);
@@ -110,8 +110,7 @@ class SkyscannerClientTestSuite {
                 """;
 
         //When
-        SkyscannerItineraryCreateDto s = skyscannerClient.getItinerariesV2("/search/create", jsonRequest);
-//        ItineraryDto s = skyscannerClient.getItineraries("/search/create", jsonRequest);
+        ItineraryDto s = skyscannerClient.getItinerariesV2("/search/create", jsonRequest);
 
         //Then
         System.out.println(s);

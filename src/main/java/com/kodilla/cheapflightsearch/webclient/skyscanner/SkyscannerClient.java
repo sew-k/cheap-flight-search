@@ -1,8 +1,9 @@
 package com.kodilla.cheapflightsearch.webclient.skyscanner;
 
 import com.kodilla.cheapflightsearch.config.SkyscannerConfig;
+import com.kodilla.cheapflightsearch.domain.skyscanner.ItineraryDto;
+import com.kodilla.cheapflightsearch.mapper.SkyscannerMapper;
 import lombok.RequiredArgsConstructor;
-
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -25,7 +26,7 @@ import java.net.URI;
 public class SkyscannerClient {
     private final RestTemplate restTemplate;
     private final SkyscannerConfig skyscannerConfig;
-
+    private final SkyscannerMapper skyscannerMapper;
     private URI urlBuilder() {
         return UriComponentsBuilder.fromHttpUrl(
                         skyscannerConfig.getSkyscannerApiEndpoint())
@@ -33,7 +34,6 @@ public class SkyscannerClient {
                 .encode()
                 .toUri();
     }
-
     public String getItinerariesV1(String addPath, String jsonBody) {
         URI url = urlBuilder();
         try {
@@ -53,20 +53,14 @@ public class SkyscannerClient {
             return "no response!";
         }
     }
-
-    public SkyscannerItineraryCreateDto getItinerariesV2(String addPath, String jsonBody) {
+    public ItineraryDto getItinerariesV2(String addPath, String jsonBody) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("x-api-key", skyscannerConfig.getSkyscannerApiKey());
         org.springframework.http.HttpEntity<String> httpEntity = new org.springframework.http.HttpEntity<>(jsonBody, httpHeaders);
-        //response = restTemplate.exchange(httpEntity, )
         SkyscannerItineraryCreateDto skyscannerItineraryCreateDto = restTemplate.postForObject(
             skyscannerConfig.getSkyscannerApiEndpoint() + addPath,
                 httpEntity,
                 SkyscannerItineraryCreateDto.class);
-
-        return skyscannerItineraryCreateDto;
-//        return ItineraryDto.builder()
-//
-//                .build();
+        return skyscannerMapper.mapSkyscannerClientDtoToItineraryDto(skyscannerItineraryCreateDto);
     }
 }
