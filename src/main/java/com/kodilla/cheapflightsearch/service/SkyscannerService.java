@@ -1,5 +1,7 @@
 package com.kodilla.cheapflightsearch.service;
 
+import com.kodilla.cheapflightsearch.domain.skyscanner.ItineraryDto;
+import com.kodilla.cheapflightsearch.dto.TripPlanDto;
 import com.kodilla.cheapflightsearch.webclient.skyscanner.SkyscannerClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,16 +10,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SkyscannerService {
     private final SkyscannerClient skyscannerClient;
-
-//    public List<ItineraryDto> fetchItineraries() {
-//        return skyscannerClient.getItineraries();
-//    }
-
-    //TEMPORARILY:
-    public String fetchSessionToken(String jsonResponse) {
-//        JsonParser parser = new JacksonJsonParser();
-//        List<String> jsonList = parser.parseList(jsonResponse);
-////        return skyscannerClient.getItineraries();
-        return null;
+    public ItineraryDto searchCreateGetItinerary(TripPlanDto tripPlanDto) {
+        //TODO - convert TripPlanDto to jsonBody request
+        String jsonBody = ""; //TEMPORARILY
+        return skyscannerClient.getItinerary("/search/create", jsonBody);
     }
 }
