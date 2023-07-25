@@ -15,11 +15,18 @@ public class UserService {
     public List<User> getUsers() {
         return userRepository.findAll();
     }
-    public User getUser(Long id) {
+    public User getUser(Long id) throws UserNotFoundException {
         return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
+    public boolean checkIfUserExists(User user) {
+        if ((userRepository.existsByUsername(user.getUsername())) || (userRepository.existsByEmail(user.getEmail()))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-    public void deleteUser(Long id)  {
+    public void deleteUser(Long id)  throws UserNotFoundException {
         if(userRepository.findById(id).isPresent()) {
             userRepository.deleteById(id);
         } else {
@@ -27,7 +34,7 @@ public class UserService {
         }
     }
 
-    public void updateUser(Long id, User user)  {
+    public void updateUser(Long id, User user) throws UserNotFoundException {
         if(userRepository.findById(id).isPresent()) {
             userRepository.deleteById(id);
             userRepository.save(user);
@@ -37,14 +44,16 @@ public class UserService {
     }
 
     public User createUser(User user) {
-        return userRepository.save(user);
+        if (!checkIfUserExists(user)) {
+            return userRepository.save(user);
+        } else return null;
     }
 
-    public User getUserByName(String username) {
+    public User getUserByName(String username) throws UserNotFoundException {
         return userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
     }
 
-    public User getUserByEmail(String email) {
+    public User getUserByEmail(String email) throws UserNotFoundException {
         return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
     }
 }

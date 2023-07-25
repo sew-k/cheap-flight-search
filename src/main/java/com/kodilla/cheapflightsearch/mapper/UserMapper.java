@@ -17,17 +17,16 @@ public class UserMapper {
         return new User(
                 userDto.getUserId(),
                 userDto.getUsername(),
-                userDto.getEmail(),
+                userDto.getEmail()
 //                calendarRepository.findById(userDto.getCalendarId())
-                null        //TODO temporarily
         );
     }
     public UserDto mapToUserDto(final User user) {
         return new UserDto(
                 user.getUserId(),
                 user.getUsername(),
-                user.getEmail(),
-                user.getCalendar().getCalendarId()
+                user.getEmail()
+//                user.getCalendar().getCalendarId()
         );
     }
     public List<UserDto> mapToUserDtoList(final List<User> userList) {

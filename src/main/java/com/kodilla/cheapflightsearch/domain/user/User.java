@@ -16,31 +16,29 @@ import java.util.Objects;
 @Setter
 @Entity(name = "users")
 public class User {
-
     @Id
     @NotNull
     @GeneratedValue
     @Column(name = "user_id", unique = true)
     private Long userId;
-
     @NotNull
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
-
     @NotNull
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "calendar_id")
-    private Calendar calendar;
-
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "calendar_id")
+//    private Calendar calendar;
+//    public User(String username, String email, Long calendarId) {
+//        this.username = username;
+//        this.email = email;
+//
+//    }
     public User(String username, String email) {
         this.username = username;
         this.email = email;
-        this.calendar = new Calendar();
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
