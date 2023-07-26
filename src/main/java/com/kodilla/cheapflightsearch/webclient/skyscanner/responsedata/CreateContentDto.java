@@ -1,4 +1,4 @@
-package com.kodilla.cheapflightsearch.webclient.skyscanner;
+package com.kodilla.cheapflightsearch.webclient.skyscanner.responsedata;
 
 import lombok.Data;
 
