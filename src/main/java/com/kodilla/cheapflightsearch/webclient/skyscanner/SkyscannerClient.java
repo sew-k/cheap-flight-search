@@ -1,25 +1,15 @@
 package com.kodilla.cheapflightsearch.webclient.skyscanner;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kodilla.cheapflightsearch.config.SkyscannerConfig;
 import com.kodilla.cheapflightsearch.domain.skyscanner.ItineraryDto;
 import com.kodilla.cheapflightsearch.mapper.SkyscannerMapper;
+import com.kodilla.cheapflightsearch.webclient.skyscanner.responsedata.SkyscannerItineraryCreateDto;
 import lombok.RequiredArgsConstructor;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.io.IOException;
-import java.net.URI;
 
 @Component
 @RequiredArgsConstructor
@@ -54,7 +44,7 @@ public class SkyscannerClient {
 //            return "no response!";
 //        }
 //    }
-    public ItineraryDto getItinerary(String addPath, String jsonBody) {
+    public ItineraryDto getItinerary(String addPath, String jsonBody) throws JsonProcessingException {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("x-api-key", skyscannerConfig.getSkyscannerApiKey());
         org.springframework.http.HttpEntity<String> httpEntity = new org.springframework.http.HttpEntity<>(jsonBody, httpHeaders);

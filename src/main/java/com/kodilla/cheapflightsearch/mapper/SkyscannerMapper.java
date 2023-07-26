@@ -1,23 +1,22 @@
 package com.kodilla.cheapflightsearch.mapper;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kodilla.cheapflightsearch.domain.skyscanner.Itinerary;
 import com.kodilla.cheapflightsearch.domain.skyscanner.ItineraryDto;
-import com.kodilla.cheapflightsearch.webclient.skyscanner.SkyscannerItineraryCreateDto;
+import com.kodilla.cheapflightsearch.webclient.skyscanner.responsedata.SkyscannerItineraryCreateDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.JsonParser;
-import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class SkyscannerMapper {
     @Autowired
     ObjectMapper objectMapper;
-    public ItineraryDto mapSkyscannerClientDtoToItineraryDto(SkyscannerItineraryCreateDto skyscannerItineraryCreateDto) {
+
+    public ItineraryDto mapSkyscannerClientDtoToItineraryDto(SkyscannerItineraryCreateDto skyscannerItineraryCreateDto) throws JsonProcessingException {
         String itineraryId = "error parsing itineraryID";
         float amount = 0.01f;
         String deepLink = "error parsing link";
@@ -25,18 +24,22 @@ public class SkyscannerMapper {
                 .map(i -> i.getItineraryId())
                 .collect(Collectors.toList()).get(0);               //TODO better sorting algorithm
 
-        Object json = skyscannerItineraryCreateDto.getContent().getResults().getItineraries().get(itineraryId);
-        try {
-            JsonNode jsonNode = objectMapper.readTree(json.toString());
-            amount = Float.parseFloat(jsonNode.get("pricingOptions").get(0).get("items").get(0).get("price").get("amount").textValue())/1000;
-            deepLink = jsonNode.get("pricingOptions").get(0).get("items").get(0).get("deepLink").textValue();
-        } catch (Exception e) {
-                                                                    //TODO Logger implementation
-        }
+        Object object = skyscannerItineraryCreateDto.getContent().getResults().getItineraries().get(itineraryId);
+        JsonNode jsonNode = objectMapper.readTree(objectMapper.writeValueAsString(object));
+        amount = Float.parseFloat(jsonNode.get("pricingOptions").get(0).get("items").get(0).get("price").get("amount").textValue()) / 1000;
+        deepLink = jsonNode.get("pricingOptions").get(0).get("items").get(0).get("deepLink").textValue();
+
         return ItineraryDto.builder()
                 .itineraryId(itineraryId)
                 .price(amount)
                 .purchaseLink(deepLink)
                 .build();
+    }
+    public Itinerary mapItineraryDtoToItinerary(ItineraryDto itineraryDto) {
+        return new Itinerary(
+                itineraryDto.getItineraryId(),
+                itineraryDto.getPrice(),
+                itineraryDto.getPurchaseLink()
+        );
     }
 }
