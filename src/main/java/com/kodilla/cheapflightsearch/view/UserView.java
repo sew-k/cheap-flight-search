@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashSet;
 import java.util.Set;
 
-@Route(value= "users_view")
+@Route(value= "main/users")
 public class UserView extends VerticalLayout {
     private Grid<User> userGrid = new Grid<>(User.class);
     @Autowired

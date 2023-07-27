@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-@Route(value= "search_view")
-public class SearchView extends VerticalLayout {
+@Route(value= "main/quick_search")
+public class QuickSearchView extends VerticalLayout {
     private String origin = "";
     private String destination = "";
     private LocalDate beginTripDate = null;
@@ -37,7 +37,7 @@ public class SearchView extends VerticalLayout {
     @Autowired
     SkyscannerMapper skyscannerMapper;
 
-    public SearchView() {
+    public QuickSearchView() {
         TextField originTextField = new TextField("Origin", "IATA code");
         originTextField.setClearButtonVisible(true);
         originTextField.setValue("WAW");                                                            //TODO temporarily stubbed
@@ -52,7 +52,6 @@ public class SearchView extends VerticalLayout {
         endDatePicker.setValue(LocalDate.of(2023, 8, 6));                       //TODO temporarily stubbed
         TextField adultsTextField = new TextField("Passengers", "1-5");
         adultsTextField.setValue(Integer.toString(adults));
-//        itineraryGrid.setColumns("itineraryMark");
         Button quickSearchButton = new Button("Quick search", e -> {
             origin = originTextField.getValue();
             destination = destinationTextField.getValue();
@@ -81,6 +80,7 @@ public class SearchView extends VerticalLayout {
                 refreshItineraryGrid();
             }
         });
+        add(new Button("Back to Main", e -> UI.getCurrent().getPage().open("main")));
         HorizontalLayout searchFieldsLayout = new HorizontalLayout(
                 originTextField,
                 destinationTextField,
@@ -96,12 +96,8 @@ public class SearchView extends VerticalLayout {
         itineraryGrid.addColumn(i -> endTripDate).setHeader("End trip date");
         itineraryGrid.addColumn(i -> adults).setHeader("Passengers");
         itineraryGrid.addColumn(i -> currencyFormatter.format(i.getPrice())).setHeader("Price");
-        itineraryGrid.addComponentColumn(i -> {
-           Button purchaseButton = new Button("Press to buy", e -> {
-               UI.getCurrent().getPage().open(i.getPurchaseLink());
-           });
-           return purchaseButton;
-        });
+        itineraryGrid.addComponentColumn(i -> new Button("Press to buy",
+                e -> UI.getCurrent().getPage().open(i.getPurchaseLink())));
         add(itineraryGrid);
     }
     public void refreshItineraryGrid() {
