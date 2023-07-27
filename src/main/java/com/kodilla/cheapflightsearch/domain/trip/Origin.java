@@ -20,8 +20,12 @@ public class Origin {
     @GeneratedValue
     @Column(name = "origin_id", unique = true)
     private Long originId;
-    @NotNull
-    @OneToOne
+//    @NotNull
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "airport_id")
     private Airport airport;
+
+    public Origin(Airport airport) {
+        this.airport = airport;
+    }
 }

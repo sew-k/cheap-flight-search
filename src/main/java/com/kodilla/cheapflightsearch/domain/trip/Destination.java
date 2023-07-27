@@ -20,8 +20,12 @@ public class Destination {
     @GeneratedValue
     @Column(name = "destination_id", unique = true)
     private Long destinationId;
-    @NotNull
-    @OneToOne
+//    @NotNull
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "airport_id")
     private Airport airport;
+
+    public Destination(Airport airport) {
+        this.airport = airport;
+    }
 }

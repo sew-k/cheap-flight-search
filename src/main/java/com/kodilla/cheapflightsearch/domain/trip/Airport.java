@@ -20,13 +20,23 @@ public class Airport {
     @GeneratedValue
     @Column(name = "airport_id", unique = true)
     private Long airportId;
-    @NotNull
+//    @NotNull
     @Column(name = "country_name")
     private String countryName;
-    @NotNull
+//    @NotNull
     @Column(name = "city_name")
     private String cityName;
     @NotNull
     @Column(name = "iata_code")
     private String iataCode;
+
+    public Airport(String iataCode) {
+        this.iataCode = iataCode;
+    }
+
+    public Airport(String countryName, String cityName, String iataCode) {
+        this.countryName = countryName;
+        this.cityName = cityName;
+        this.iataCode = iataCode;
+    }
 }

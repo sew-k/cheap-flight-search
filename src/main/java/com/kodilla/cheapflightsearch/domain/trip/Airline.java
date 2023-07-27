@@ -16,21 +16,28 @@ import java.util.List;
 @Entity(name = "airlines")
 public class Airline {
     @Id
-    @NotNull
     @GeneratedValue
     @Column(name = "airline_id", unique = true)
     private Long airlineId;
     @NotNull
-    @Column(name = "airline_name", unique = true)
+    @Column(name = "airline_name")
     private String airlineName;
     @NotNull
-    @Column(name = "carrier_id", unique = true)
+    @Column(name = "carrier_id")
     private String carrierId;
-    @OneToMany(
-            targetEntity = Route.class,
-            mappedBy = "airline",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
-    )
-    private List<Route> routes;
+//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private List<Route> routes;
+    public Airline(String airlineName) {
+        this.airlineName = airlineName;
+    }
+    public Airline(String airlineName, String carrierId) {
+        this.airlineName = airlineName;
+        this.carrierId = carrierId;
+    }
+
+//    public Airline(Long airlineId, String airlineName, String carrierId) {
+//        this.airlineId = airlineId;
+//        this.airlineName = airlineName;
+//        this.carrierId = carrierId;
+//    }
 }
