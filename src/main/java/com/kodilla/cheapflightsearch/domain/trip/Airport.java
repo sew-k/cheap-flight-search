@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,23 +19,24 @@ public class Airport {
     @GeneratedValue
     @Column(name = "airport_id", unique = true)
     private Long airportId;
-//    @NotNull
-    @Column(name = "country_name")
-    private String countryName;
-//    @NotNull
-    @Column(name = "city_name")
-    private String cityName;
     @NotNull
-    @Column(name = "iata_code")
+    @Column(name = "country")
+    private String country;
+    @NotNull
+    @Column(name = "city")
+    private String city;
+    @OneToOne(mappedBy = "origin")
+    @JoinColumn(name = "origin_route_id")
+    private Route originRoute;
+    @OneToOne(mappedBy = "destination")
+    @JoinColumn(name = "destination_route_id")
+    private Route destinationRoute;
+    @NotNull
+    @Column(name = "iata_code", unique = true)
     private String iataCode;
-
-    public Airport(String iataCode) {
-        this.iataCode = iataCode;
-    }
-
-    public Airport(String countryName, String cityName, String iataCode) {
-        this.countryName = countryName;
-        this.cityName = cityName;
+    public Airport(String country, String city, String iataCode) {
+        this.country = country;
+        this.city = city;
         this.iataCode = iataCode;
     }
 }
