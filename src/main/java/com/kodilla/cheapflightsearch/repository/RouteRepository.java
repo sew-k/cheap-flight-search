@@ -21,7 +21,4 @@ public interface RouteRepository extends CrudRepository<Route, Long> {
     void deleteById(Long id);
     Optional<Route> findByOrigin(String origin);
     Optional<Route> findByDestination(String destination);
-//    Optional<Route> findByDaysOfWeek(List<Day> daysOfWeek);
-//    Optional<Route> findByAirline(String airline);
-
 }

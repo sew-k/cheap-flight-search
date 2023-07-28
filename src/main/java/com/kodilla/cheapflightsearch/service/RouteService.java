@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,10 +43,9 @@ public class RouteService {
     public Route getRouteByDestination(String destination) throws RouteNotFoundException {
         return routeRepository.findByDestination(destination).orElseThrow(RouteNotFoundException::new);
     }
-//    public Route getRouteByDaysOfWeek(List<Day> daysOfWeek) throws RouteNotFoundException {
-//        return routeRepository.findByDaysOfWeek(daysOfWeek).orElseThrow(RouteNotFoundException::new);
-//    }
-//    public Route getRouteByAirline(String airline) throws RouteNotFoundException {
-//        return routeRepository.findByDestination(airline).orElseThrow(RouteNotFoundException::new);
-//    }
+    public List<Route> getFavouriteRoutes() throws RouteNotFoundException {
+        return routeRepository.findAll().stream()
+                .filter(Route::isFavourite)
+                .collect(Collectors.toList());
+    }
 }
