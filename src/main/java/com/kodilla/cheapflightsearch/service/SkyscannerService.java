@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SkyscannerService {
     private final SkyscannerClient skyscannerClient;
-    public ItineraryDto searchCreateGetItinerary(FlightSearchRequestDto flightSearchRequestDto) throws JsonProcessingException {
+    public ItineraryDto searchCreateGetItinerary(FlightSearchRequestDto flightSearchRequestDto) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonBody = objectMapper.writeValueAsString(flightSearchRequestDto);
         return skyscannerClient.getItinerary("/search/create", jsonBody);
