@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class WeatherMapper {
-    public Weather mapToCurrentWeather(WeatherDto weatherForCity) {
-        return new CurrentWeather(weatherForCity.getTemperature());
+    public Weather mapToCurrentWeather(WeatherDto weatherForCityDto) {
+        return new CurrentWeather(weatherForCityDto.getTemperature());
     }
 }

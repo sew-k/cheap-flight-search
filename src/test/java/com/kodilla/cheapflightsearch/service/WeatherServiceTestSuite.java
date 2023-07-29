@@ -1,7 +1,9 @@
 package com.kodilla.cheapflightsearch.service;
 
 import com.kodilla.cheapflightsearch.config.OpenWeatherConfig;
+import com.kodilla.cheapflightsearch.domain.weather.Weather;
 import com.kodilla.cheapflightsearch.domain.weather.WeatherDto;
+import com.kodilla.cheapflightsearch.mapper.WeatherMapper;
 import com.kodilla.cheapflightsearch.webclient.weather.WeatherClient;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,19 +19,23 @@ class WeatherServiceTestSuite {
     @InjectMocks
     WeatherService weatherService;
     @Mock
+    WeatherMapper weatherMapper;
+    @Mock
     WeatherClient weatherClient;
+
     @Test
     void shouldCallWeatherClientMethod() {
         //Given
         WeatherDto weatherDto = WeatherDto.builder()
                 .temperature(15.55f)
                 .build();
-        when(weatherClient.getWeatherForCity(
+        Weather weather = new Weather(weatherDto.getTemperature());
+        when(weatherMapper.mapToCurrentWeather(weatherClient.getWeatherForCity(
                 "warsaw",
                 OpenWeatherConfig.CALL_FOR_CURRENT_WEATHER,
                 OpenWeatherConfig.UNITS_METRIC,
-                OpenWeatherConfig.LANG_PL))
-                .thenReturn(weatherDto);
+                OpenWeatherConfig.LANG_PL)))
+                .thenReturn(weather);
 
         //When
         float resultTemp = weatherService.getWeather("warsaw").getTemperature();
@@ -42,5 +48,4 @@ class WeatherServiceTestSuite {
                 OpenWeatherConfig.LANG_PL);
         assertEquals(weatherDto.getTemperature(), resultTemp);
     }
-
 }
