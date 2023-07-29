@@ -25,7 +25,6 @@ public class UserService {
             return false;
         }
     }
-
     public void deleteUser(Long id)  throws UserNotFoundException {
         if(userRepository.findById(id).isPresent()) {
             userRepository.deleteById(id);
@@ -33,11 +32,10 @@ public class UserService {
             throw new UserNotFoundException();
         }
     }
-
-    public void updateUser(Long id, User user) throws UserNotFoundException {
+    public User updateUser(Long id, User user) throws UserNotFoundException {
         if(userRepository.findById(id).isPresent()) {
             userRepository.deleteById(id);
-            userRepository.save(user);
+            return userRepository.save(user);
         } else {
             throw new UserNotFoundException();
         }

@@ -1,5 +1,6 @@
 package com.kodilla.cheapflightsearch.mapper;
 
+import com.kodilla.cheapflightsearch.domain.calendar.Calendar;
 import com.kodilla.cheapflightsearch.domain.user.User;
 import com.kodilla.cheapflightsearch.domain.user.UserDto;
 import com.kodilla.cheapflightsearch.repository.CalendarRepository;
@@ -17,16 +18,16 @@ public class UserMapper {
         return new User(
                 userDto.getUserId(),
                 userDto.getUsername(),
-                userDto.getEmail()
-//                calendarRepository.findById(userDto.getCalendarId())
+                userDto.getEmail(),
+                calendarRepository.findById(userDto.getCalendarId()).orElse(new Calendar())
         );
     }
     public UserDto mapToUserDto(final User user) {
         return new UserDto(
                 user.getUserId(),
                 user.getUsername(),
-                user.getEmail()
-//                user.getCalendar().getCalendarId()
+                user.getEmail(),
+                user.getCalendar().getCalendarId()
         );
     }
     public List<UserDto> mapToUserDtoList(final List<User> userList) {
