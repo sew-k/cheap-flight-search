@@ -23,8 +23,9 @@ public class HolidayPlan {
     @NotNull
     @Column(name = "end_date")
     private LocalDate endDate;
-    @NotNull
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "calendar_id")
-    private Calendar calendar;
+
+    public HolidayPlan(LocalDate beginDate, LocalDate endDate) {
+        this.beginDate = beginDate;
+        this.endDate = endDate;
+    }
 }

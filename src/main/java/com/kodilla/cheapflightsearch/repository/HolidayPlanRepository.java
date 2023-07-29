@@ -1,6 +1,6 @@
 package com.kodilla.cheapflightsearch.repository;
 
-import com.kodilla.cheapflightsearch.domain.calendar.Calendar;
+import com.kodilla.cheapflightsearch.domain.calendar.HolidayPlan;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,15 +10,13 @@ import java.util.Optional;
 
 @Repository
 @Transactional
-public interface CalendarRepository extends CrudRepository<Calendar, Long> {
+public interface HolidayPlanRepository extends CrudRepository<HolidayPlan, Long> {
     @Override
-    List<Calendar> findAll();
+    List<HolidayPlan> findAll();
     @Override
-    Calendar save(Calendar calendar);
+    HolidayPlan save(HolidayPlan holidayPlan);
     @Override
-    Optional<Calendar> findById(Long id);
+    Optional<HolidayPlan> findById(Long id);
     @Override
     void deleteById(Long id);
-    @Override
-    boolean existsById(Long id);
 }

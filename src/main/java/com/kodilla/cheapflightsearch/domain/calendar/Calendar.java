@@ -8,11 +8,11 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
-
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity(name = "calendars")
@@ -24,9 +24,10 @@ public class Calendar {
     private Long calendarId;
     @OneToMany(
             targetEntity = HolidayPlan.class,
-            mappedBy = "calendar",
             cascade = CascadeType.ALL,
+            orphanRemoval = true,
             fetch = FetchType.EAGER
     )
-    private List<HolidayPlan> holidayPlanList;
+    @JoinColumn(name = "calendar_id")
+    private List<HolidayPlan> holidayPlanList = new ArrayList<>();
 }
