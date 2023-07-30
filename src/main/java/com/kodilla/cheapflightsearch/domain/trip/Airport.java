@@ -39,4 +39,9 @@ public class Airport {
         this.city = city;
         this.iataCode = iataCode;
     }
+
+    @Override
+    public String toString() {
+        return iataCode + " [" + country + ", " + city + "]";
+    }
 }

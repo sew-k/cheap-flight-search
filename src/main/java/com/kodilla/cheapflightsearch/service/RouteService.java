@@ -48,4 +48,8 @@ public class RouteService {
                 .filter(Route::isFavourite)
                 .collect(Collectors.toList());
     }
+    public void switchFavourite(Route route) {
+        route.setFavourite(!route.isFavourite());
+        routeRepository.save(route);
+    }
 }
