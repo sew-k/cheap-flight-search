@@ -19,6 +19,6 @@ public interface RouteRepository extends CrudRepository<Route, Long> {
     Optional<Route> findById(Long id);
     @Override
     void deleteById(Long id);
-    Optional<Route> findByOrigin(String origin);
-    Optional<Route> findByDestination(String destination);
+    Optional<Route> findByOrigin(Airport origin);
+    Optional<Route> findByDestination(Airport destination);
 }

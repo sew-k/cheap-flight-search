@@ -25,13 +25,13 @@ public class Route {
     private Long routeId;
 
     @OneToOne(
-            cascade = CascadeType.PERSIST,
+            cascade = CascadeType.DETACH,
             fetch = FetchType.EAGER
     )
     @JoinColumn(name = "origin_airport_id")
     private Airport origin;
     @OneToOne(
-            cascade = CascadeType.PERSIST,
+            cascade = CascadeType.DETACH,
             fetch = FetchType.EAGER
     )
     @JoinColumn(name = "destination_airport_id")
