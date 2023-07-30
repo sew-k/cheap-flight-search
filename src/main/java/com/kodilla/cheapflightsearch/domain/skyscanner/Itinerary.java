@@ -31,7 +31,7 @@ public class Itinerary {
     @NotNull
     @Column(name = "purchase_link")
     private String purchaseLink;
-
+    @NotNull
     @Column(name = "is_purchased")
     private boolean purchased;
 
@@ -39,11 +39,13 @@ public class Itinerary {
         this.itineraryMark = itineraryMark;
         this.price = price;
         this.purchaseLink = purchaseLink;
+        this.purchased = false;
     }
     public Itinerary(String itineraryMark, double price, TripPlan tripPlan, String purchaseLink) {
         this.itineraryMark = itineraryMark;
         this.price = price;
         this.tripPlan = tripPlan;
         this.purchaseLink = purchaseLink;
+        this.purchased = false;
     }
 }
