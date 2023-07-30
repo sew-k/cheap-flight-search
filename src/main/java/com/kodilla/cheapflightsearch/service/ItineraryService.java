@@ -1,15 +1,19 @@
 package com.kodilla.cheapflightsearch.service;
 
 import com.kodilla.cheapflightsearch.controller.ItineraryNotFoundException;
+import com.kodilla.cheapflightsearch.domain.calendar.HolidayPlan;
 import com.kodilla.cheapflightsearch.domain.skyscanner.Itinerary;
 
+import com.kodilla.cheapflightsearch.domain.trip.Route;
 import com.kodilla.cheapflightsearch.domain.trip.TripPlan;
 import com.kodilla.cheapflightsearch.mapper.SkyscannerMapper;
 import com.kodilla.cheapflightsearch.repository.ItineraryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,6 +22,8 @@ public class ItineraryService {
     private final ItineraryRepository itineraryRepository;
     private final SkyscannerService skyscannerService;
     private final SkyscannerMapper skyscannerMapper;
+    private final CalendarService calendarService;
+    private final RouteService routeService;
 
     public List<Itinerary> getItineraries() {
         return itineraryRepository.findAll();
@@ -53,15 +59,48 @@ public class ItineraryService {
                 .collect(Collectors.toList());
     }
 
-    public Itinerary searchForItineraryBasedOnTripPlan(TripPlan tripPlan) throws ItineraryNotFoundException {
+    public Optional<Itinerary> searchForItineraryBasedOnTripPlan(TripPlan tripPlan) {
         try {
-            return createItinerary(skyscannerService.searchCreateGetItinerary(skyscannerMapper.mapTripPlanToFlightSearchDto(tripPlan)));
+            return Optional.ofNullable(createItinerary(skyscannerService.searchCreateGetItinerary(skyscannerMapper.mapTripPlanToFlightSearchDto(tripPlan))));
         } catch (Exception e) {
-            throw new ItineraryNotFoundException();
+            return null;
         }
     }
 
     public void switchItineraryPurchased(Itinerary itinerary) {
         itinerary.setPurchased(!itinerary.isPurchased());
+        itineraryRepository.save(itinerary);
+    }
+
+    public List<Itinerary> searchForItinerariesMatchingRoutesAndHolidayPlans(List<HolidayPlan> holidayPlanList,
+                                                                             List<Route> routes,
+                                                                             int adults
+                                                                            ) throws Exception {
+        List<Itinerary> resultList = new ArrayList<>();
+        for (Route route : routes) {
+            for (HolidayPlan holidayPlan : holidayPlanList) {
+                if (route.getDaysOfWeek().contains(holidayPlan.getBeginDate().getDayOfWeek())) {
+                    Optional<Itinerary> searchResult = Optional.ofNullable(
+                            createItinerary(
+                                    skyscannerService.searchCreateGetItinerary(
+                                            skyscannerMapper.mapTripPlanToFlightSearchDto(
+                                                    new TripPlan(
+                                                            route.getOrigin().getIataCode(),
+                                                            route.getDestination().getIataCode(),
+                                                            holidayPlan.getBeginDate(),
+                                                            holidayPlan.getEndDate(),
+                                                            adults
+                                                    )
+                                            )
+                                    )
+                            )
+                    );
+                    if (searchResult.isPresent()) {
+                        resultList.add(searchResult.get());
+                    }
+                }
+            }
+        }
+        return resultList;
     }
 }
