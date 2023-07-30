@@ -1,17 +1,13 @@
 package com.kodilla.cheapflightsearch.domain.skyscanner;
 
+import com.kodilla.cheapflightsearch.domain.trip.TripPlan;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @Entity(name = "itineraries")
 @Data
 public class Itinerary {
@@ -26,14 +22,28 @@ public class Itinerary {
     @NotNull
     @Column(name = "price")
     private double price;
+    @OneToOne(
+            cascade = CascadeType.DETACH,
+            fetch = FetchType.EAGER
+    )
+    @JoinColumn(name = "itinerary_id")
+    private TripPlan tripPlan;
     @NotNull
     @Column(name = "purchase_link")
     private String purchaseLink;
+
+    @Column(name = "is_purchased")
+    private boolean purchased;
 
     public Itinerary(String itineraryMark, double price, String purchaseLink) {
         this.itineraryMark = itineraryMark;
         this.price = price;
         this.purchaseLink = purchaseLink;
     }
-
+    public Itinerary(String itineraryMark, double price, TripPlan tripPlan, String purchaseLink) {
+        this.itineraryMark = itineraryMark;
+        this.price = price;
+        this.tripPlan = tripPlan;
+        this.purchaseLink = purchaseLink;
+    }
 }
