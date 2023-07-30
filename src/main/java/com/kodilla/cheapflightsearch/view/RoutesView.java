@@ -5,13 +5,17 @@ import com.kodilla.cheapflightsearch.service.AirportService;
 import com.kodilla.cheapflightsearch.service.RouteService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,11 +60,13 @@ public class RoutesView extends VerticalLayout {
                 originAirport = airportService.getAirportByIata(originTextField.getValue());
             } catch (Exception e) {
                 Notification.show(originTextField.getLabel() + " doesn't exist!");
+                Notification.show("Please choose another, or add to airports");
             }
             try {
                 destinationAirport = airportService.getAirportByIata(destinationTextField.getValue());
             } catch (Exception e) {
                 Notification.show(destinationTextField.getLabel() + " doesn't exist!");
+                Notification.show("Please choose another, or add to airports");
             }
             if ((originAirport != null) && (destinationAirport != null)) {
                 Route newRouteToAdd = new Route(
@@ -111,10 +117,28 @@ public class RoutesView extends VerticalLayout {
                 + ", " + route.getDestination().getCountry()
                 + "]").setHeader("Destination").setSortable(true);
         routesGrid.addColumn(route -> route.getDaysOfWeek()).setHeader("Days of week").setSortable(true);
+        routesGrid.addColumn(
+                new ComponentRenderer<>(Button::new, (button, route) -> {
+                    button.addThemeVariants(ButtonVariant.LUMO_ICON,
+                            ButtonVariant.LUMO_ERROR,
+                            ButtonVariant.LUMO_TERTIARY);
+                    button.addClickListener(e -> this.removeRoute(route));
+                    button.setIcon(new Icon(VaadinIcon.TRASH));
+                })).setHeader("Manage");
         add(routesGrid);
         add(new Button("Refresh", e -> refreshRoutesGrid()));
     }
     public void refreshRoutesGrid() {
         routesGrid.setItems(routeService.getRoutes());
+    }
+    private void removeRoute(Route route) {
+        if (route == null)
+            return;
+        try {
+            routeService.deleteRoute(route.getRouteId());
+        } catch (Exception e) {
+            Notification.show("Exception when trying to remove route: " + e);
+        }
+        this.refreshRoutesGrid();
     }
 }

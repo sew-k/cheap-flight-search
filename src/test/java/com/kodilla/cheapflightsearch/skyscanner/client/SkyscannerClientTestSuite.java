@@ -1,5 +1,6 @@
 package com.kodilla.cheapflightsearch.skyscanner.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kodilla.cheapflightsearch.domain.skyscanner.ItineraryDto;
 import com.kodilla.cheapflightsearch.webclient.skyscanner.SkyscannerClient;
 import org.junit.jupiter.api.Test;
@@ -65,7 +66,7 @@ class SkyscannerClientTestSuite {
 //        System.out.println(s);
 //    }
     @Test
-    void testGetItinerary() {
+    void testGetItinerary() throws Exception {
         //Given
         String jsonRequest = """
                 {

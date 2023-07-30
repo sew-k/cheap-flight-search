@@ -35,7 +35,7 @@ public class FlightSearchRequestDto {
                                 )
                         )
                 ),
-                "ryan, wizz"
+                "all"
         );
     }
 }

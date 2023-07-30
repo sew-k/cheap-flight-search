@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kodilla.cheapflightsearch.controller.ItineraryNotFoundException;
 import com.kodilla.cheapflightsearch.domain.skyscanner.Itinerary;
 import com.kodilla.cheapflightsearch.domain.skyscanner.ItineraryDto;
+import com.kodilla.cheapflightsearch.domain.trip.TripPlan;
+import com.kodilla.cheapflightsearch.webclient.skyscanner.requestdata.FlightSearchRequestDto;
 import com.kodilla.cheapflightsearch.webclient.skyscanner.responsedata.SkyscannerItineraryCreateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,11 +38,13 @@ public class SkyscannerMapper {
                 .purchaseLink(deepLink)
                 .build();
     }
-    public Itinerary mapItineraryDtoToItinerary(ItineraryDto itineraryDto) {
-        return new Itinerary(
-                itineraryDto.getItineraryId(),
-                itineraryDto.getPrice(),
-                itineraryDto.getPurchaseLink()
+    public FlightSearchRequestDto mapTripPlanToFlightSearchDto(TripPlan tripPlan) {
+        return new FlightSearchRequestDto(
+                tripPlan.getAdults(),
+                tripPlan.getOriginIata(),
+                tripPlan.getDestinationIata(),
+                tripPlan.getBeginDate(),
+                tripPlan.getEndDate()
         );
     }
 }

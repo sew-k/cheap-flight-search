@@ -2,7 +2,7 @@ package com.kodilla.cheapflightsearch.view;
 
 import com.kodilla.cheapflightsearch.domain.skyscanner.Itinerary;
 import com.kodilla.cheapflightsearch.domain.skyscanner.ItineraryDto;
-import com.kodilla.cheapflightsearch.mapper.SkyscannerMapper;
+import com.kodilla.cheapflightsearch.mapper.ItineraryMapper;
 import com.kodilla.cheapflightsearch.service.SkyscannerService;
 import com.kodilla.cheapflightsearch.webclient.skyscanner.requestdata.FlightSearchRequestDto;
 import com.vaadin.flow.component.UI;
@@ -35,7 +35,7 @@ public class QuickSearchView extends VerticalLayout {
     @Autowired
     SkyscannerService skyscannerService;
     @Autowired
-    SkyscannerMapper skyscannerMapper;
+    ItineraryMapper itineraryMapper;
 
     public QuickSearchView() {
         TextField originTextField = new TextField("Origin", "IATA code");
@@ -69,10 +69,10 @@ public class QuickSearchView extends VerticalLayout {
                     beginTripDate,
                     endTripDate);
             try {
-                ItineraryDto itineraryDto = skyscannerService.searchCreateGetItinerary(flightSearchRequestDto);
-                Notification.show("ItineraryID: " + itineraryDto.getItineraryId());
-                Notification.show("Best price for this flight is: " + Float.toString(itineraryDto.getPrice()) + " PLN");
-                itineraryList.add(skyscannerMapper.mapItineraryDtoToItinerary(itineraryDto));
+                Itinerary itinerary = skyscannerService.searchCreateGetItinerary(flightSearchRequestDto);
+                Notification.show("ItineraryID: " + itinerary.getItineraryId());
+                Notification.show("Best price for this flight is: " + Double.toString(itinerary.getPrice()) + " PLN");
+                itineraryList.add(itinerary);
             } catch (Exception exception) {
                 Notification.show("Exception: " + exception);
             } finally {
