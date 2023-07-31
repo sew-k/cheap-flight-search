@@ -1,6 +1,7 @@
 package com.kodilla.cheapflightsearch.controller;
 
 import com.kodilla.cheapflightsearch.domain.trip.RouteDto;
+import com.kodilla.cheapflightsearch.exception.RouteNotFoundException;
 import com.kodilla.cheapflightsearch.mapper.RouteMapper;
 import com.kodilla.cheapflightsearch.service.RouteService;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.kodilla.cheapflightsearch.service;
 
-import com.kodilla.cheapflightsearch.controller.RouteNotFoundException;
+import com.kodilla.cheapflightsearch.exception.RouteNotFoundException;
 import com.kodilla.cheapflightsearch.domain.trip.Airport;
 import com.kodilla.cheapflightsearch.domain.trip.Route;
 import com.kodilla.cheapflightsearch.repository.RouteRepository;

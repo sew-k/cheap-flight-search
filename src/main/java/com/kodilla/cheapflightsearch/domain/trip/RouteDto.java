@@ -14,19 +14,7 @@ public class RouteDto {
     private Long routeId;
     private String origin;
     private String destination;
-//    private List<String> days;
-//    private String airline;
-//    public RouteDto(String origin, String destination, List<String> days, String airline) {
-//        this.origin = origin;
-//        this.destination = destination;
-//        this.days = days;
-//        this.airline = airline;
-//    }
-//    public RouteDto(String origin, String destination, List<String> days) {
-//        this.origin = origin;
-//        this.destination = destination;
-//        this.days = days;
-//    }
+
     private List<DayOfWeek> daysOfWeek;
     public RouteDto(String origin, String destination) {
         this.origin = origin;
