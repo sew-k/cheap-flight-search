@@ -20,7 +20,7 @@ public class CalendarView extends VerticalLayout {
     @Autowired
     CalendarService calendarService;
     private Calendar calendar;                                 //TODO temporarily. To associate with User
-    //    private Grid<Calendar> calendarGrid = new Grid<>(Calendar.class, false);
+
     private Grid<HolidayPlan> holidaysGrid = new Grid<>(HolidayPlan.class);
 
     public CalendarView() {

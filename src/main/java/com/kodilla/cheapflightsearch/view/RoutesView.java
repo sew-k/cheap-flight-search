@@ -88,26 +88,25 @@ public class RoutesView extends VerticalLayout {
         );
         add(searchFieldsLayout);
         add(addToRoutesButton);
-        routesGrid.setSelectionMode(Grid.SelectionMode.MULTI);
-        routesGrid.addSelectionListener(new SelectionListener<Grid<Route>, Route>() {
-            @Override
-            public void selectionChange(SelectionEvent<Grid<Route>, Route> event) {
-                event.getFirstSelectedItem().stream().forEach(route -> {
-                    route.setFavourite(true);
-                    try {
-                        routeService.updateRoute(route.getRouteId(), route);
-                    } catch (Exception e) {
-
-                    } finally {
-                        refreshRoutesGrid();
-                    }
-                    Notification.show("Route "
-                            + route.getOrigin().toString() + "->"
-                            + route.getDestination().toString()
-                            + " added to favourites");
-                });
-            }
-        });
+        add(new Button("Refresh", e -> refreshRoutesGrid()));
+//        routesGrid.setSelectionMode(Grid.SelectionMode.MULTI);
+//        routesGrid.addSelectionListener(new SelectionListener<Grid<Route>, Route>() {
+//            @Override
+//            public void selectionChange(SelectionEvent<Grid<Route>, Route> event) {
+//                event.getAllSelectedItems().stream().forEach(route -> {
+//                    routeService.switchFavourite(route);
+//                    try {
+//                        routeService.updateRoute(route.getRouteId(), route);
+//                    } catch (Exception e) {
+//
+//                    }
+//                    Notification.show("Route "
+//                            + route.getOrigin().toString() + "->"
+//                            + route.getDestination().toString()
+//                            + " added to favourites");
+//                });
+//            }
+//        });
         routesGrid.addColumn(route -> route.getOrigin().getIataCode()
                 + " [" + route.getOrigin().getCity()
                 + ", " + route.getOrigin().getCountry()
@@ -125,8 +124,15 @@ public class RoutesView extends VerticalLayout {
                     button.addClickListener(e -> this.removeRoute(route));
                     button.setIcon(new Icon(VaadinIcon.TRASH));
                 })).setHeader("Manage");
+        routesGrid.addColumn(
+                new ComponentRenderer<>(Button::new, (button, route) -> {
+                    button.addThemeVariants(ButtonVariant.LUMO_ICON,
+                            ButtonVariant.LUMO_ERROR,
+                            ButtonVariant.LUMO_TERTIARY);
+                    button.addClickListener(e -> routeService.switchFavourite(route));
+                    button.setIcon(new Icon(VaadinIcon.EYE));
+                })).setHeader("Favourite");
         add(routesGrid);
-        add(new Button("Refresh", e -> refreshRoutesGrid()));
     }
     public void refreshRoutesGrid() {
         routesGrid.setItems(routeService.getRoutes());

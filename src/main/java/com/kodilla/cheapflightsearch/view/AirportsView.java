@@ -13,8 +13,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.awt.*;
-
 @Route(value = "main/airports")
 public class AirportsView extends VerticalLayout {
     @Autowired
