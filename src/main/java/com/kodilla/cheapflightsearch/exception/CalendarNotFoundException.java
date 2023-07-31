@@ -1,4 +1,4 @@
-package com.kodilla.cheapflightsearch.controller;
+package com.kodilla.cheapflightsearch.exception;
 
 public class CalendarNotFoundException extends Exception {
 }
