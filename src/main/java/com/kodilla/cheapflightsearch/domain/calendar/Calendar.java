@@ -30,4 +30,8 @@ public class Calendar {
     )
     @JoinColumn(name = "calendar_id")
     private List<HolidayPlan> holidayPlanList = new ArrayList<>();
+
+    public Calendar(List<HolidayPlan> holidayPlanList) {
+        this.holidayPlanList = holidayPlanList;
+    }
 }

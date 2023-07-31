@@ -1,6 +1,6 @@
 package com.kodilla.cheapflightsearch.service;
 
-import com.kodilla.cheapflightsearch.controller.CalendarNotFoundException;
+import com.kodilla.cheapflightsearch.exception.CalendarNotFoundException;
 import com.kodilla.cheapflightsearch.domain.calendar.Calendar;
 import com.kodilla.cheapflightsearch.domain.calendar.HolidayPlan;
 import com.kodilla.cheapflightsearch.repository.CalendarRepository;
