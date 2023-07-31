@@ -1,12 +1,14 @@
 package com.kodilla.cheapflightsearch.domain.skyscanner;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 
 @Data
-@Builder
+@Getter
+@AllArgsConstructor
 public class ItineraryDto {
-    private String itineraryId;
-    private float price;
+    private String itineraryMark;
+    private double price;
     private String purchaseLink;
 }
