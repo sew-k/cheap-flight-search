@@ -4,6 +4,7 @@ import com.kodilla.cheapflightsearch.domain.user.UserDto;
 import com.kodilla.cheapflightsearch.exception.UserNotFoundException;
 import com.kodilla.cheapflightsearch.mapper.UserMapper;
 import com.kodilla.cheapflightsearch.service.UserService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequestMapping("/v1/cheapflightsearch/users")
 @RequiredArgsConstructor
 @CrossOrigin("*")
+@Api(tags = "User controller")
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;

@@ -4,6 +4,7 @@ import com.kodilla.cheapflightsearch.domain.trip.RouteDto;
 import com.kodilla.cheapflightsearch.exception.RouteNotFoundException;
 import com.kodilla.cheapflightsearch.mapper.RouteMapper;
 import com.kodilla.cheapflightsearch.service.RouteService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequestMapping("/v1/cheapflightsearch/routes")
 @RequiredArgsConstructor
 @CrossOrigin("*")
+@Api(tags = "Route controller")
 public class RouteController {
     private final RouteService routeService;
     private final RouteMapper routeMapper;

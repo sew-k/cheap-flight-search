@@ -6,6 +6,7 @@ import com.kodilla.cheapflightsearch.mapper.ItineraryMapper;
 import com.kodilla.cheapflightsearch.service.CalendarService;
 import com.kodilla.cheapflightsearch.service.ItineraryService;
 import com.kodilla.cheapflightsearch.service.RouteService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequestMapping("/v1/cheapflightsearch/itineraries")
 @RequiredArgsConstructor
 @CrossOrigin("*")
+@Api(tags = "Itinerary controller")
 public class ItineraryController {
     private final ItineraryService itineraryService;
     private final ItineraryMapper itineraryMapper;

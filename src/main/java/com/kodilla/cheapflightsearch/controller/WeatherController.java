@@ -1,6 +1,7 @@
 package com.kodilla.cheapflightsearch.controller;
 
 import com.kodilla.cheapflightsearch.service.WeatherService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v1/cheapflightsearch/weather")
 @RequiredArgsConstructor
 @CrossOrigin("*")
+@Api(tags = "Weather controller")
 public class WeatherController {
     private final WeatherService weatherService;
     @GetMapping("/{city}")
