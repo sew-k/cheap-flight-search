@@ -1,16 +1,16 @@
 package com.kodilla.cheapflightsearch.domain.trip;
 
+import com.kodilla.cheapflightsearch.domain.skyscanner.Itinerary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.Objects;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -37,6 +37,9 @@ public class TripPlan {
     @NotNull
     @Column(name = "adults")
     private int adults;
+    @OneToOne
+    @JoinColumn(name = "itinerary_id")
+    private Itinerary itinerary;
 
     public TripPlan(String originIata, String destinationIata, LocalDate beginDate, LocalDate endDate, int adults) {
         this.originIata = originIata;
@@ -44,5 +47,28 @@ public class TripPlan {
         this.beginDate = beginDate;
         this.endDate = endDate;
         this.adults = adults;
+    }
+    public TripPlan(String originIata, String destinationIata, LocalDate beginDate, LocalDate endDate, int adults, Itinerary itinerary) {
+        this.originIata = originIata;
+        this.destinationIata = destinationIata;
+        this.beginDate = beginDate;
+        this.endDate = endDate;
+        this.adults = adults;
+        this.itinerary = itinerary;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TripPlan tripPlan = (TripPlan) o;
+        return adults == tripPlan.adults && originIata.equals(tripPlan.originIata)
+                && destinationIata.equals(tripPlan.destinationIata) && beginDate.equals(tripPlan.beginDate)
+                && endDate.equals(tripPlan.endDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(originIata, destinationIata, beginDate, endDate, adults);
     }
 }

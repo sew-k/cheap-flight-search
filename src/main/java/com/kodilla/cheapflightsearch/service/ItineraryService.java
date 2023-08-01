@@ -6,9 +6,11 @@ import com.kodilla.cheapflightsearch.domain.skyscanner.Itinerary;
 
 import com.kodilla.cheapflightsearch.domain.trip.Route;
 import com.kodilla.cheapflightsearch.domain.trip.TripPlan;
+import com.kodilla.cheapflightsearch.exception.TripPlanNotFoundException;
 import com.kodilla.cheapflightsearch.mapper.SkyscannerMapper;
 import com.kodilla.cheapflightsearch.mapper.TripPlanMapper;
 import com.kodilla.cheapflightsearch.repository.ItineraryRepository;
+import com.kodilla.cheapflightsearch.repository.TripPlanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +29,9 @@ public class ItineraryService {
     private final ItineraryRepository itineraryRepository;
     private final SkyscannerService skyscannerService;
     private final SkyscannerMapper skyscannerMapper;
+    private final TripPlanRepository tripPlanRepository;
     private final TripPlanMapper tripPlanMapper;
-    private final RouteService routeService;
+    private final AirportService airportService;
 
     public List<Itinerary> getItineraries() {
         return itineraryRepository.findAll();
@@ -71,11 +74,17 @@ public class ItineraryService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<Itinerary> searchForItineraryBasedOnTripPlan(TripPlan tripPlan) {
+    public Optional<Itinerary> searchForItineraryBasedOnTripPlan(TripPlan tripPlan) throws ItineraryNotFoundException {
         try {
-            return Optional.ofNullable(createItinerary(skyscannerService.searchCreateGetItinerary(skyscannerMapper.mapTripPlanToFlightSearchDto(tripPlan))));
+            Optional<Itinerary> result = Optional.ofNullable(skyscannerService.searchCreateGetItinerary(skyscannerMapper.mapTripPlanToFlightSearchDto(tripPlan)));
+            if (result.isPresent()) {
+                tripPlanRepository.save(tripPlan);
+                result.get().setTripPlan(tripPlan);
+                itineraryRepository.save(result.get());
+            }
+            return result;
         } catch (Exception e) {
-            return null;
+           throw new ItineraryNotFoundException();
         }
     }
 
@@ -151,5 +160,44 @@ public class ItineraryService {
             }
         }
         return resultList;
+    }
+
+    public List<TripPlan> getTripPlans() {
+        return tripPlanRepository.findAll();
+    }
+
+    public void deleteTripPlan(Long id) throws TripPlanNotFoundException {
+        if (tripPlanRepository.findById(id).isPresent()) {
+            tripPlanRepository.deleteById(id);
+        } else {
+            throw new TripPlanNotFoundException();
+        }
+    }
+
+    public TripPlan updateTripPlan(Long id, TripPlan tripPlan) throws TripPlanNotFoundException {
+        if (tripPlanRepository.findById(id).isPresent()) {
+            return tripPlanRepository.save(tripPlan);
+        } else {
+            throw new TripPlanNotFoundException();
+        }
+    }
+
+    public TripPlan createTripPlan(TripPlan tripPlan) {
+        return tripPlanRepository.save(tripPlan);
+    }
+
+    public String getWeatherForTripPlanDestination(TripPlan tripPlan) {
+        try {
+            return airportService.getWeatherForCity(airportService.getAirportByIata(tripPlan.getDestinationIata()));
+        } catch (Exception e) {
+            return "Not found";
+        }
+    }
+    public String getCityForTripPlanDestination(TripPlan tripPlan) {
+        try {
+            return airportService.getAirportByIata(tripPlan.getDestinationIata()).getCity();
+        } catch (Exception e) {
+            return "Not found";
+        }
     }
 }

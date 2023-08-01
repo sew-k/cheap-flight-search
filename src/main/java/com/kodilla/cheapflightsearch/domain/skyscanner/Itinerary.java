@@ -26,10 +26,10 @@ public class Itinerary {
             cascade = CascadeType.DETACH,
             fetch = FetchType.EAGER
     )
-    @JoinColumn(name = "itinerary_id")
+    @JoinColumn(name = "trip_plan_id")
     private TripPlan tripPlan;
     @NotNull
-    @Column(name = "purchase_link")
+    @Column(name = "purchase_link", length = 3000)
     private String purchaseLink;
     @NotNull
     @Column(name = "is_purchased")

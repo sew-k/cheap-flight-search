@@ -8,12 +8,14 @@ import com.kodilla.cheapflightsearch.domain.trip.TripPlan;
 import com.kodilla.cheapflightsearch.mapper.SkyscannerMapper;
 import com.kodilla.cheapflightsearch.mapper.TripPlanMapper;
 import com.kodilla.cheapflightsearch.repository.ItineraryRepository;
+import com.kodilla.cheapflightsearch.repository.TripPlanRepository;
 import com.kodilla.cheapflightsearch.webclient.skyscanner.requestdata.FlightSearchRequestDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -51,7 +53,7 @@ class ItineraryServiceTestSuite {
     }
 
     @Test
-    void updateItinerary() {
+    void testUpdateItinerary() {
     }
 
     @Test
