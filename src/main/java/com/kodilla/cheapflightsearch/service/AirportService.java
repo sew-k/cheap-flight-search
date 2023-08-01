@@ -1,6 +1,6 @@
 package com.kodilla.cheapflightsearch.service;
 
-import com.kodilla.cheapflightsearch.controller.AirportNotFoundException;
+import com.kodilla.cheapflightsearch.exception.AirportNotFoundException;
 import com.kodilla.cheapflightsearch.domain.trip.Airport;
 import com.kodilla.cheapflightsearch.repository.AirportRepository;
 import lombok.RequiredArgsConstructor;
