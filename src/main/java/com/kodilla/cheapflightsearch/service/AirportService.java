@@ -12,6 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AirportService {
     private final AirportRepository airportRepository;
+    private final WeatherService weatherService;
     public List<Airport> getAirports() {
         return airportRepository.findAll();
     }
@@ -46,6 +47,10 @@ public class AirportService {
     }
     public boolean checkIfAirportExists(String iataCode) {
         return airportRepository.findByIataCode(iataCode).isPresent();
+    }
+    public String getWeatherForCity(Airport airport) {
+        return weatherService.getWeather(airport.getCity()).getTemperature()
+                + "\u00B0" + "C";
     }
 
 }

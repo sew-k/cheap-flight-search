@@ -24,10 +24,10 @@ public class Airport {
     @NotNull
     @Column(name = "city")
     private String city;
-    @OneToOne(mappedBy = "origin")
+    @OneToOne(mappedBy = "origin", cascade = CascadeType.REMOVE)
     @JoinColumn(name = "origin_route_id")
     private Route originRoute;
-    @OneToOne(mappedBy = "destination")
+    @OneToOne(mappedBy = "destination", cascade = CascadeType.REMOVE)
     @JoinColumn(name = "destination_route_id")
     private Route destinationRoute;
     @NotNull

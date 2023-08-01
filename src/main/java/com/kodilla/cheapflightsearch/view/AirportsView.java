@@ -28,17 +28,12 @@ public class AirportsView extends VerticalLayout {
         airportsGrid.addColumn(Airport::getIataCode).setHeader("IATA code").setSortable(true);
         airportsGrid.addColumn(Airport::getCountry).setHeader("Country").setSortable(true);
         airportsGrid.addColumn(Airport::getCity).setHeader("City").setSortable(true);
-        airportsGrid.addColumn(this::getWeatherForCity).setHeader("Weather").setSortable(true);
+        airportsGrid.addColumn(a -> airportService.getWeatherForCity(a)).setHeader("Weather").setSortable(true);
         add(airportsGrid);
     }
 
     public void refreshAirportsGrid() {
         airportsGrid.setItems(airportService.getAirports());
-    }
-
-    public String getWeatherForCity(Airport airport) {
-        return weatherService.getWeather(airport.getCity()).getTemperature()
-                + "\u00B0" + "C";
     }
 
     public Dialog newAirportDialog() {
