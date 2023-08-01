@@ -1,10 +1,7 @@
 package com.kodilla.cheapflightsearch.mapper;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kodilla.cheapflightsearch.controller.ItineraryNotFoundException;
-import com.kodilla.cheapflightsearch.domain.skyscanner.Itinerary;
 import com.kodilla.cheapflightsearch.domain.skyscanner.ItineraryDto;
 import com.kodilla.cheapflightsearch.domain.trip.TripPlan;
 import com.kodilla.cheapflightsearch.webclient.skyscanner.requestdata.FlightSearchRequestDto;
@@ -21,22 +18,17 @@ public class SkyscannerMapper {
     ObjectMapper objectMapper;
 
     public ItineraryDto mapSkyscannerClientDtoToItineraryDto(SkyscannerItineraryCreateDto skyscannerItineraryCreateDto) throws Exception {
-        String itineraryId;
+        String itineraryMark;
         float amount;
         String deepLink;
-        itineraryId = Optional.of(skyscannerItineraryCreateDto.getContent().getSortingOptions().getBest().stream()
+        itineraryMark = Optional.of(skyscannerItineraryCreateDto.getContent().getSortingOptions().getBest().stream()
                 .map(i -> i.getItineraryId())
                 .collect(Collectors.toList()).get(0)).orElseThrow();                                                          //TODO better sorting algorithm
-        Object object = skyscannerItineraryCreateDto.getContent().getResults().getItineraries().get(itineraryId);
+        Object object = skyscannerItineraryCreateDto.getContent().getResults().getItineraries().get(itineraryMark);
         JsonNode jsonNode = objectMapper.readTree(objectMapper.writeValueAsString(object));
         amount = Float.parseFloat(jsonNode.get("pricingOptions").get(0).get("items").get(0).get("price").get("amount").textValue()) / 1000;
         deepLink = jsonNode.get("pricingOptions").get(0).get("items").get(0).get("deepLink").textValue();
-
-        return ItineraryDto.builder()
-                .itineraryId(itineraryId)
-                .price(amount)
-                .purchaseLink(deepLink)
-                .build();
+        return new ItineraryDto(itineraryMark, amount, deepLink);
     }
     public FlightSearchRequestDto mapTripPlanToFlightSearchDto(TripPlan tripPlan) {
         return new FlightSearchRequestDto(
