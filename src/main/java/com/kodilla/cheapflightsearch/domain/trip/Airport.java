@@ -15,7 +15,6 @@ import javax.validation.constraints.NotNull;
 @Entity(name = "airports")
 public class Airport {
     @Id
-    @NotNull
     @GeneratedValue
     @Column(name = "airport_id", unique = true)
     private Long airportId;

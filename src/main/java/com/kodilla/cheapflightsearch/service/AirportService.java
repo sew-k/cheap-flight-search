@@ -30,7 +30,6 @@ public class AirportService {
     }
     public void updateAirport(Long id, Airport airport) throws AirportNotFoundException {
         if(airportRepository.findById(id).isPresent()) {
-            airportRepository.deleteById(id);
             airportRepository.save(airport);
         } else {
             throw new AirportNotFoundException();
