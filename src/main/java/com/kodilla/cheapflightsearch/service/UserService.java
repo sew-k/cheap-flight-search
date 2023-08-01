@@ -1,6 +1,6 @@
 package com.kodilla.cheapflightsearch.service;
 
-import com.kodilla.cheapflightsearch.controller.UserNotFoundException;
+import com.kodilla.cheapflightsearch.exception.UserNotFoundException;
 import com.kodilla.cheapflightsearch.domain.user.User;
 import com.kodilla.cheapflightsearch.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
