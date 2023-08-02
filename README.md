@@ -3,9 +3,9 @@
 Application based on REST API enables:
 - multiple searching for cheapest, direct itirenaries to user's favourites destinations based on user's annual holiday plan and weather in specified destinations
 - managing stored data, including holiday plans, favourite routes, purchased (or not) itineraries
-- (in future) searching for travel basing on weather data
-- (in future) scheduling - regular (for example daily) searching for itineraries for choosing cheapest ones
-- (in future) scheduling - possibility to get email with reminder of purchased itirenary with weather forecast data on arrival day to destination
+- (*in future*) searching for travel basing on weather data
+- (*in future*) scheduling - regular (for example daily) searching for itineraries for choosing cheapest ones
+- (*in future*) scheduling - possibility to get email with reminder of purchased itirenary with weather forecast data on arrival day to destination
 
 # Getting started
 
@@ -16,11 +16,12 @@ Application shares view layer implemented in Vaadin framework. Possibility to te
 Not deployed on cloud yet. Only local testing possible;
 
 1. MySQL database and user with all privileges as follows:
+````
 - database name: flights_db
 - url: //localhost:3306
 - username=passenger_user
 - password=Pass123
-
+````
 2. Java 17 JDK.
 
 3. IDE with Gradle build tool, such as IntelliJ to compile and run code.
@@ -35,8 +36,32 @@ Not deployed on cloud yet. Only local testing possible;
 
 3. Build and run application in your IDE
 
+## Frontend pages
+
+1. Application **main page**
+- http://localhost:8080/main
+
+2. **Airports** managing
+- http://localhost:8080/main/airports
+
+3. **Calendar** and vacation plans managing
+- http://localhost:8080/main/calendar
+
+4. **User** data managing (panel for Administrator only) - access from main page currently disabled
+- http://localhost:8080/main/users
+
+5. **Routes** (and favourite ones) managing
+- http://localhost:8080/main/routes
+
+6. **Itineraries** searching, trip plans managing
+- http://localhost:8080/main/itineraries
+
+7. **Quick search** for itinerary
+- http://localhost:8080/main/quick_search
+
 # Endpoints
 
+1. User
 
 
 # Features to be implemented
@@ -60,6 +85,7 @@ Not deployed on cloud yet. Only local testing possible;
 
 4. Vaadin - view layer
 - to split into frontend and backend separate applications (to consider)
+- development of more responsive UI
 
 5. Deploying backend (replit) and database (cloud)
 
