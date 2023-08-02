@@ -39,7 +39,7 @@ class ItineraryMapperTestSuite {
         //Given
 
         //When
-        Itinerary resultItinerary = itineraryMapper.mapItineraryDtoToItinerary(itineraryDto);
+        Itinerary resultItinerary = itineraryMapper.mapToItinerary(itineraryDto);
 
         //Then
         assertEquals(itineraryDto.getItineraryMark(), resultItinerary.getItineraryMark());
@@ -52,7 +52,7 @@ class ItineraryMapperTestSuite {
         //Given
 
         //When
-        Itinerary resultItinerary = itineraryMapper.mapItineraryDtoToItineraryWithTripPlan(itineraryDto, tripPlan);
+        Itinerary resultItinerary = itineraryMapper.mapToItineraryWithTripPlan(itineraryDto, tripPlan);
 
         //Then
         assertEquals(itineraryDto.getItineraryMark(), resultItinerary.getItineraryMark());
@@ -70,7 +70,7 @@ class ItineraryMapperTestSuite {
         //Given
 
         //When
-        ItineraryDto resultItineraryDto = itineraryMapper.mapItineraryToItineraryDto(itinerary);
+        ItineraryDto resultItineraryDto = itineraryMapper.mapToItineraryDto(itinerary);
 
         //Then
         assertEquals(itinerary.getItineraryMark(), resultItineraryDto.getItineraryMark());
@@ -83,7 +83,7 @@ class ItineraryMapperTestSuite {
         //Given
 
         //When
-        List<ItineraryDto> resultItineraryDtoList = itineraryMapper.mapItineraryListToItineraryDtoList(List.of(itinerary));
+        List<ItineraryDto> resultItineraryDtoList = itineraryMapper.mapToItineraryDtoList(List.of(itinerary));
 
         //Then
         assertFalse(resultItineraryDtoList.isEmpty());

@@ -16,6 +16,6 @@ public class SkyscannerService {
     public Itinerary searchCreateGetItinerary(FlightSearchRequestDto flightSearchRequestDto) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonBody = objectMapper.writeValueAsString(flightSearchRequestDto);
-        return itineraryMapper.mapItineraryDtoToItinerary(skyscannerClient.getItinerary("/search/create", jsonBody));
+        return itineraryMapper.mapToItinerary(skyscannerClient.getItinerary("/search/create", jsonBody));
     }
 }

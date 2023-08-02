@@ -27,12 +27,12 @@ public class ItineraryController {
 
     @GetMapping()
     public ResponseEntity<List<ItineraryDto>> getItineraries() {
-        return ResponseEntity.ok(itineraryMapper.mapItineraryListToItineraryDtoList(itineraryService.getItineraries()));
+        return ResponseEntity.ok(itineraryMapper.mapToItineraryDtoList(itineraryService.getItineraries()));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ItineraryDto> getItineraryById(@PathVariable("id") long id) throws ItineraryNotFoundException {
-        return ResponseEntity.ok(itineraryMapper.mapItineraryToItineraryDto(itineraryService.getItinerary(id)));
+        return ResponseEntity.ok(itineraryMapper.mapToItineraryDto(itineraryService.getItinerary(id)));
     }
 
     @DeleteMapping("/{id}")
@@ -43,8 +43,8 @@ public class ItineraryController {
 
     @PutMapping(path = "/update/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ItineraryDto> updateUser(@PathVariable("id") long id, @RequestBody ItineraryDto itineraryDto) throws ItineraryNotFoundException {
-        itineraryService.updateItinerary(id, itineraryMapper.mapItineraryDtoToItinerary(itineraryDto));
-        return ResponseEntity.ok(itineraryMapper.mapItineraryToItineraryDto(itineraryService.getItineraryByItineraryMark(itineraryDto.getItineraryMark())));
+        itineraryService.updateItinerary(id, itineraryMapper.mapToItinerary(itineraryDto));
+        return ResponseEntity.ok(itineraryMapper.mapToItineraryDto(itineraryService.getItineraryByItineraryMark(itineraryDto.getItineraryMark())));
     }
 
     @GetMapping(path = "/itineraries/favourite/{calendar_id}/{adults}")
@@ -53,7 +53,7 @@ public class ItineraryController {
             @PathVariable("adults") int adults,
             @RequestBody List<ItineraryDto> itineraryDtoList
     ) throws Exception {
-        return ResponseEntity.ok(itineraryMapper.mapItineraryListToItineraryDtoList(
+        return ResponseEntity.ok(itineraryMapper.mapToItineraryDtoList(
                         itineraryService.searchForItinerariesMatchingFavouriteRoutesAndHolidayPlans(
                                 calendarService.getCalendar(calendarId).getHolidayPlanList(),
                                 routeService.getRoutes(),
