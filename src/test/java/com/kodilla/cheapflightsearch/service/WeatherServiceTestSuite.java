@@ -30,11 +30,12 @@ class WeatherServiceTestSuite {
                 .temperature(15.55f)
                 .build();
         Weather weather = new Weather(weatherDto.getTemperature());
-        when(weatherMapper.mapToCurrentWeather(weatherClient.getWeatherForCity(
+        when(weatherMapper.mapToCurrentWeather(
+                weatherMapper.mapToWeatherDto(weatherClient.getWeatherForCity(
                 "warsaw",
                 OpenWeatherConfig.CALL_FOR_CURRENT_WEATHER,
                 OpenWeatherConfig.UNITS_METRIC,
-                OpenWeatherConfig.LANG_PL)))
+                OpenWeatherConfig.LANG_PL))))
                 .thenReturn(weather);
 
         //When

@@ -5,6 +5,7 @@ import com.kodilla.cheapflightsearch.domain.skyscanner.Itinerary;
 import com.kodilla.cheapflightsearch.domain.trip.Airport;
 import com.kodilla.cheapflightsearch.domain.trip.Route;
 import com.kodilla.cheapflightsearch.domain.trip.TripPlan;
+import com.kodilla.cheapflightsearch.exception.ItineraryNotFoundException;
 import com.kodilla.cheapflightsearch.mapper.SkyscannerMapper;
 import com.kodilla.cheapflightsearch.mapper.TripPlanMapper;
 import com.kodilla.cheapflightsearch.repository.ItineraryRepository;
@@ -42,6 +43,7 @@ class ItineraryServiceTestSuite {
 
     @Test
     void getItineraries() {
+
     }
 
     @Test
@@ -50,6 +52,34 @@ class ItineraryServiceTestSuite {
 
     @Test
     void deleteItinerary() {
+        //Given
+        Route route = new Route(
+                new Airport("Poland", "Warsaw", "WAW"),
+                new Airport("Germany", "Cologne", "CGN"),
+                Set.of(DayOfWeek.FRIDAY, DayOfWeek.SUNDAY),
+                true
+        );
+        TripPlan tripPlan = new TripPlan(
+                route.getOrigin().getIataCode(),
+                route.getDestination().getIataCode(),
+                LocalDate.of(2023,10,10),
+                LocalDate.of(2023,10,11),
+                1
+        );
+        Itinerary itinerary = new Itinerary(1L, "itinerary mark", 199.99, tripPlan,"link", false);
+        Long id = itinerary.getItineraryId();
+        when(itineraryRepository.existsById(id)).thenReturn(true);
+
+        //When
+        try {
+            itineraryService.deleteItinerary(id);
+        } catch (Exception e) {
+
+        }
+
+        //Then
+        verify(itineraryRepository, atLeastOnce()).existsById(id);
+        verify(itineraryRepository, atLeastOnce()).deleteById(id);
     }
 
     @Test
@@ -57,7 +87,28 @@ class ItineraryServiceTestSuite {
     }
 
     @Test
-    void createItinerary() {
+    void testCreateItinerary(){
+        //Given
+        Route route = new Route(
+                new Airport("Poland", "Warsaw", "WAW"),
+                new Airport("Germany", "Cologne", "CGN"),
+                Set.of(DayOfWeek.FRIDAY, DayOfWeek.SUNDAY),
+                true
+        );
+        TripPlan tripPlan = new TripPlan(
+                route.getOrigin().getIataCode(),
+                route.getDestination().getIataCode(),
+                LocalDate.of(2023,10,10),
+                LocalDate.of(2023,10,11),
+                1
+        );
+        Itinerary itinerary = new Itinerary("itinerary mark", 199.99, tripPlan,"link");
+
+        //When
+        itineraryService.createItinerary(itinerary);
+
+        //Then
+        verify(itineraryRepository, atLeastOnce()).save(itinerary);
     }
 
     @Test
@@ -69,11 +120,28 @@ class ItineraryServiceTestSuite {
     }
 
     @Test
-    void switchItineraryPurchased() {
+    void testSwitchItineraryPurchased() {
+        //Given
+        Itinerary itinerary = new Itinerary("itinerary mark", 199.99, "purchase link");
+        itineraryService.createItinerary(itinerary);
+        Long id = itinerary.getItineraryId();
+
+        //When
+        itineraryService.switchItineraryPurchased(itinerary);
+
+        //Then
+        assertTrue(itinerary.isPurchased());
+
+        //CleanUp
+        try {
+            itineraryService.deleteItinerary(id);
+        } catch (Exception e) {
+
+        }
     }
 
     @Test
-    void searchForItinerariesMatchingRoutesAndHolidayPlans_DatesMatching() {
+    void testSearchForItinerariesMatchingRoutesAndHolidayPlans_DatesMatching() {
         //Given
         Route route = new Route(
                 new Airport("Poland", "Warsaw", "WAW"),
@@ -134,7 +202,7 @@ class ItineraryServiceTestSuite {
         assertEquals(1, resultList.size());
     }
     @Test
-    void searchForItinerariesMatchingRoutesAndHolidayPlans_DatesNotMatching() {
+    void testSearchForItinerariesMatchingRoutesAndHolidayPlans_DatesNotMatching() {
         //Given
         Route route = new Route(
                 new Airport("Poland", "Warsaw", "WAW"),
