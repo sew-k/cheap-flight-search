@@ -1,9 +1,6 @@
 package com.kodilla.cheapflightsearch.domain.trip;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,8 +11,7 @@ import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Entity(name = "routes")
 public class Route {
     @Id
@@ -41,6 +37,7 @@ public class Route {
     private Set<DayOfWeek> daysOfWeek = new HashSet<>();
     @Column(name = "favourite")
     private boolean favourite;
+
     public Route(Airport origin, Airport destination, Set<DayOfWeek> daysOfWeek, boolean favourite) {
         this.origin = origin;
         this.destination = destination;

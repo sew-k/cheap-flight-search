@@ -1,9 +1,9 @@
 package com.kodilla.cheapflightsearch.domain.weather;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 @Builder
 public class WeatherDto {
     private float temperature;

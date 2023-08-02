@@ -1,10 +1,7 @@
 package com.kodilla.cheapflightsearch.domain.calendar;
 
 import com.kodilla.cheapflightsearch.domain.calendar.HolidayPlan;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -13,8 +10,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 @Entity(name = "calendars")
 public class Calendar {
     @Id

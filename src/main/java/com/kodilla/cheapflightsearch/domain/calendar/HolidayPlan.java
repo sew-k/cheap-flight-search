@@ -8,8 +8,7 @@ import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Entity(name = "holiday_plans")
 public class HolidayPlan {
     @Id

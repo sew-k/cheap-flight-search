@@ -1,10 +1,7 @@
 package com.kodilla.cheapflightsearch.domain.user;
 
 import com.kodilla.cheapflightsearch.domain.calendar.Calendar;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,8 +9,7 @@ import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Entity(name = "users")
 public class User {
     @Id
@@ -30,15 +26,12 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "calendar_id")
     private Calendar calendar;
-//    public User(String username, String email, Long calendarId) {
-//        this.username = username;
-//        this.email = email;
-//
-//    }
+
     public User(String username, String email) {
         this.username = username;
         this.email = email;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

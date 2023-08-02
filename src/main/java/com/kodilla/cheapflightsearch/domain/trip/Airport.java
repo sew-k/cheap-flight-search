@@ -1,17 +1,13 @@
 package com.kodilla.cheapflightsearch.domain.trip;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Entity(name = "airports")
 public class Airport {
     @Id
@@ -33,6 +29,7 @@ public class Airport {
     @NotNull
     @Column(name = "iata_code", unique = true)
     private String iataCode;
+
     public Airport(String country, String city, String iataCode) {
         this.country = country;
         this.city = city;

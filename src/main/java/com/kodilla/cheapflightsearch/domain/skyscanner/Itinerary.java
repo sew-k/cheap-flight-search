@@ -8,8 +8,8 @@ import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "itineraries")
 @Data
+@Entity(name = "itineraries")
 public class Itinerary {
     @Id
     @NotNull
@@ -41,6 +41,7 @@ public class Itinerary {
         this.purchaseLink = purchaseLink;
         this.purchased = false;
     }
+
     public Itinerary(String itineraryMark, double price, TripPlan tripPlan, String purchaseLink) {
         this.itineraryMark = itineraryMark;
         this.price = price;

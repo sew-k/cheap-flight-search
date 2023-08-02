@@ -1,10 +1,7 @@
 package com.kodilla.cheapflightsearch.domain.trip;
 
 import com.kodilla.cheapflightsearch.domain.skyscanner.Itinerary;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -13,8 +10,7 @@ import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Entity(name = "trip_plans")
 public class TripPlan {
     @Id
@@ -48,6 +44,7 @@ public class TripPlan {
         this.endDate = endDate;
         this.adults = adults;
     }
+
     public TripPlan(String originIata, String destinationIata, LocalDate beginDate, LocalDate endDate, int adults, Itinerary itinerary) {
         this.originIata = originIata;
         this.destinationIata = destinationIata;
