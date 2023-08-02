@@ -41,7 +41,7 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.ok().build();
     }
-    @PutMapping(path="/updateUser/{id}", consumes= MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path="/update/{id}", consumes= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDto> updateUser(@PathVariable("id") long id, @RequestBody UserDto userDto) throws UserNotFoundException {
         userService.updateUser(id, userMapper.mapToUser(userDto));
         return ResponseEntity.ok(userMapper.mapToUserDto(userService.getUser(userDto.getUserId())));

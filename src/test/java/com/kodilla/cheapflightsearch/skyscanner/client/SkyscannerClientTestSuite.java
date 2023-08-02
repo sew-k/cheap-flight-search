@@ -14,9 +14,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 class SkyscannerClientTestSuite {
     @Autowired
     SkyscannerClient skyscannerClient;
-
-//    @Test
-//    void testGetItinerariesV1() {
+    @Test
+    void testGetItinerary() throws Exception {          //TODO - only for occasionally testing responses. Commented due to danger of "429 Too many Requests" response from the server. Not handled yet.
 //        //Given
 //        String jsonRequest = """
 //                {
@@ -60,59 +59,9 @@ class SkyscannerClientTestSuite {
 //                """;
 //
 //        //When
-//        String s = skyscannerClient.getItinerariesV1("/search/create", jsonRequest);
+//        ItineraryDto s = skyscannerClient.getItinerary("/search/create", jsonRequest);
 //
 //        //Then
 //        System.out.println(s);
-//    }
-    @Test
-    void testGetItinerary() throws Exception {
-        //Given
-        String jsonRequest = """
-                {
-                  "query": {
-                    "market": "PL",
-                    "locale": "pl-PL",
-                    "currency": "PLN",
-                    "adults": 1,
-                    "cabinClass": "CABIN_CLASS_ECONOMY",
-                    "queryLegs": [
-                        {
-                            "originPlaceId": {
-                                    "iata": "WMI"
-                            },
-                            "destinationPlaceId": {
-                                    "iata": "CFU"
-                            },
-                            "date": {
-                                "year": 2023,
-                                "month": 8,
-                                "day": 4
-                            }
-                        },
-                        {
-                            "originPlaceId": {
-                                    "iata": "CFU"
-                            },
-                            "destinationPlaceId": {
-                                    "iata": "WMI"
-                            },
-                            "date": {
-                                "year": 2023,
-                                "month": 8,
-                                "day": 6
-                            }
-                        }
-                    ],
-                    "includeCarriersIds": "ryan, wizz"
-                  }
-                }
-                """;
-
-        //When
-        ItineraryDto s = skyscannerClient.getItinerary("/search/create", jsonRequest);
-
-        //Then
-        System.out.println(s);
     }
 }

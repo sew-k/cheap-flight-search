@@ -28,15 +28,7 @@ public class RouteController {
     public ResponseEntity<RouteDto> getRouteById(@PathVariable("id") long id) throws RouteNotFoundException {
         return ResponseEntity.ok(routeMapper.mapToRouteDto(routeService.getRoute(id)));
     }
-//    @GetMapping("/route/{origin}")
-//    public ResponseEntity<RouteDto> getRouteByOrigin(@PathVariable("origin") String origin) throws RouteNotFoundException {
-//        return ResponseEntity.ok(routeMapper.mapToRouteDto(routeService.getRouteByOrigin(origin)));
-//    }
-//    @GetMapping("/route/{destination}")
-//    public ResponseEntity<RouteDto> getRouteByDestination(@PathVariable("destination") String destination) throws RouteNotFoundException {
-//        return ResponseEntity.ok(routeMapper.mapToRouteDto(routeService.getRouteByDestination(destination)));
-//    }
-    @PutMapping(path="/updateRoute/{id}", consumes= MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path="/update/{id}", consumes= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RouteDto> updateRoute(@PathVariable("id") long id, @RequestBody RouteDto routeDto) throws RouteNotFoundException {
         routeService.updateRoute(id, routeMapper.mapToRoute(routeDto));
         return ResponseEntity.ok(routeMapper.mapToRouteDto(routeService.getRoute(routeDto.getRouteId())));

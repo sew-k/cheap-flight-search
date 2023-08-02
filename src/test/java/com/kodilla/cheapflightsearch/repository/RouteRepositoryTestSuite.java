@@ -2,8 +2,6 @@ package com.kodilla.cheapflightsearch.repository;
 
 import com.kodilla.cheapflightsearch.domain.trip.Airport;
 import com.kodilla.cheapflightsearch.domain.trip.Route;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -59,7 +57,7 @@ class RouteRepositoryTestSuite {
             airportRepository.deleteById(originTestAirport2Id);
             airportRepository.deleteById(destinationTestAirport2Id);
         } catch (Exception e) {
-            System.out.println("Exception when tear down: " + e);
+            System.out.println("Exception when tear down \"testFindAll()\": " + e);
         }
     }
 
@@ -141,7 +139,7 @@ class RouteRepositoryTestSuite {
         try {
             routeRepository.deleteById(routeId);
         } catch (Exception e) {
-            System.out.println("Exception when tear down: " + e);
+            System.out.println("Exception when tear down in \"testDeleteById()\": " + e);
         }
     }
     @Test
@@ -172,7 +170,7 @@ class RouteRepositoryTestSuite {
         try {
             routeRepository.deleteById(routeId);
         } catch (Exception e) {
-            System.out.println("Exception when tear down: " + e);
+            System.out.println("Exception when tear down in \"testDeleteByIdAirportsShouldRemain()\": " + e);
         }
     }
 
