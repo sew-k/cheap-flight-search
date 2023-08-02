@@ -17,12 +17,12 @@ public class AirportMapper {
         );
     }
     public AirportDto mapToAirportDto(Airport airport) {
-        return new AirportDto(
-                airport.getAirportId(),
-                airport.getCountry(),
-                airport.getCity(),
-                airport.getIataCode()
-        );
+        return AirportDto.builder()
+                .airportId(airport.getAirportId())
+                .country(airport.getCountry())
+                .city(airport.getCity())
+                .iataCode(airport.getIataCode())
+                .build();
     }
     public List<AirportDto> mapToAirportDtoList(final List<Airport> airportList) {
         return airportList.stream().map(this::mapToAirportDto).collect(Collectors.toList());

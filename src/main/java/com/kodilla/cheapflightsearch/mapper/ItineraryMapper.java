@@ -10,14 +10,14 @@ import java.util.stream.Collectors;
 
 @Service
 public class ItineraryMapper {
-    public Itinerary mapItineraryDtoToItinerary(ItineraryDto itineraryDto) {
+    public Itinerary mapToItinerary(ItineraryDto itineraryDto) {
         return new Itinerary(
                 itineraryDto.getItineraryMark(),
                 itineraryDto.getPrice(),
                 itineraryDto.getPurchaseLink()
         );
     }
-    public Itinerary mapItineraryDtoToItineraryWithTripPlan(ItineraryDto itineraryDto, TripPlan tripPlan) {
+    public Itinerary mapToItineraryWithTripPlan(ItineraryDto itineraryDto, TripPlan tripPlan) {
         return new Itinerary(
                 itineraryDto.getItineraryMark(),
                 itineraryDto.getPrice(),
@@ -25,16 +25,16 @@ public class ItineraryMapper {
                 itineraryDto.getPurchaseLink()
         );
     }
-    public ItineraryDto mapItineraryToItineraryDto(Itinerary itinerary) {
-        return new ItineraryDto(
-                itinerary.getItineraryMark(),
-                itinerary.getPrice(),
-                itinerary.getPurchaseLink()
-        );
+    public ItineraryDto mapToItineraryDto(Itinerary itinerary) {
+        return ItineraryDto.builder()
+                .itineraryMark(itinerary.getItineraryMark())
+                .price(itinerary.getPrice())
+                .purchaseLink(itinerary.getPurchaseLink())
+                .build();
     }
-    public List<ItineraryDto> mapItineraryListToItineraryDtoList(List<Itinerary> itineraryList) {
+    public List<ItineraryDto> mapToItineraryDtoList(List<Itinerary> itineraryList) {
         return itineraryList.stream()
-                .map(i -> mapItineraryToItineraryDto(i))
+                .map(i -> mapToItineraryDto(i))
                 .collect(Collectors.toList());
     }
 }

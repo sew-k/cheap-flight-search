@@ -23,11 +23,14 @@ public class UserView extends VerticalLayout {
     UserController userController;
     @Autowired
     UserMapper userMapper;
-//    @Autowired
-//    UserService userService;
     public UserView() {
         add(new Button("Add User", e -> {
-            userController.createUser(new UserDto("John1", "john1@test.com"));
+            userController.createUser(
+                    UserDto.builder()
+                            .username("John1")
+                            .email("john1@test.com")
+                            .build()
+                    );
             Notification.show("user added");
         }));
         add(new Button("Select User profile", e -> Notification.show("User selected")));

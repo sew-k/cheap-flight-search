@@ -23,12 +23,12 @@ public class UserMapper {
         );
     }
     public UserDto mapToUserDto(final User user) {
-        return new UserDto(
-                user.getUserId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getCalendar().getCalendarId()
-        );
+        return UserDto.builder()
+                .userId(user.getUserId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .calendarId(user.getCalendar().getCalendarId())
+                .build();
     }
     public List<UserDto> mapToUserDtoList(final List<User> userList) {
         return userList.stream().map(this::mapToUserDto).collect(Collectors.toList());
