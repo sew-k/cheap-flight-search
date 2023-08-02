@@ -1,6 +1,5 @@
 package com.kodilla.cheapflightsearch.domain.calendar;
 
-import com.kodilla.cheapflightsearch.domain.calendar.HolidayPlan;
 import lombok.*;
 
 import javax.persistence.*;

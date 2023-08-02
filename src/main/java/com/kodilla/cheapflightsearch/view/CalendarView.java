@@ -56,8 +56,6 @@ public class CalendarView extends VerticalLayout {
         }));
         add(new Button("Refresh", e -> refreshHolidaysGridForCalendar(calendar.getCalendarId())));
         holidaysGrid.setColumns("beginDate", "endDate");
-//        holidaysGrid.addColumn(Grid<HolidayPlan> () -> ).setHeader("Begin Holiday date").setSortable(true);
-//        holidaysGrid.addColumn(HolidayPlan::getBeginDate).setHeader("End Holiday date").setSortable(true);
         add(holidaysGrid);
     }
 

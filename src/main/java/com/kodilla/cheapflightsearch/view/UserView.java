@@ -38,12 +38,11 @@ public class UserView extends VerticalLayout {
             removeSelectedUsers();
             Notification.show("User deleted");
         }));
-//        add(new Button("Incognito mode", e -> Notification.show("Incognito mode - no user selected - without notifications")));
+
         add(new Button("Show all users", e -> {
             refreshUserGrid();
             Notification.show("Showing all users");
         }));
-//        userGrid.setColumns("username", "email");
 
         userGrid.setColumns("userId", "username", "email");
         userGrid.setSelectionMode(Grid.SelectionMode.MULTI);
@@ -57,7 +56,6 @@ public class UserView extends VerticalLayout {
         }
     }
     private void refreshUserGrid() {
-//        userGrid.setItems(userService.getUsers());
         userGrid.setItems(userMapper.mapToUserList(userController.getUsers().getBody()));
     }
     private void removeSelectedUsers() {

@@ -12,11 +12,17 @@ import org.springframework.stereotype.Service;
 public class WeatherService {
     private final WeatherClient weatherClient;
     private final WeatherMapper weatherMapper;
+
     public Weather getWeather(String city) {
-        return weatherMapper.mapToCurrentWeather(weatherClient.getWeatherForCity(
-                city,
-                OpenWeatherConfig.CALL_FOR_CURRENT_WEATHER,
-                OpenWeatherConfig.UNITS_METRIC,
-                OpenWeatherConfig.LANG_PL));
+        return weatherMapper.mapToCurrentWeather(
+                weatherMapper.mapToWeatherDto(
+                        weatherClient.getWeatherForCity(
+                                city,
+                                OpenWeatherConfig.CALL_FOR_CURRENT_WEATHER,
+                                OpenWeatherConfig.UNITS_METRIC,
+                                OpenWeatherConfig.LANG_PL
+                        )
+                )
+        );
     }
 }

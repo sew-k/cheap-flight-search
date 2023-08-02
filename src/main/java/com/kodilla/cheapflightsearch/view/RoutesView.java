@@ -34,9 +34,6 @@ public class RoutesView extends VerticalLayout {
     AirportService airportService;
 
     public RoutesView() {
-//        Airport originAirport = new Airport("Poland", "Warsaw", "WMI"); //TODO temporarily stubbed
-//        Airport destinationAirport = new Airport("Greece", "Korfu", "CFU");   //TODO temporarily stubbed
-
         TextField originTextField = new TextField("Origin", "IATA code");
         originTextField.setClearButtonVisible(true);
         originTextField.setValue("WMI");
@@ -89,24 +86,6 @@ public class RoutesView extends VerticalLayout {
         add(searchFieldsLayout);
         add(addToRoutesButton);
         add(new Button("Refresh", e -> refreshRoutesGrid()));
-//        routesGrid.setSelectionMode(Grid.SelectionMode.MULTI);
-//        routesGrid.addSelectionListener(new SelectionListener<Grid<Route>, Route>() {
-//            @Override
-//            public void selectionChange(SelectionEvent<Grid<Route>, Route> event) {
-//                event.getAllSelectedItems().stream().forEach(route -> {
-//                    routeService.switchFavourite(route);
-//                    try {
-//                        routeService.updateRoute(route.getRouteId(), route);
-//                    } catch (Exception e) {
-//
-//                    }
-//                    Notification.show("Route "
-//                            + route.getOrigin().toString() + "->"
-//                            + route.getDestination().toString()
-//                            + " added to favourites");
-//                });
-//            }
-//        });
         routesGrid.addColumn(route -> route.getOrigin().getIataCode()
                 + " [" + route.getOrigin().getCity()
                 + ", " + route.getOrigin().getCountry()

@@ -19,4 +19,5 @@ public interface ItineraryRepository extends CrudRepository<Itinerary, Long> {
     @Override
     void deleteById(Long id);
     boolean existsByItineraryMark(Itinerary itinerary);
+    boolean existsById(Long id);
 }

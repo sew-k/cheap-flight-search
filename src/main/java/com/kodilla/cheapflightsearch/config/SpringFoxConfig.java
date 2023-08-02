@@ -24,7 +24,6 @@ public class SpringFoxConfig {
                 .paths(PathSelectors.ant("/v1/cheapflightsearch/**"))
                 .build()
                 .apiInfo(apiInfo());
-//                .pathMapping("/v1/cheapflightsearch/");
     }
 
     private ApiInfo apiInfo() {

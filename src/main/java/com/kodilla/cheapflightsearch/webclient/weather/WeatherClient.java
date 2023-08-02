@@ -12,11 +12,11 @@ public class WeatherClient {
     private final OpenWeatherConfig openWeatherConfig;
     private final RestTemplate restTemplate;
 
-    public WeatherDto getWeatherForCity(String city,
+    public OpenWeatherDto getWeatherForCity(String city,
                                         String weatherCallType,
                                         String weatherUnits,
                                         String weatherLang) {
-        OpenWeatherDto openWeatherDto = restTemplate.getForObject(
+        return restTemplate.getForObject(
                 openWeatherConfig.getOpenWeatherApiEndpoint()
                 + "/{weathercalltype}?q={city}&units={units}&lang={lang}&appid={apiKey}",
                 OpenWeatherDto.class,
@@ -25,10 +25,5 @@ public class WeatherClient {
                 weatherUnits,
                 weatherLang,
                 openWeatherConfig.getOpenWeatherApiKey());
-        return WeatherDto.builder()
-                .temperature(openWeatherDto
-                        .getMain()
-                        .getTemp())
-                .build();
     }
 }

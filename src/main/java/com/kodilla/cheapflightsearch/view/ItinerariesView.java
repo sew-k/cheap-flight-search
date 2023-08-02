@@ -82,7 +82,6 @@ public class ItinerariesView extends VerticalLayout {
                         )
                 );
                 if (searchingResult.isPresent()) {
-//                    itineraryService.createItinerary(searchingResult.get());
                     refreshTripPlansGrid();
                     refreshItinerariesGrid();
                 }
@@ -132,7 +131,6 @@ public class ItinerariesView extends VerticalLayout {
                     try {
                         Optional<Itinerary> searchingResult = itineraryService.searchForItineraryBasedOnTripPlan(t);
                         if (searchingResult.isPresent()) {
-//                            itineraryService.createItinerary(searchingResult.get());
                             refreshTripPlansGrid();
                             refreshItinerariesGrid();
                         }

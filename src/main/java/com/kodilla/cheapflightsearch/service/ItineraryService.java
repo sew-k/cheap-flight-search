@@ -49,7 +49,7 @@ public class ItineraryService {
     }
 
     public void deleteItinerary(Long id) throws ItineraryNotFoundException {
-        if (itineraryRepository.findById(id).isPresent()) {
+        if (itineraryRepository.existsById(id)) {
             itineraryRepository.deleteById(id);
         } else {
             throw new ItineraryNotFoundException();
