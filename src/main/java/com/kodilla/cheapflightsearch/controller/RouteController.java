@@ -29,12 +29,12 @@ public class RouteController {
         return ResponseEntity.ok(routeMapper.mapToRouteDto(routeService.getRoute(id)));
     }
     @PutMapping(path="/update/{id}", consumes= MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RouteDto> updateRoute(@PathVariable("id") long id, @RequestBody RouteDto routeDto) throws RouteNotFoundException {
+    public ResponseEntity<RouteDto> updateRoute(@PathVariable("id") long id, @RequestBody RouteDto routeDto) throws Exception {
         routeService.updateRoute(id, routeMapper.mapToRoute(routeDto));
         return ResponseEntity.ok(routeMapper.mapToRouteDto(routeService.getRoute(routeDto.getRouteId())));
     }
     @PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> createRoute(@RequestBody RouteDto routeDto) {
+    public ResponseEntity<Void> createRoute(@RequestBody RouteDto routeDto) throws Exception {
         routeService.createRoute(routeMapper.mapToRoute(routeDto));
         return ResponseEntity.ok().build();
     }
