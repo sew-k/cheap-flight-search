@@ -61,33 +61,225 @@ Not deployed on cloud yet. Only local testing possible;
 
 # Endpoints
 
-1. User
+## Airports 
 
+### Get all airports
+- **URL**: `/v1/cheapflightsearch/airports`
+- **Method**: GET
+- **Parameters**: -
+- **Response**: 
+  - json
+    ```
+    [  
+       {
+        "airportId": int,
+        "country": String,
+        "city": String,
+        "iataCode": String
+       },
+       {
+        ...
+       }
+    ]
+    ```
+### Get airport by ID
+- **URL**: `/v1/cheapflightsearch/airports/{id}`
+- **Method**: GET
+- **Parameters**: 
+  ```{id} - ID of the airport in database```
+- **Response**: 
+  - json
+    ```
+       {
+        "airportId": int,
+        "country": String,
+        "city": String,
+        "iataCode": String
+       }
+    ```
+### Get airport by IATA code
+- **URL**: `/v1/cheapflightsearch/airports/iata/{iata_code}`
+- **Method**: GET
+- **Parameters**:
+  ```{iata_code} - IATA code of the airport in database```
+- **Response**: 
+  - json
+    ```
+       {
+        "airportId": int,
+        "country": String,
+        "city": String,
+        "iataCode": String
+       }
+    ```
+### Save new airport to database
+- **URL**: `/v1/cheapflightsearch/airports`
+- **Method**: POST
+- **Parameters**: 
+  - json
+    ```
+       {
+        "country": String,
+        "city": String,
+        "iataCode": String
+       }
+    ```
+- **Response**: void
 
+### Update airport with ID
+- **URL**: `/v1/cheapflightsearch/airports/update/{id}`
+- **Method**: PUT
+- **Parameters**:   
+  - ```{id} - ID of the airport to update in database```
+  - json
+    ```
+       {
+        "airportId": int,
+        "country": String,
+        "city": String,
+        "iataCode": String
+       }
+    ```
+- **Response**: 
+  - json
+    ```
+       {
+        "airportId": int,
+        "country": String,
+        "city": String,
+        "iataCode": String
+       }
+    ```
+### Update airport with IATA code
+- **URL**: `/v1/cheapflightsearch/airports/update/iata/{iata_code}`
+- **Method**: PUT
+- **Parameters**:
+    - ```{iata_code} - - IATA code of the airport to update in database```
+    - json
+      ```
+         {
+          "airportId": int,
+          "country": String,
+          "city": String,
+          "iataCode": String
+         }
+      ```
+- **Response**:
+    - json
+      ```
+         {
+          "airportId": int,
+          "country": String,
+          "city": String,
+          "iataCode": String
+         }
+      ```
+
+## Routes
+
+*- to be completed*
+
+## Itineraries
+
+### Get all itineraries
+- **URL**: `/v1/cheapflightsearch/itineraries`
+- **Method**: GET
+- **Parameters**: -
+- **Response**:
+  - json
+    ```
+    [  
+       {
+        "itineraryMark": String,
+        "price": double,
+        "purchaseLink": String
+       },
+       {
+        ...
+       }
+    ]
+    ```
+### Get itinerary by ID
+- **URL**: `/v1/cheapflightsearch/itineraries/{id}`
+- **Method**: GET
+- **Parameters**: 
+-   ```{id} - ID of the itinerary in database```
+- **Response**:
+  - json
+    ```
+       {
+        "itineraryMark": String,
+        "price": double,
+        "purchaseLink": String
+       }
+    ```
+### Delete itinerary by ID
+- **URL**: `/v1/cheapflightsearch/itineraries/{id}`
+- **Method**: DELETE
+- **Parameters**:
+-   ```{id} - ID of the itinerary in database```
+- **Response**: void
+
+### Update itinerary with ID
+- **URL**: `/v1/cheapflightsearch/itineraries/update/{id}`
+- **Method**: PUT
+- **Parameters**:
+  - ```{id} - ID of the itinerary to update in database```
+  - json
+    ```
+       {
+        "itineraryMark": String,
+        "price": double,
+        "purchaseLink": String
+       }
+    ```
+- **Response**:
+  - json (updated itinerary)
+    ```
+       {
+        "itineraryMark": String,
+        "price": double,
+        "purchaseLink": String
+       }
+    ```
+    
+### Get itineraries matching favourite routes and holiday plans
+*- for comprehensive testing*
+
+## Users
+
+*- to be completed*
+
+## Weather
+
+*- to be completed*
+      
 # Features to be implemented
 
-1. User
+1. **User**
 - using application as default User
 - User authentication using Spring Security
 - managing dataset by Administrator
 
-2. Calendar
+2. **Calendar**
 - full year calendar view with holiday plan visualized on it
 - ability to pick vacation dates on full year calendar in CalendarView
 
-3. Weather
+3. **Weather**
 - using more data (ex. humidity, wind force)
 - using forecast data (now only current temperature in specific places)
 
-4. Better Exceptions handling
+4. **Better Exceptions handling**
 - when incorrect data input
 - for error responses from external API's
 
-4. Vaadin - view layer
+4. **Vaadin** - view layer
 - to split into frontend and backend separate applications (to consider)
 - development of more responsive UI
 
-5. Deploying backend (replit) and database (cloud)
+5. Application deploy
+- deploying backend on *replit* (to consider) 
+- deploying database on cloud
 
 6. Skyscanner
 - search results for more actual and correct data from Skyscanner API
