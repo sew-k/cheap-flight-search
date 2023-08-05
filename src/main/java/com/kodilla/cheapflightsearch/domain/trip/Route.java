@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.DayOfWeek;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -42,5 +43,18 @@ public class Route {
         this.destination = destination;
         this.daysOfWeek = daysOfWeek;
         this.favourite = favourite;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Route route = (Route) o;
+        return Objects.equals(origin, route.origin) && Objects.equals(destination, route.destination);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(origin, destination);
     }
 }

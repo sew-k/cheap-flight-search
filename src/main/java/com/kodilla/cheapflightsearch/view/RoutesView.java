@@ -6,6 +6,7 @@ import com.kodilla.cheapflightsearch.service.RouteService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.Icon;
@@ -13,34 +14,35 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.data.selection.SelectionEvent;
-import com.vaadin.flow.data.selection.SelectionListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 
-import javax.mail.Message;
 import java.time.DayOfWeek;
+import java.util.HashSet;
+import java.util.Set;
 
 @com.vaadin.flow.router.Route(value = "main/routes")
 public class RoutesView extends VerticalLayout {
     private Airport originAirport;
     private Airport destinationAirport;
     private Grid<Route> routesGrid = new Grid<>(Route.class, false);
+    private Set<Airport> airportSet = new HashSet<>();
     @Autowired
     RouteService routeService;
     @Autowired
     AirportService airportService;
 
     public RoutesView() {
-        TextField originTextField = new TextField("Origin", "IATA code");
-        originTextField.setClearButtonVisible(true);
-        originTextField.setValue("WMI");
-        TextField destinationTextField = new TextField("Destination", "IATA code");
-        originTextField.setClearButtonVisible(true);
-        destinationTextField.setValue("CFU");
-
+        ComboBox<Airport> originAirportComboBox = new ComboBox<>("Origin airport");
+        originAirportComboBox.setPattern("IATA code");
+        originAirportComboBox.setAllowCustomValue(true);
+        originAirportComboBox.setItems(airportSet);
+        ComboBox<Airport> destinationAirportComboBox = new ComboBox<>("Destination airport");
+        destinationAirportComboBox.setPattern("IATA code");
+        destinationAirportComboBox.setAllowCustomValue(true);
+        destinationAirportComboBox.setItems(airportSet);
         MultiSelectComboBox<DayOfWeek> selectionDaysOfWeekComboBox = new MultiSelectComboBox<>("Days of week");
         selectionDaysOfWeekComboBox.setItems(
                 DayOfWeek.MONDAY,
@@ -51,41 +53,34 @@ public class RoutesView extends VerticalLayout {
                 DayOfWeek.SATURDAY,
                 DayOfWeek.SUNDAY
         );
-        selectionDaysOfWeekComboBox.setValue(DayOfWeek.FRIDAY, DayOfWeek.SUNDAY);                   //TODO temporarily stubbed
+        selectionDaysOfWeekComboBox.setValue();                   //TODO temporarily stubbed
         Button addToRoutesButton = new Button("Add to routes", i -> {
-            try {
-                originAirport = airportService.getAirportByIata(originTextField.getValue());
-            } catch (Exception e) {
-                Notification.show(originTextField.getLabel() + " doesn't exist!");
-                Notification.show("Please choose another, or add to airports");
-            }
-            try {
-                destinationAirport = airportService.getAirportByIata(destinationTextField.getValue());
-            } catch (Exception e) {
-                Notification.show(destinationTextField.getLabel() + " doesn't exist!");
-                Notification.show("Please choose another, or add to airports");
-            }
-            if ((originAirport != null) && (destinationAirport != null)) {
-                Route newRouteToAdd = new Route(
+            originAirport = originAirportComboBox.getValue();
+            destinationAirport = destinationAirportComboBox.getValue();
+            if (airportSet.contains(originAirport) && airportSet.contains(destinationAirport)) {
+                routeService.createRoute(new Route(
                         originAirport,
                         destinationAirport,
                         selectionDaysOfWeekComboBox.getValue(),
                         false
-                );
-                routeService.createRoute(newRouteToAdd);
+                        ));
+                refreshRoutesGrid();
             } else {
-                Notification.show("Incorrect values");
+                Notification.show("Incorrect input values!");
             }
         });
         add(new Button("Back to Main", e -> UI.getCurrent().getPage().open("main")));
         HorizontalLayout searchFieldsLayout = new HorizontalLayout(
-                originTextField,
-                destinationTextField,
+                originAirportComboBox,
+                destinationAirportComboBox,
                 selectionDaysOfWeekComboBox
         );
+        add(new Button("Refresh all", e -> {
+            setUpAirports();
+            refreshRoutesGrid();
+        }));
         add(searchFieldsLayout);
         add(addToRoutesButton);
-        add(new Button("Refresh", e -> refreshRoutesGrid()));
         routesGrid.addColumn(route -> route.getOrigin().getIataCode()
                 + " [" + route.getOrigin().getCity()
                 + ", " + route.getOrigin().getCountry()
@@ -125,5 +120,14 @@ public class RoutesView extends VerticalLayout {
             Notification.show("Exception when trying to remove route: " + e);
         }
         this.refreshRoutesGrid();
+    }
+    @EventListener(ApplicationReadyEvent.class)
+    private void setUpAirports() {
+        try {
+            Thread.sleep(1000);
+            airportSet.addAll(airportService.getAirports());
+        } catch (Exception e) {
+
+        }
     }
 }
