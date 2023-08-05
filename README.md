@@ -1,17 +1,21 @@
-# Introduction
+# Cheap_Flight_Search
 
-Application based on REST API enables:
+## Introduction
+
+The main purpose of this application is to practice building and development of application based on REST API services with implementation of various tools and integration data from external sources.
+
+Application enables:
 - multiple searching for cheapest, direct itirenaries to user's favourites destinations based on user's annual holiday plan and weather in specified destinations
 - managing stored data, including holiday plans, favourite routes, purchased (or not) itineraries
 - (*in future*) searching for travel basing on weather data
 - (*in future*) scheduling - regular (for example daily) searching for itineraries for choosing cheapest ones
 - (*in future*) scheduling - possibility to get email with reminder of purchased itirenary with weather forecast data on arrival day to destination
 
-# Getting started
+## Getting started
 
 Application shares view layer implemented in Vaadin framework. Possibility to test it by build and compile code in chosen IDE.
 
-## Requirements
+### Requirements
 
 Not deployed on cloud yet. Only local testing possible;
 
@@ -28,7 +32,7 @@ Not deployed on cloud yet. Only local testing possible;
 
 4. REST client, such as Postman to test API endpoints.
 
-## How to use
+### How to use
 
 1. Clone code from GitHub repository
 
@@ -36,7 +40,7 @@ Not deployed on cloud yet. Only local testing possible;
 
 3. Build and run application in your IDE
 
-## Frontend pages
+### Frontend pages
 
 1. Application **main page**
 - http://localhost:8080/main
@@ -59,13 +63,13 @@ Not deployed on cloud yet. Only local testing possible;
 7. **Quick search** for itinerary
 - http://localhost:8080/main/quick_search
 
-# Endpoints
+## Endpoints
 
 All API endpoints documentation is available through Swagger: http://localhost:8080/swagger-ui/ 
 
-## Airports 
+### Airports 
 
-### Get all airports
+#### Get all airports
 - **URL**: `/v1/cheapflightsearch/airports`
 - **Method**: GET
 - **Parameters**: -
@@ -84,7 +88,7 @@ All API endpoints documentation is available through Swagger: http://localhost:8
        }
     ]
     ```
-### Get airport by ID
+#### Get airport by ID
 - **URL**: `/v1/cheapflightsearch/airports/{id}`
 - **Method**: GET
 - **Parameters**: 
@@ -99,7 +103,7 @@ All API endpoints documentation is available through Swagger: http://localhost:8
         "iataCode": String
        }
     ```
-### Get airport by IATA code
+#### Get airport by IATA code
 - **URL**: `/v1/cheapflightsearch/airports/iata/{iata_code}`
 - **Method**: GET
 - **Parameters**:
@@ -114,7 +118,7 @@ All API endpoints documentation is available through Swagger: http://localhost:8
         "iataCode": String
        }
     ```
-### Save new airport to database
+#### Save new airport to database
 - **URL**: `/v1/cheapflightsearch/airports`
 - **Method**: POST
 - **Parameters**: 
@@ -128,7 +132,7 @@ All API endpoints documentation is available through Swagger: http://localhost:8
     ```
 - **Response**: void
 
-### Update airport with ID
+#### Update airport with ID
 - **URL**: `/v1/cheapflightsearch/airports/update/{id}`
 - **Method**: PUT
 - **Parameters**:   
@@ -152,7 +156,7 @@ All API endpoints documentation is available through Swagger: http://localhost:8
         "iataCode": String
        }
     ```
-### Update airport with IATA code
+#### Update airport with IATA code
 - **URL**: `/v1/cheapflightsearch/airports/update/iata/{iata_code}`
 - **Method**: PUT
 - **Parameters**:
@@ -177,13 +181,13 @@ All API endpoints documentation is available through Swagger: http://localhost:8
          }
       ```
 
-## Routes
+### Routes
 
 *- to be completed*
 
-## Itineraries
+### Itineraries
 
-### Get all itineraries
+#### Get all itineraries
 - **URL**: `/v1/cheapflightsearch/itineraries`
 - **Method**: GET
 - **Parameters**: -
@@ -201,7 +205,7 @@ All API endpoints documentation is available through Swagger: http://localhost:8
        }
     ]
     ```
-### Get itinerary by ID
+#### Get itinerary by ID
 - **URL**: `/v1/cheapflightsearch/itineraries/{id}`
 - **Method**: GET
 - **Parameters**: 
@@ -215,14 +219,14 @@ All API endpoints documentation is available through Swagger: http://localhost:8
         "purchaseLink": String
        }
     ```
-### Delete itinerary by ID
+#### Delete itinerary by ID
 - **URL**: `/v1/cheapflightsearch/itineraries/{id}`
 - **Method**: DELETE
 - **Parameters**:
 -   ```{id} - ID of the itinerary in database```
 - **Response**: void
 
-### Update itinerary with ID
+#### Update itinerary with ID
 - **URL**: `/v1/cheapflightsearch/itineraries/update/{id}`
 - **Method**: PUT
 - **Parameters**:
@@ -245,18 +249,18 @@ All API endpoints documentation is available through Swagger: http://localhost:8
        }
     ```
     
-### Get itineraries matching favourite routes and holiday plans
+#### Get itineraries matching favourite routes and holiday plans
 *- for comprehensive testing*
 
-## Users
+### Users
 
 *- to be completed*
 
-## Weather
+### Weather
 
 *- to be completed*
       
-# Features to be implemented
+## Features to be implemented
 
 1. **User**
 - using application as default User
@@ -286,11 +290,12 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 6. Skyscanner
 - search results for more actual and correct data from Skyscanner API
 
-# Troubleshooting
+## Troubleshooting
 
 1. ~~There is an issue of using Swagger (swagger-ui) for API endpoints documentation in the project~~ - FIXED
 
 2. Before searching for itineraries in ItineraryView it is needed to set up data by clicking "set airports" button
 
 3. Not handled exception when User duplicates searching requests for Itineraries
+4. CalendarView is now useless due to not store current data about User and it's calendar
 
