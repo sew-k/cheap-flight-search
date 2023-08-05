@@ -61,6 +61,8 @@ Not deployed on cloud yet. Only local testing possible;
 
 # Endpoints
 
+All API endpoints documentation is available through Swagger: http://localhost:8080/swagger-ui/ 
+
 ## Airports 
 
 ### Get all airports
@@ -286,7 +288,7 @@ Not deployed on cloud yet. Only local testing possible;
 
 # Troubleshooting
 
-1. There is an issue of using Swagger (swagger-ui) for API endpoints documentation in the project - not fixed yet
+1. ~~There is an issue of using Swagger (swagger-ui) for API endpoints documentation in the project~~ - FIXED
 
 2. Before searching for itineraries in ItineraryView it is needed to set up data by clicking "set airports" button
 
