@@ -1,4 +1,4 @@
-package com.kodilla.cheapflightsearch.repository;
+package com.kodilla.cheapflightsearch.watcher;
 
 import com.kodilla.cheapflightsearch.domain.calendar.Calendar;
 import com.kodilla.cheapflightsearch.domain.watcher.DatabaseManipulation;

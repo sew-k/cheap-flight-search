@@ -1,12 +1,10 @@
 package com.kodilla.cheapflightsearch.watcher;
 
 import com.kodilla.cheapflightsearch.domain.watcher.DatabaseManipulation;
-import com.kodilla.cheapflightsearch.repository.DatabaseManipulationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -41,9 +39,11 @@ public class DatabaseWatcher {
                 .method(joinPoint.getSignature().getName())
                 .build();
         databaseManipulationDeque.offer(databaseManipulation);
-
+        saveDatabaseManipulationsToDatabase(databaseManipulationDeque);
     }
-    private void saveDatabaseManipulationsToDatabase(Deque<DatabaseManipulation> databaseManipulationDeque) {   //TODO save to database with delay
-        databaseManipulationRepository.save(databaseManipulationDeque.poll());
+    private void saveDatabaseManipulationsToDatabase(Deque<DatabaseManipulation> databaseManipulationDeque) {   //TODO only operations like save/ update/ delete should be saved to database
+        while (!databaseManipulationDeque.isEmpty()) {
+            databaseManipulationRepository.save(databaseManipulationDeque.poll());
+        }
     }
 }
