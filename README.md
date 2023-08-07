@@ -5,11 +5,11 @@
 The main purpose of this application is to practice building and development of application based on REST API services with implementation of various tools and integration data from external sources.
 
 Application enables:
-- multiple searching for cheapest, direct itirenaries to user's favourites destinations based on user's annual holiday plan and weather in specified destinations
+- multiple searching for cheapest, direct itineraries to user's favourites destinations based on user's annual holiday plan and weather in specified destinations
 - managing stored data, including holiday plans, favourite routes, purchased (or not) itineraries
 - (*in future*) searching for travel basing on weather data
 - (*in future*) scheduling - regular (for example daily) searching for itineraries for choosing cheapest ones
-- (*in future*) scheduling - possibility to get email with reminder of purchased itirenary with weather forecast data on arrival day to destination
+- (*in future*) scheduling - possibility to get email with reminder of purchased itinerary with weather forecast data on arrival day to destination
 
 ## Getting started
 
