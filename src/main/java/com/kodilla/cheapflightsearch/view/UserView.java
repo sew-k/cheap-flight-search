@@ -1,51 +1,82 @@
 package com.kodilla.cheapflightsearch.view;
 
-import com.helger.commons.callback.exception.IExceptionCallback;
 import com.kodilla.cheapflightsearch.controller.UserController;
+import com.kodilla.cheapflightsearch.domain.calendar.Calendar;
+import com.kodilla.cheapflightsearch.domain.skyscanner.Itinerary;
 import com.kodilla.cheapflightsearch.domain.user.User;
 import com.kodilla.cheapflightsearch.domain.user.UserDto;
 import com.kodilla.cheapflightsearch.mapper.UserMapper;
 import com.kodilla.cheapflightsearch.service.UserService;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
-@Route(value= "main/users")
+@Route(value = "main/users")
 public class UserView extends VerticalLayout {
-    private Grid<User> userGrid = new Grid<>(User.class);
+    private Grid<User> userGrid = new Grid<>(User.class, false);
+    private User selectedUser = null;
     @Autowired
-    UserController userController;
-    @Autowired
-    UserMapper userMapper;
+    UserService userService;
+
     public UserView() {
         add(new Button("Add User", e -> {
-            userController.createUser(
-                    UserDto.builder()
-                            .username("John1")
-                            .email("john1@test.com")
-                            .build()
-                    );
+            userService.createUser(
+                    new User(
+                            "JohnTest",
+                            "john_test@test.com",
+                            new Calendar()
+                    ));
             Notification.show("user added");
+            refreshUserGrid();
         }));
-        add(new Button("Select User profile", e -> Notification.show("User selected")));
-        add(new Button("Delete selected", e -> {
-            removeSelectedUsers();
-            Notification.show("User deleted");
+        add(new Button("Set current User", e -> {
+            if (selectedUser != null) {
+                UserService.setCurrentUser(selectedUser);
+                Notification.show("User selected. Current user is: " + UserService.getCurrentUser().getUsername());
+            } else {
+                Notification.show("Select user first!");
+            }
         }));
-
         add(new Button("Show all users", e -> {
             refreshUserGrid();
             Notification.show("Showing all users");
         }));
+        userGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        userGrid.addSelectionListener(selection -> {
+            Optional<User> selectedUser = selection.getFirstSelectedItem();
+            if (selectedUser.isPresent()) {
+                this.selectedUser = selectedUser.get();
+            }
+        });
+        userGrid.addColumn(User::getUserId).setHeader("User ID");
+        userGrid.addColumn(User::getUsername).setHeader("Username");
+        userGrid.addColumn(User::getEmail).setHeader("e-mail");
+        userGrid.addColumn(u -> u.getCalendar().getCalendarId()).setHeader("Calendar ID");
 
-        userGrid.setColumns("userId", "username", "email");
-        userGrid.setSelectionMode(Grid.SelectionMode.MULTI);
+        userGrid.addColumn(
+                new ComponentRenderer<>(Button::new, (button, user) -> {
+                    button.addThemeVariants(ButtonVariant.LUMO_ICON,
+                            ButtonVariant.LUMO_ERROR,
+                            ButtonVariant.LUMO_TERTIARY);
+                    button.addClickListener(e -> {
+                        this.removeUser(user);
+                        if (user.equals(this.selectedUser)) {
+                            this.selectedUser = null;
+                        }
+                    });
+                    button.setIcon(new Icon(VaadinIcon.TRASH));
+                })).setHeader("Manage");
         add(userGrid);
         setSizeFull();
         try {
@@ -55,19 +86,32 @@ public class UserView extends VerticalLayout {
 
         }
     }
+
     private void refreshUserGrid() {
-        userGrid.setItems(userMapper.mapToUserList(userController.getUsers().getBody()));
+        userGrid.setItems(userService.getUsers());
     }
+
     private void removeSelectedUsers() {
         Set<User> usersToRemove = new HashSet<>(userGrid.getSelectedItems());
-        for (User user: usersToRemove) {
+        for (User user : usersToRemove) {
             try {
-                userController.deleteUser(user.getUserId());
+                userService.deleteUser(user.getUserId());
             } catch (Exception e) {
-                                                //TODO - catch exception
+                //TODO - catch exception
             }
         }
         refreshUserGrid();
+    }
+
+    private void removeUser(User user) {
+        if (user == null)
+            return;
+        try {
+            userService.deleteUser(user.getUserId());
+        } catch (Exception e) {
+            Notification.show("Exception when trying to remove user: " + e);
+        }
+        this.refreshUserGrid();
     }
 
 }

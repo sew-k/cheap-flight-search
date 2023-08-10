@@ -31,6 +31,11 @@ public class User {
         this.username = username;
         this.email = email;
     }
+    public User(String username, String email, Calendar calendar) {
+        this.username = username;
+        this.email = email;
+        this.calendar = calendar;
+    }
 
     @Override
     public boolean equals(Object o) {

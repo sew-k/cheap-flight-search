@@ -12,6 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    public static User currentUser;
     public List<User> getUsers() {
         return userRepository.findAll();
     }
@@ -53,5 +54,13 @@ public class UserService {
 
     public User getUserByEmail(String email) throws UserNotFoundException {
         return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+    }
+
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+
+    public static void setCurrentUser(User currentUser) {
+        UserService.currentUser = currentUser;
     }
 }
