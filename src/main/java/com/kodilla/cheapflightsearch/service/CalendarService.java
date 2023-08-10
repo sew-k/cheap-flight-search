@@ -39,6 +39,13 @@ public class CalendarService {
             throw new CalendarNotFoundException();
         }
     }
+    public Calendar updateCalendar(Calendar calendar) throws CalendarNotFoundException {
+        if (calendarRepository.findById(calendar.getCalendarId()).isPresent()) {
+            return calendarRepository.save(calendar);
+        } else {
+            throw new CalendarNotFoundException();
+        }
+    }
 
     public Calendar createCalendar(Calendar calendar) {
         return calendarRepository.save(calendar);
@@ -55,7 +62,10 @@ public class CalendarService {
         calendar.getHolidayPlanList().remove(holidayPlanRepository.findById(holidayPlan.getHolidayPlanId()).get());
         return updateCalendar(id, calendar);
     }
-
+    public Calendar removeHolidayPlanFromCalendar(Calendar calendar, HolidayPlan holidayPlan) throws CalendarNotFoundException {
+        calendar.getHolidayPlanList().remove(holidayPlanRepository.findById(holidayPlan.getHolidayPlanId()).get());
+        return updateCalendar(calendar.getCalendarId(), calendar);
+    }
     public boolean isCalendarExisting(Long id) {
         return calendarRepository.existsById(id);
     }
