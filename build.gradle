@@ -34,6 +34,8 @@ dependencies {
 	implementation 'com.vaadin:vaadin-spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 
+	implementation 'org.springframework.boot:spring-boot-starter-security:3.1.2'
+
 	implementation 'io.springfox:springfox-swagger2:3.0.0'
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
