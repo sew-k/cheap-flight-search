@@ -20,7 +20,6 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
         setSizeFull();
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
-
         loginForm.setAction("login");
         add(new H1("CheapFlightSearch"), loginForm);
     }

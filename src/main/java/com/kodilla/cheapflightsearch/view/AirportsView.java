@@ -13,6 +13,10 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
+
+@RolesAllowed("ADMIN")
 @Route(value = "main/airports")
 public class AirportsView extends VerticalLayout {
     @Autowired

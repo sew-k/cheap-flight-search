@@ -18,10 +18,11 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-
+@RolesAllowed("ADMIN")
 @Route(value = "main/users")
 public class UserView extends VerticalLayout {
     private Grid<User> userGrid = new Grid<>(User.class, false);

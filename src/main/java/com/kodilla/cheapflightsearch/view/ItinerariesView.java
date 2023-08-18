@@ -26,10 +26,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 
+import javax.annotation.security.PermitAll;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.*;
-
+@PermitAll
 @Route(value = "main/itineraries")
 public class ItinerariesView extends VerticalLayout {
     private Grid<TripPlan> tripPlanGrid = new Grid<>(TripPlan.class, false);

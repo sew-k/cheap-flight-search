@@ -21,8 +21,9 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.security.PermitAll;
 import java.time.LocalDate;
-
+@PermitAll
 @Route(value = "main/calendar")
 public class CalendarView extends VerticalLayout {
     @Autowired

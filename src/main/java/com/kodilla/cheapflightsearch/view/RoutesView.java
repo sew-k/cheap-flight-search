@@ -19,10 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 
+import javax.annotation.security.PermitAll;
 import java.time.DayOfWeek;
 import java.util.HashSet;
 import java.util.Set;
-
+@PermitAll
 @com.vaadin.flow.router.Route(value = "main/routes")
 public class RoutesView extends VerticalLayout {
     private Airport originAirport;
