@@ -1,12 +1,9 @@
 package com.kodilla.cheapflightsearch.view;
 
-import com.kodilla.cheapflightsearch.controller.UserController;
 import com.kodilla.cheapflightsearch.domain.calendar.Calendar;
-import com.kodilla.cheapflightsearch.domain.skyscanner.Itinerary;
 import com.kodilla.cheapflightsearch.domain.user.User;
-import com.kodilla.cheapflightsearch.domain.user.UserDto;
-import com.kodilla.cheapflightsearch.mapper.UserMapper;
 import com.kodilla.cheapflightsearch.service.UserService;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
@@ -22,6 +19,7 @@ import javax.annotation.security.RolesAllowed;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+
 @RolesAllowed("ADMIN")
 @Route(value = "main/users")
 public class UserView extends VerticalLayout {
@@ -31,6 +29,7 @@ public class UserView extends VerticalLayout {
     UserService userService;
 
     public UserView() {
+        add(new Button("Back to Main", e -> UI.getCurrent().getPage().open("main")));
         add(new Button("Add User", e -> {
             userService.createUser(
                     new User(

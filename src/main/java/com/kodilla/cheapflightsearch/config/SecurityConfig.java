@@ -16,8 +16,6 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 public class SecurityConfig extends VaadinWebSecurity {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        http.authorizeHttpRequests()
-//                .requestMatchers("main").permitAll();
         super.configure(http);
         setLoginView(http, LoginView.class);
     }
