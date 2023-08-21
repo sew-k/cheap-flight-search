@@ -13,7 +13,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 
 @RolesAllowed("ADMIN")
@@ -32,7 +31,7 @@ public class AirportsView extends VerticalLayout {
         airportsGrid.addColumn(Airport::getIataCode).setHeader("IATA code").setSortable(true);
         airportsGrid.addColumn(Airport::getCountry).setHeader("Country").setSortable(true);
         airportsGrid.addColumn(Airport::getCity).setHeader("City").setSortable(true);
-        airportsGrid.addColumn(a -> airportService.getWeatherForCity(a)).setHeader("Weather").setSortable(true);
+        airportsGrid.addColumn(a -> airportService.getWeatherForAirport(a)).setHeader("Weather").setSortable(true);
         add(airportsGrid);
     }
 
@@ -63,7 +62,7 @@ public class AirportsView extends VerticalLayout {
     public Button createSaveAirportButton(Dialog newAirportDialog, TextField countryTextField,
                                           TextField cityTextField, TextField iataCodeTextField) {
         return new Button("Save", e -> {
-            if (!airportService.checkIfAirportExists(iataCodeTextField.getValue())) {
+            if (!airportService.checkIfAirportExistsByIata(iataCodeTextField.getValue())) {
                 airportService.createAirport(
                         new Airport(
                                 countryTextField.getValue(),

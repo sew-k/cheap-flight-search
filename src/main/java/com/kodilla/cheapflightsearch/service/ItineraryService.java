@@ -188,7 +188,7 @@ public class ItineraryService {
 
     public String getWeatherForTripPlanDestination(TripPlan tripPlan) {
         try {
-            return airportService.getWeatherForCity(airportService.getAirportByIata(tripPlan.getDestinationIata()));
+            return airportService.getWeatherForAirport(airportService.getAirportByIata(tripPlan.getDestinationIata()));
         } catch (Exception e) {
             return "Not found";
         }

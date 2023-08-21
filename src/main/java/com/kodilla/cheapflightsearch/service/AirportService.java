@@ -43,12 +43,12 @@ public class AirportService {
         return airportRepository.findByCity(city);
     }
     public List<Airport> getAirportsByCountry(String country) {
-        return airportRepository.findByCity(country);
+        return airportRepository.findByCountry(country);
     }
-    public boolean checkIfAirportExists(String iataCode) {
+    public boolean checkIfAirportExistsByIata(String iataCode) {
         return airportRepository.findByIataCode(iataCode).isPresent();
     }
-    public String getWeatherForCity(Airport airport) {
+    public String getWeatherForAirport(Airport airport) {
         return weatherService.getWeather(airport.getCity()).getTemperature()
                 + "\u00B0" + "C";
     }
