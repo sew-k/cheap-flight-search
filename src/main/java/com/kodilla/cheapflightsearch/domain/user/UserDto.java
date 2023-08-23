@@ -10,5 +10,6 @@ public class UserDto {
     private long userId;
     private String username;
     private String email;
+    private UserRole role;
     private long calendarId;
 }

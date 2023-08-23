@@ -2,6 +2,7 @@ package com.kodilla.cheapflightsearch.view;
 
 import com.kodilla.cheapflightsearch.domain.calendar.Calendar;
 import com.kodilla.cheapflightsearch.domain.user.User;
+import com.kodilla.cheapflightsearch.domain.user.UserRole;
 import com.kodilla.cheapflightsearch.service.UserService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -35,6 +36,7 @@ public class UserView extends VerticalLayout {
                     new User(
                             "JohnTest",
                             "john_test@test.com",
+                            UserRole.USER,
                             new Calendar()
                     ));
             Notification.show("user added");
@@ -62,6 +64,7 @@ public class UserView extends VerticalLayout {
         userGrid.addColumn(User::getUserId).setHeader("User ID");
         userGrid.addColumn(User::getUsername).setHeader("Username");
         userGrid.addColumn(User::getEmail).setHeader("e-mail");
+        userGrid.addColumn(User::getRole).setHeader("User role");
         userGrid.addColumn(u -> u.getCalendar().getCalendarId()).setHeader("Calendar ID");
 
         userGrid.addColumn(

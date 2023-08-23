@@ -1,5 +1,6 @@
 package com.kodilla.cheapflightsearch.config;
 
+import com.kodilla.cheapflightsearch.domain.user.UserRole;
 import com.kodilla.cheapflightsearch.view.LoginView;
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
 import org.springframework.context.annotation.Bean;
@@ -25,12 +26,12 @@ public class SecurityConfig extends VaadinWebSecurity {
         UserDetails user = User.builder()
                 .username("user")
                 .password("{noop}0001a")
-                .roles("USER")
+                .roles(String.valueOf(UserRole.USER))
                 .build();
         UserDetails admin = User.builder()
                 .username("admin")
                 .password("{noop}0002b")
-                .roles("USER", "ADMIN")
+                .roles(String.valueOf(UserRole.USER), String.valueOf(UserRole.ADMIN))
                 .build();
         return new InMemoryUserDetailsManager(user, admin);
     }

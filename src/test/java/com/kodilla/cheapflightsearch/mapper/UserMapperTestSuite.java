@@ -4,6 +4,7 @@ import com.kodilla.cheapflightsearch.domain.calendar.Calendar;
 import com.kodilla.cheapflightsearch.domain.calendar.HolidayPlan;
 import com.kodilla.cheapflightsearch.domain.user.User;
 import com.kodilla.cheapflightsearch.domain.user.UserDto;
+import com.kodilla.cheapflightsearch.domain.user.UserRole;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,7 +41,7 @@ class UserMapperTestSuite {
     void testMapToUserDto() {
         //Given
         Calendar calendar = new Calendar(1L, List.of(new HolidayPlan()));
-        User user = new User(1L, "Name", "email", calendar);
+        User user = new User(1L, "Name", "email", UserRole.USER, calendar);
 
         //When
         UserDto resultUserDto = userMapper.mapToUserDto(user);
@@ -55,9 +56,9 @@ class UserMapperTestSuite {
     void testMapToUserDtoList() {
         //Given
         Calendar calendar2 = new Calendar(2L, List.of(new HolidayPlan()));
-        User user2 = new User(2L, "Name", "email", calendar2);
+        User user2 = new User(2L, "Name", "email", UserRole.USER, calendar2);
         Calendar calendar3 = new Calendar(3L, List.of(new HolidayPlan()));
-        User user3 = new User(3L, "Name", "email", calendar3);
+        User user3 = new User(3L, "Name", "email", UserRole.USER, calendar3);
         List<User> userList = List.of(
                 user2,
                 user3
@@ -82,11 +83,13 @@ class UserMapperTestSuite {
                         .userId(1L)
                         .username("Name1")
                         .email("email1")
+                        .role(UserRole.USER)
                         .build(),
                 UserDto.builder()
                         .userId(2L)
                         .username("Name2")
                         .email("email2")
+                        .role(UserRole.USER)
                         .build()
         );
 

@@ -19,6 +19,7 @@ public class UserMapper {
                 userDto.getUserId(),
                 userDto.getUsername(),
                 userDto.getEmail(),
+                userDto.getRole(),
                 calendarRepository.findById(userDto.getCalendarId()).orElse(new Calendar())
         );
     }
@@ -27,6 +28,7 @@ public class UserMapper {
                 .userId(user.getUserId())
                 .username(user.getUsername())
                 .email(user.getEmail())
+                .role(user.getRole())
                 .calendarId(user.getCalendar().getCalendarId())
                 .build();
     }

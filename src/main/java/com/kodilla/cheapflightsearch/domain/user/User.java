@@ -23,6 +23,9 @@ public class User {
     @NotNull
     @Column(name = "email", unique = true)
     private String email;
+    @NotNull
+    @Column(name = "role")
+    private UserRole role;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "calendar_id")
     private Calendar calendar;
@@ -30,10 +33,12 @@ public class User {
     public User(String username, String email) {
         this.username = username;
         this.email = email;
+        this.role = UserRole.USER;
     }
-    public User(String username, String email, Calendar calendar) {
+    public User(String username, String email, UserRole role, Calendar calendar) {
         this.username = username;
         this.email = email;
+        this.role = role;
         this.calendar = calendar;
     }
 
