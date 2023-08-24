@@ -32,13 +32,17 @@ Not deployed on cloud yet. Only local testing possible;
 
 4. REST client, such as Postman to test API endpoints.
 
+5. Favourite browser for checking usability and UX of simplified view layer.
+
 ### How to use
 
-1. Clone code from GitHub repository
+1. Clone code from GitHub repository.
 
-2. Set up MySQL local database
+2. Set up MySQL local database.
 
-3. Build and run application in your IDE
+3. Build and run application in your IDE.
+
+4. Test application endpoints by Postman or use it in favourite browser.
 
 ### Frontend pages
 
@@ -263,9 +267,9 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 ## Features to be implemented
 
 1. **User**
-- using application as default User
-- User authentication using Spring Security
-- managing dataset by Administrator
+- using application as default User - *developed ADMIN and USER roles, also possible act as Anonymous [2023.08.24]*
+- User authentication using Spring Security - *implemented [2023.08.23]*
+- managing dataset by Administrator - *not completed yet*
 
 2. **Calendar**
 - full year calendar view with holiday plan visualized on it
@@ -297,5 +301,5 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 2. Before searching for itineraries in ItineraryView it is needed to set up data by clicking "set airports" button
 
 3. Not handled exception when User duplicates searching requests for Itineraries
-4. CalendarView is now useless due to not store current data about User and it's calendar
+4. ~~CalendarView is now useless due to not store current data about User and it's calendar~~ - FIXED
 
