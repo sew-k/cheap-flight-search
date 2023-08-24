@@ -15,8 +15,20 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig extends VaadinWebSecurity {
+    private static final String[] AUTH_WHITELIST = {
+            "/v2/api-docs/**",
+            "/swagger-ui/**",
+            "/configuration/ui",
+            "/swagger-resources/**",
+            "/configuration/**",
+            "/swagger-ui.html",
+            "/webjars/**"
+};
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .antMatchers(AUTH_WHITELIST).permitAll();
         super.configure(http);
         setLoginView(http, LoginView.class);
     }
