@@ -28,7 +28,8 @@ public class MainView extends VerticalLayout {
         } catch (Exception e) {
             Notification.show("No user logged in. Using application as Anonymous.");
         }
-        Button loginButton = new Button("Sign in", e -> UI.getCurrent().getPage().open("login"));
+        Button signupButton = new Button("Sign up", e -> UI.getCurrent().getPage().open("signup"));
+        Button loginButton = new Button("Log in", e -> UI.getCurrent().getPage().open("login"));
         Button logoutButton = new Button("Log out ", e -> securityService.logout());
         if (username == null) {
             logoutButton.setEnabled(false);
@@ -36,7 +37,7 @@ public class MainView extends VerticalLayout {
             logoutButton.setEnabled(true);
             logoutButton.setText("Log out: " + username);
         }
-        authenticationLayout.add(loginButton, logoutButton);
+        authenticationLayout.add(signupButton, loginButton, logoutButton);
         authenticationLayout.setAlignItems(Alignment.STRETCH);
         add(authenticationLayout);
         add(new Label("CHEAP-FLIGHT-SEARCH"));
