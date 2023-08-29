@@ -26,19 +26,24 @@ public class User {
     @NotNull
     @Column(name = "role")
     private UserRole role;
+    @NotNull
+    @Column(name = "password")
+    private String password;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "calendar_id")
     private Calendar calendar;
 
-    public User(String username, String email) {
+    public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.role = UserRole.USER;
+        this.password = password;
     }
-    public User(String username, String email, UserRole role, Calendar calendar) {
+    public User(String username, String email, UserRole role, String password, Calendar calendar) {
         this.username = username;
         this.email = email;
         this.role = role;
+        this.password = password;
         this.calendar = calendar;
     }
 

@@ -41,7 +41,7 @@ class UserMapperTestSuite {
     void testMapToUserDto() {
         //Given
         Calendar calendar = new Calendar(1L, List.of(new HolidayPlan()));
-        User user = new User(1L, "Name", "email", UserRole.USER, calendar);
+        User user = new User(1L, "Name", "email", UserRole.USER, "password", calendar);
 
         //When
         UserDto resultUserDto = userMapper.mapToUserDto(user);
@@ -56,9 +56,9 @@ class UserMapperTestSuite {
     void testMapToUserDtoList() {
         //Given
         Calendar calendar2 = new Calendar(2L, List.of(new HolidayPlan()));
-        User user2 = new User(2L, "Name", "email", UserRole.USER, calendar2);
+        User user2 = new User(2L, "Name", "email", UserRole.USER, "password", calendar2);
         Calendar calendar3 = new Calendar(3L, List.of(new HolidayPlan()));
-        User user3 = new User(3L, "Name", "email", UserRole.USER, calendar3);
+        User user3 = new User(3L, "Name", "email", UserRole.USER, "password", calendar3);
         List<User> userList = List.of(
                 user2,
                 user3

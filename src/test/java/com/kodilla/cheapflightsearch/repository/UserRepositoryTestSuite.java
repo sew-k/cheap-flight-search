@@ -20,10 +20,10 @@ class UserRepositoryTestSuite {
     @BeforeAll
     static void setUp() {
         usersTestList = List.of(
-                new User("TestUser1", "testUser1@test.com"),
-                new User("TestUser2", "testUser2@test.com"),
-                new User("TestUser3", "testUser3@test.com"),
-                new User("TestUser4", "testUser4@test.com")
+                new User("TestUser1", "testUser1@test.com", "password"),
+                new User("TestUser2", "testUser2@test.com", "password"),
+                new User("TestUser3", "testUser3@test.com", "password"),
+                new User("TestUser4", "testUser4@test.com", "password")
         );
     }
     @Test
@@ -48,7 +48,7 @@ class UserRepositoryTestSuite {
     @Test
     void testSave() {
         //Given & When
-        User user = new User("TestUser5", "testUser5@test.com");
+        User user = new User("TestUser5", "testUser5@test.com", "password");
         userRepository.save(user);
         Long id = user.getUserId();
 
@@ -63,7 +63,7 @@ class UserRepositoryTestSuite {
     @Test
     void testFindByIdWhenExisting() {
         //Given
-        User user = new User("TestUser6", "testUser6@test.com");
+        User user = new User("TestUser6", "testUser6@test.com", "password");
         userRepository.save(user);
         Long id = user.getUserId();
 
@@ -84,7 +84,7 @@ class UserRepositoryTestSuite {
     @Test
     void testFindByUsernameWhenExisting() {
         //Given
-        User user = new User("John", "john@test.com");
+        User user = new User("John", "john@test.com", "password");
         userRepository.save(user);
         Long id = user.getUserId();
 
@@ -105,7 +105,7 @@ class UserRepositoryTestSuite {
     @Test
     void testFindByEmailWhenExisting() {
         //Given
-        User user = new User("John", "john@test.com");
+        User user = new User("John", "john@test.com", "password");
         userRepository.save(user);
         Long id = user.getUserId();
 
@@ -126,7 +126,7 @@ class UserRepositoryTestSuite {
     @Test
     void testDeleteById() {
         //Given
-        User user = new User("TestUser7", "testUser7@test.com");
+        User user = new User("TestUser7", "testUser7@test.com", "password");
         userRepository.save(user);
         Long id = user.getUserId();
 

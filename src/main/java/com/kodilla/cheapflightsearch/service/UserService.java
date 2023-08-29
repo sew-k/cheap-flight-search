@@ -4,14 +4,17 @@ import com.kodilla.cheapflightsearch.exception.UserNotFoundException;
 import com.kodilla.cheapflightsearch.domain.user.User;
 import com.kodilla.cheapflightsearch.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     public static User currentUser;
     public List<User> getUsers() {
         return userRepository.findAll();
@@ -44,6 +47,8 @@ public class UserService {
 
     public User createUser(User user) {
         if (!checkIfUserExists(user)) {
+            String encodedPassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(encodedPassword);
             return userRepository.save(user);
         } else return null;
     }
@@ -62,5 +67,14 @@ public class UserService {
 
     public static void setCurrentUser(User currentUser) {
         UserService.currentUser = currentUser;
+    }
+
+    public boolean checkLogin(String username, String password) {
+        Optional<User> userToCheck = userRepository.findByUsername(username);
+        if (userToCheck.isPresent() && passwordEncoder.matches(password, userToCheck.get().getPassword())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

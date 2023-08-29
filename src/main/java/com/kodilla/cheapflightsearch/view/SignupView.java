@@ -49,7 +49,8 @@ public class SignupView extends VerticalLayout {
     private void submit() throws UserAlreadyExistsException {
         User newUser = new User(
                 usernameField.getValue(),
-                emailField.getValue()
+                emailField.getValue(),
+                passwordField.getValue()
         );
         if (!userExists(newUser)) {
             saveNewUser(newUser);

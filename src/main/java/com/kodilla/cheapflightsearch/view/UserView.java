@@ -37,6 +37,7 @@ public class UserView extends VerticalLayout {
                             "JohnTest",
                             "john_test@test.com",
                             UserRole.USER,
+                            "password",
                             new Calendar()
                     ));
             Notification.show("user added");
