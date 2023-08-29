@@ -1,3 +1,10 @@
+CREATE TABLE IF NOT EXISTS airports (
+    airport_id INT AUTO_INCREMENT PRIMARY KEY,
+    country VARCHAR(255),
+    city VARCHAR(255),
+    iata_code VARCHAR(255)
+);
+
 INSERT IGNORE INTO airports (airport_id, country, city, iata_code)
 VALUES  (18, "Portugal", "Lisbon", "LIS"),
         (20, "Portugal", "Porto", "OPO"),
