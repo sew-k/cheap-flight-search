@@ -1,21 +1,20 @@
 package com.kodilla.cheapflightsearch.view;
 
+import com.kodilla.cheapflightsearch.domain.calendar.Calendar;
 import com.kodilla.cheapflightsearch.domain.user.User;
+import com.kodilla.cheapflightsearch.domain.user.UserRole;
 import com.kodilla.cheapflightsearch.exception.UserAlreadyExistsException;
 import com.kodilla.cheapflightsearch.service.UserService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Route(value = "signup")
@@ -24,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class SignupView extends VerticalLayout {
     private TextField usernameField = new TextField("Username");
     private TextField emailField = new TextField("Email");
-    private TextField passwordField = new TextField("Password");
+    private PasswordField passwordField = new PasswordField("Password");
     @Autowired
     UserService userService;
 
@@ -33,6 +32,7 @@ public class SignupView extends VerticalLayout {
         setSizeFull();
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
+        add(new H1("CheapFlightSearch"));
         add(usernameField);
         add(emailField);
         add(passwordField);
@@ -50,7 +50,9 @@ public class SignupView extends VerticalLayout {
         User newUser = new User(
                 usernameField.getValue(),
                 emailField.getValue(),
-                passwordField.getValue()
+                UserRole.USER,
+                passwordField.getValue(),
+                new Calendar()
         );
         if (!userExists(newUser)) {
             saveNewUser(newUser);
