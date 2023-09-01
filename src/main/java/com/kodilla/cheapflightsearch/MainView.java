@@ -3,7 +3,7 @@ package com.kodilla.cheapflightsearch;
 import com.kodilla.cheapflightsearch.service.SecurityService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -40,7 +40,7 @@ public class MainView extends VerticalLayout {
         authenticationLayout.add(signupButton, loginButton, logoutButton);
         authenticationLayout.setAlignItems(Alignment.STRETCH);
         add(authenticationLayout);
-        add(new Label("CHEAP-FLIGHT-SEARCH"));
+        add(new H1("CheapFlightSearch"));
         add(new Button("Quick search", e -> UI.getCurrent().getPage().open("main/quick_search")));
         add(new Button("User", e -> UI.getCurrent().getPage().open("main/users")));
         add(new Button("Routes", e -> UI.getCurrent().getPage().open("main/routes")));
