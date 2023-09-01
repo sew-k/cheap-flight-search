@@ -7,6 +7,7 @@ import com.kodilla.cheapflightsearch.exception.UserAlreadyExistsException;
 import com.kodilla.cheapflightsearch.service.UserService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -32,18 +33,20 @@ public class SignupView extends VerticalLayout {
         setSizeFull();
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
-        add(new H1("CheapFlightSearch"));
-        add(usernameField);
-        add(emailField);
-        add(passwordField);
-        add(new Button("Submit", event -> {
+        Button submitButton = new Button("Submit", event -> {
             try {
                 submit();
             } catch (UserAlreadyExistsException e) {
                 Notification.show("User " + usernameField.getValue() + " already exists in database!");
                 clearTextFields();
             }
-        }));
+        });
+        submitButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        add(new H1("CheapFlightSearch"));
+        add(usernameField);
+        add(emailField);
+        add(passwordField);
+        add(submitButton);
     }
 
     private void submit() throws UserAlreadyExistsException {
