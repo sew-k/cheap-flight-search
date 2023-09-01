@@ -9,6 +9,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
@@ -34,19 +35,25 @@ public class SignupView extends VerticalLayout {
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
         Button submitButton = new Button("Submit", event -> {
-            try {
-                submit();
-            } catch (UserAlreadyExistsException e) {
-                Notification.show("User " + usernameField.getValue() + " already exists in database!");
-                clearTextFields();
-            }
+            tryToSubmit();
         });
+        submitButton.setAutofocus(true);
         submitButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         add(new H1("CheapFlightSearch"));
+        add(new H2("Sign up"));
         add(usernameField);
         add(emailField);
         add(passwordField);
         add(submitButton);
+    }
+
+    private void tryToSubmit() {
+        try {
+            submit();
+        } catch (UserAlreadyExistsException e) {
+            Notification.show("User " + usernameField.getValue() + " already exists in database!");
+            clearTextFields();
+        }
     }
 
     private void submit() throws UserAlreadyExistsException {
