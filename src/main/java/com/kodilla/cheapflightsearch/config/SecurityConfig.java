@@ -30,6 +30,19 @@ public class SecurityConfig extends VaadinWebSecurity {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll();
+        http.authorizeRequests()
+                .antMatchers(
+                        "/v1/cheapflightsearch/users/**",
+                        "/v1/cheapflightsearch/users",
+                        "/v1/cheapflightsearch/airports/update/**"
+                ).hasRole("ADMIN");
+        http.authorizeRequests()
+                .antMatchers(
+                        "/v1/cheapflightsearch/itineraries",
+                        "/v1/cheapflightsearch/itineraries/**",
+                        "/v1/cheapflightsearch/routes",
+                        "/v1/cheapflightsearch/routes/**"
+                ).authenticated();
         super.configure(http);
         setLoginView(http, LoginView.class);
     }
@@ -38,19 +51,4 @@ public class SecurityConfig extends VaadinWebSecurity {
     public PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-//    @Bean
-//    public UserDetailsService users() {
-//        UserDetails user = User.builder()
-//                .username("user")
-//                .password("{noop}0001a")
-//                .roles(String.valueOf(UserRole.USER))
-//                .build();
-//        UserDetails admin = User.builder()
-//                .username("admin")
-//                .password("{noop}0002b")
-//                .roles(String.valueOf(UserRole.USER), String.valueOf(UserRole.ADMIN))
-//                .build();
-//        return new InMemoryUserDetailsManager(user, admin);
-//    }
 }
