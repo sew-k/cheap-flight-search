@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "Weather controller")
 public class WeatherController {
     private final WeatherService weatherService;
+
     @GetMapping("/{city}")
     public ResponseEntity<Float> getWeatherByCity(@PathVariable("city") String city) {
         return ResponseEntity.ok(weatherService.getWeather(city).getTemperature());
