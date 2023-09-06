@@ -1,4 +1,4 @@
-package com.kodilla.cheapflightsearch.domain.scheduler;
+package com.kodilla.cheapflightsearch.scheduler;
 
 import com.kodilla.cheapflightsearch.domain.email.Mail;
 import com.kodilla.cheapflightsearch.domain.user.User;

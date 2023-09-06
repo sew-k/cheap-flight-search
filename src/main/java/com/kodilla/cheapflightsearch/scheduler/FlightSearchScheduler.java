@@ -1,4 +1,4 @@
-package com.kodilla.cheapflightsearch.domain.scheduler;
+package com.kodilla.cheapflightsearch.scheduler;
 
 import com.kodilla.cheapflightsearch.domain.calendar.HolidayPlan;
 import com.kodilla.cheapflightsearch.domain.skyscanner.Itinerary;
