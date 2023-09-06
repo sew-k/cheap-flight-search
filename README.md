@@ -267,32 +267,37 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 ## Features to be implemented
 
 1. **User**
-- using application as default User - *developed ADMIN and USER roles, also possible act as Anonymous [2023.08.24]*
-- User authentication using Spring Security - *implemented [2023.08.23]*
-- managing dataset by Administrator - *not completed yet*
+- [x] using application as default User - *developed ADMIN and USER roles, also possible act as Anonymous [2023.08.24]*
+- [ ] User authentication using Spring Security - *implemented [2023.08.23, 2023.08.31 - with using of DB]*
+- [ ] managing dataset by Administrator - *not completed yet*
 
 2. **Calendar**
-- full year calendar view with holiday plan visualized on it
-- ability to pick vacation dates on full year calendar in CalendarView
+- [ ] full year calendar view with holiday plan visualized on it
+- [ ] ability to pick vacation dates on full year calendar in CalendarView
 
 3. **Weather**
-- using more data (ex. humidity, wind force)
-- using forecast data (now only current temperature in specific places)
+- [ ] using more data (ex. humidity, wind force)
+- [ ] using forecast data (now only current temperature in specific places)
 
 4. **Better Exceptions handling**
-- when incorrect data input
-- for error responses from external API's
+- [ ] when incorrect data input
+- [ ] for error responses from external API's
 
 4. **Vaadin** - view layer
-- to split into frontend and backend separate applications (to consider)
-- development of more responsive UI
+- [ ] to split into frontend and backend separate applications (to consider)
+- [ ] development of more responsive UI
 
 5. Application deploy
-- deploying backend on *replit* (to consider) 
-- deploying database on cloud
+- [ ] deploying backend on *replit* (to consider) 
+- [ ] deploying database on cloud
 
 6. Skyscanner
-- search results for more actual and correct data from Skyscanner API
+- [ ] search results for more actual and correct data from Skyscanner API
+
+7. Scheduled actions
+- [ ] scheduled reminder email about upcoming trip - with for example weather data in destination city
+- [ ] setting scheduled searching engine feature for finding cheapest flights to purchase
+- [ ] scheduled information email with latest prices of favourite itineraries 
 
 ## Troubleshooting
 
