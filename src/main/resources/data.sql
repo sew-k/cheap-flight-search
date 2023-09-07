@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS airports (
-    airport_id INT AUTO_INCREMENT PRIMARY KEY,
+    airport_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     country VARCHAR(255),
     city VARCHAR(255),
     iata_code VARCHAR(255)
