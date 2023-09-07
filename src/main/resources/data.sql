@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS airports (
 
 INSERT IGNORE INTO airports (airport_id, country, city, iata_code)
 VALUES  (18, "Portugal", "Lisbon", "LIS"),
-        (20, "Portugal", "Porto", "OPO"),
         (21, "Portugal", "Porto", "OPO"),
         (22, "Poland", "Wroclaw", "WRO"),
         (23, "Poland", "Warsaw", "WAW"),
