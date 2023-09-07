@@ -168,7 +168,6 @@ public class ItinerariesView extends VerticalLayout {
     @EventListener(ApplicationReadyEvent.class)
     private void setUpAirports() {
         try {
-            Thread.sleep(1000);
             airportSet.addAll(airportService.getAirports());
         } catch (Exception e) {
 
