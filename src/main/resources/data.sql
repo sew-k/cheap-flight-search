@@ -17,4 +17,5 @@ VALUES  (18, "Portugal", "Lisbon", "LIS"),
         (40, "Greece", "Korfu", "CFU"),
         (41, "Greece", "Rhodes", "RHO"),
         (42, "Greece", "Chania", "CHQ"),
-        (42, "Greece", "Heraklion", "HER");
+        (43, "Greece", "Heraklion", "HER"),
+        (44, "Germany", "Cologne", "CGN");
