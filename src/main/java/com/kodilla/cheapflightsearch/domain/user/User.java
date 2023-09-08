@@ -1,6 +1,7 @@
 package com.kodilla.cheapflightsearch.domain.user;
 
 import com.kodilla.cheapflightsearch.domain.calendar.Calendar;
+import com.kodilla.cheapflightsearch.domain.trip.TripPlan;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -37,6 +38,13 @@ public class User implements UserDetails {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "calendar_id")
     private Calendar calendar;
+    @OneToMany(
+            targetEntity = TripPlan.class,
+            mappedBy = "user",
+            cascade = CascadeType.REMOVE,
+            fetch = FetchType.LAZY
+    )
+    private List<TripPlan> tripPlans;
 
     public User(String username, String email, String password) {
         this.username = username;
@@ -45,6 +53,14 @@ public class User implements UserDetails {
         this.password = password;
     }
     public User(String username, String email, UserRole role, String password, Calendar calendar) {
+        this.username = username;
+        this.email = email;
+        this.role = role;
+        this.password = password;
+        this.calendar = calendar;
+    }
+    public User(Long userId, String username, String email, UserRole role, String password, Calendar calendar) {
+        this.userId = userId;
         this.username = username;
         this.email = email;
         this.role = role;

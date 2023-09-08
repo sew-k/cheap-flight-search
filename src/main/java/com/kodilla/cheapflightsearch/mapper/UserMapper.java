@@ -4,6 +4,7 @@ import com.kodilla.cheapflightsearch.domain.calendar.Calendar;
 import com.kodilla.cheapflightsearch.domain.user.User;
 import com.kodilla.cheapflightsearch.domain.user.UserDto;
 import com.kodilla.cheapflightsearch.repository.CalendarRepository;
+import com.kodilla.cheapflightsearch.service.ItineraryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,8 @@ import java.util.stream.Collectors;
 public class UserMapper {
     @Autowired
     CalendarRepository calendarRepository;
+    @Autowired
+    ItineraryService itineraryService;
     public User mapToUser(final UserDto userDto) {
         return new User(
                 userDto.getUserId(),
@@ -21,7 +24,8 @@ public class UserMapper {
                 userDto.getEmail(),
                 userDto.getRole(),
                 userDto.getPassword(),
-                calendarRepository.findById(userDto.getCalendarId()).orElse(new Calendar())
+                calendarRepository.findById(userDto.getCalendarId()).orElse(new Calendar()),
+                itineraryService.getTripPlansByUserId(userDto.getUserId())
         );
     }
     public UserDto mapToUserDto(final User user) {
