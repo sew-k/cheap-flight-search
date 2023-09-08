@@ -1,5 +1,6 @@
 package com.kodilla.cheapflightsearch.service;
 
+import com.kodilla.cheapflightsearch.domain.user.User;
 import com.kodilla.cheapflightsearch.exception.ItineraryNotFoundException;
 import com.kodilla.cheapflightsearch.domain.calendar.HolidayPlan;
 import com.kodilla.cheapflightsearch.domain.skyscanner.Itinerary;
@@ -39,6 +40,15 @@ public class ItineraryService {
 
     public Itinerary getItinerary(Long id) throws ItineraryNotFoundException {
         return itineraryRepository.findById(id).orElseThrow(ItineraryNotFoundException::new);
+    }
+
+    public List<Itinerary> getItinerariesByUser(User user) {
+        return tripPlanRepository.findByUserId(user).stream()
+                .filter(t -> t.getItinerary() != null)
+                .map(t -> itineraryRepository.findById(t.getItinerary().getItineraryId()))
+                .filter(o -> o.isPresent())
+                .map(o -> o.get())
+                .collect(Collectors.toList());
     }
 
     public Itinerary getItineraryByItineraryMark(String itineraryMark) throws ItineraryNotFoundException {
@@ -84,7 +94,7 @@ public class ItineraryService {
             }
             return result;
         } catch (Exception e) {
-           throw new ItineraryNotFoundException();
+            throw new ItineraryNotFoundException();
         }
     }
 
@@ -123,6 +133,7 @@ public class ItineraryService {
         }
         return resultList;
     }
+
     public List<Itinerary> searchForItinerariesFavouriteRoutesFewNextWeekends(int howManyWeekends,
                                                                               List<Route> routes,
                                                                               int adults) throws Exception {
@@ -166,6 +177,16 @@ public class ItineraryService {
         return tripPlanRepository.findAll();
     }
 
+    public List<TripPlan> getTripPlansByUserId(Long userId) {
+        return tripPlanRepository.findAll().stream()
+                .filter(t -> t.getUserId().getUserId().equals(userId))
+                .collect(Collectors.toList());
+    }
+
+    public List<TripPlan> getTripPlansByUser(User user) {
+        return tripPlanRepository.findByUserId(user);
+    }
+
     public void deleteTripPlan(Long id) throws TripPlanNotFoundException {
         if (tripPlanRepository.findById(id).isPresent()) {
             tripPlanRepository.deleteById(id);
@@ -193,6 +214,7 @@ public class ItineraryService {
             return "Not found";
         }
     }
+
     public String getCityForTripPlanDestination(TripPlan tripPlan) {
         try {
             return airportService.getAirportByIata(tripPlan.getDestinationIata()).getCity();
