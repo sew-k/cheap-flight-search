@@ -1,6 +1,7 @@
 package com.kodilla.cheapflightsearch.domain.trip;
 
 import com.kodilla.cheapflightsearch.domain.skyscanner.Itinerary;
+import com.kodilla.cheapflightsearch.domain.user.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,13 +12,16 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 @Entity(name = "trip_plans")
 public class TripPlan {
     @Id
-    @NotNull
     @GeneratedValue
     @Column(name = "trip_plan_id", unique = true)
     private Long tripPlanId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
     @NotNull
     @Column(name = "origin_iata")
     private String originIata;

@@ -43,7 +43,7 @@ public class ItineraryService {
     }
 
     public List<Itinerary> getItinerariesByUser(User user) {
-        return tripPlanRepository.findByUserId(user).stream()
+        return tripPlanRepository.findByUser(user).stream()
                 .filter(t -> t.getItinerary() != null)
                 .map(t -> itineraryRepository.findById(t.getItinerary().getItineraryId()))
                 .filter(o -> o.isPresent())
@@ -179,12 +179,12 @@ public class ItineraryService {
 
     public List<TripPlan> getTripPlansByUserId(Long userId) {
         return tripPlanRepository.findAll().stream()
-                .filter(t -> t.getUserId().getUserId().equals(userId))
+                .filter(t -> t.getUser().getUserId().equals(userId))
                 .collect(Collectors.toList());
     }
 
     public List<TripPlan> getTripPlansByUser(User user) {
-        return tripPlanRepository.findByUserId(user);
+        return tripPlanRepository.findByUser(user);
     }
 
     public void deleteTripPlan(Long id) throws TripPlanNotFoundException {
