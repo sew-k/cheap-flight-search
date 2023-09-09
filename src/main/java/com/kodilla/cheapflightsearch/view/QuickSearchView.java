@@ -17,7 +17,6 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.security.PermitAll;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -43,16 +42,14 @@ public class QuickSearchView extends VerticalLayout {
     public QuickSearchView() {
         TextField originTextField = new TextField("Origin", "IATA code");
         originTextField.setClearButtonVisible(true);
-        originTextField.setValue("WAW");                                                            //TODO temporarily stubbed
         TextField destinationTextField = new TextField("Destination", "IATA code");
         originTextField.setClearButtonVisible(true);
-        destinationTextField.setValue("CFU");                                                       //TODO temporarily stubbed
         DatePicker beginDatePicker = new DatePicker("Begin trip date");
         beginDatePicker.setWeekNumbersVisible(true);
-        beginDatePicker.setValue(LocalDate.of(2023, 8, 4));                     //TODO temporarily stubbed
+        beginDatePicker.setValue(LocalDate.now());
         DatePicker endDatePicker = new DatePicker("End trip date");
         endDatePicker.setWeekNumbersVisible(true);
-        endDatePicker.setValue(LocalDate.of(2023, 8, 6));                       //TODO temporarily stubbed
+        endDatePicker.setValue(LocalDate.now());
         TextField adultsTextField = new TextField("Passengers", "1-5");
         adultsTextField.setValue(Integer.toString(adults));
         Button quickSearchButton = new Button("Quick search", e -> {
