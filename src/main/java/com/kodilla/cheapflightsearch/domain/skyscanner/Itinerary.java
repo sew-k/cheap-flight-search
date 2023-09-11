@@ -22,10 +22,7 @@ public class Itinerary {
     @NotNull
     @Column(name = "price")
     private double price;
-    @OneToOne(
-            cascade = CascadeType.DETACH,
-            fetch = FetchType.EAGER
-    )
+    @OneToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "trip_plan_id")
     private TripPlan tripPlan;
     @NotNull

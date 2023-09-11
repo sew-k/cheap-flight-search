@@ -1,10 +1,12 @@
 package com.kodilla.cheapflightsearch.repository;
 
 import com.kodilla.cheapflightsearch.domain.skyscanner.Itinerary;
+import com.kodilla.cheapflightsearch.domain.trip.TripPlan;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 @Repository
@@ -20,4 +22,5 @@ public interface ItineraryRepository extends CrudRepository<Itinerary, Long> {
     void deleteById(Long id);
     boolean existsByItineraryMark(Itinerary itinerary);
     boolean existsById(Long id);
+    List<Itinerary> findByTripPlan(TripPlan tripPlan);
 }

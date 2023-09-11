@@ -37,9 +37,6 @@ public class TripPlan {
     @NotNull
     @Column(name = "adults")
     private int adults;
-    @OneToOne
-    @JoinColumn(name = "itinerary_id")
-    private Itinerary itinerary;
 
     public TripPlan(String originIata, String destinationIata, LocalDate beginDate, LocalDate endDate, int adults) {
         this.originIata = originIata;
@@ -55,7 +52,6 @@ public class TripPlan {
         this.beginDate = beginDate;
         this.endDate = endDate;
         this.adults = adults;
-        this.itinerary = itinerary;
     }
 
     @Override
@@ -71,5 +67,18 @@ public class TripPlan {
     @Override
     public int hashCode() {
         return Objects.hash(originIata, destinationIata, beginDate, endDate, adults);
+    }
+
+    @Override
+    public String toString() {
+        return "TripPlan{" +
+                "tripPlanId=" + tripPlanId +
+                ", user=" + user +
+                ", originIata='" + originIata + '\'' +
+                ", destinationIata='" + destinationIata + '\'' +
+                ", beginDate=" + beginDate +
+                ", endDate=" + endDate +
+                ", adults=" + adults +
+                '}';
     }
 }

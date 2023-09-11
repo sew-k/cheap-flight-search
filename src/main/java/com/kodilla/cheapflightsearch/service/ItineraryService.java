@@ -43,11 +43,8 @@ public class ItineraryService {
     }
 
     public List<Itinerary> getItinerariesByUser(User user) {
-        return tripPlanRepository.findByUser(user).stream()
-                .filter(t -> t.getItinerary() != null)
-                .map(t -> itineraryRepository.findById(t.getItinerary().getItineraryId()))
-                .filter(o -> o.isPresent())
-                .map(o -> o.get())
+        return itineraryRepository.findAll().stream()
+                .filter(i -> i.getTripPlan().getUser().equals(user))
                 .collect(Collectors.toList());
     }
 
@@ -84,18 +81,10 @@ public class ItineraryService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<Itinerary> searchForItineraryBasedOnTripPlan(TripPlan tripPlan) throws ItineraryNotFoundException {
-        try {
-            Optional<Itinerary> result = Optional.ofNullable(skyscannerService.searchCreateGetItinerary(skyscannerMapper.mapTripPlanToFlightSearchDto(tripPlan)));
-            if (result.isPresent()) {
-                tripPlanRepository.save(tripPlan);
-                result.get().setTripPlan(tripPlan);
-                itineraryRepository.save(result.get());
-            }
-            return result;
-        } catch (Exception e) {
-            throw new ItineraryNotFoundException();
-        }
+    public Itinerary searchForItineraryBasedOnTripPlan(TripPlan tripPlan) throws Exception {
+        Itinerary result = skyscannerService.searchCreateGetItinerary(skyscannerMapper.mapTripPlanToFlightSearchDto(tripPlan));
+        result.setTripPlan(tripPlan);
+        return result;
     }
 
     public void switchItineraryPurchased(Itinerary itinerary) {
@@ -188,7 +177,13 @@ public class ItineraryService {
     }
 
     public void deleteTripPlan(Long id) throws TripPlanNotFoundException {
-        if (tripPlanRepository.findById(id).isPresent()) {
+        Optional<TripPlan> tripPlanToDelete = tripPlanRepository.findById(id);
+        if (tripPlanToDelete.isPresent()) {
+            itineraryRepository.findByTripPlan(tripPlanToDelete.get()).stream()
+                            .forEach(i -> {
+                                i.setTripPlan(null);
+                                itineraryRepository.save(i);
+                            });
             tripPlanRepository.deleteById(id);
         } else {
             throw new TripPlanNotFoundException();

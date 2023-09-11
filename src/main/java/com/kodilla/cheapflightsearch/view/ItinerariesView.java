@@ -3,10 +3,12 @@ package com.kodilla.cheapflightsearch.view;
 import com.kodilla.cheapflightsearch.domain.skyscanner.Itinerary;
 import com.kodilla.cheapflightsearch.domain.trip.Airport;
 import com.kodilla.cheapflightsearch.domain.trip.TripPlan;
-import com.kodilla.cheapflightsearch.exception.ItineraryNotFoundException;
-import com.kodilla.cheapflightsearch.mapper.ItineraryMapper;
+import com.kodilla.cheapflightsearch.domain.user.User;
+import com.kodilla.cheapflightsearch.exception.UserNotFoundException;
 import com.kodilla.cheapflightsearch.service.AirportService;
 import com.kodilla.cheapflightsearch.service.ItineraryService;
+import com.kodilla.cheapflightsearch.service.SecurityService;
+import com.kodilla.cheapflightsearch.service.UserService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -23,25 +25,37 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 
 import javax.annotation.security.PermitAll;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.*;
+
 @PermitAll
 @Route(value = "main/itineraries")
 public class ItinerariesView extends VerticalLayout {
     private Grid<TripPlan> tripPlanGrid = new Grid<>(TripPlan.class, false);
     private Grid<Itinerary> itineraryGrid = new Grid<>(Itinerary.class, false);
     private Set<Airport> airportSet = new HashSet<>();
+    private User currentUser = null;
+    private Airport originAirport;
+    private Airport destinationAirport;
+    private LocalDate beginDate;
+    private LocalDate endDate;
+    private int adults;
+    private ComboBox<Airport> originAirportComboBox = new ComboBox<>("Origin airport");
+    private ComboBox<Airport> destinationAirportComboBox = new ComboBox<>("Destination airport");
+    private DatePicker beginDatePicker = new DatePicker("Begin trip date");
+    private DatePicker endDatePicker = new DatePicker("End trip date");
+    private TextField adultsTextField = new TextField("Passengers", "1-5");
 
     private static final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("pl", "PL"));
     @Autowired
-    ItineraryService itineraryService;
+    SecurityService securityService;
     @Autowired
-    ItineraryMapper itineraryMapper;
+    UserService userService;
+    @Autowired
+    ItineraryService itineraryService;
     @Autowired
     AirportService airportService;
 
@@ -49,60 +63,35 @@ public class ItinerariesView extends VerticalLayout {
 
         add(new Button("Back to Main", e -> UI.getCurrent().getPage().open("main")));
         add(new Button("Refresh all", e -> {
+            setCurrentUser();
             setUpAirports();
-            refreshItinerariesGrid();
-            refreshTripPlansGrid();
+            refreshAll();
         }));
 
-        ComboBox<Airport> originAirportComboBox = new ComboBox<>("Origin airport");
         originAirportComboBox.setPattern("IATA code");
         originAirportComboBox.setAllowCustomValue(true);
         originAirportComboBox.setItems(airportSet);
-
-        ComboBox<Airport> destinationAirportComboBox = new ComboBox<>("Destination airport");
         destinationAirportComboBox.setPattern("IATA code");
         destinationAirportComboBox.setAllowCustomValue(true);
         destinationAirportComboBox.setItems(airportSet);
-        DatePicker beginDatePicker = new DatePicker("Begin trip date");
         beginDatePicker.setWeekNumbersVisible(true);
-        beginDatePicker.setValue(LocalDate.of(2023, 8, 4));                     //TODO temporarily stubbed
-        DatePicker endDatePicker = new DatePicker("End trip date");
+        beginDatePicker.setValue(LocalDate.now());
         endDatePicker.setWeekNumbersVisible(true);
-        endDatePicker.setValue(LocalDate.of(2023, 8, 6));                       //TODO temporarily stubbed
-        TextField adultsTextField = new TextField("Passengers", "1-5");
+        endDatePicker.setValue(LocalDate.now());
 
-        Button customSearchButton = new Button("Search", e -> {
-            try {
-                Optional<Itinerary> searchingResult = itineraryService.searchForItineraryBasedOnTripPlan(
-                        newTripPlanFromInput(
-                                originAirportComboBox,
-                                destinationAirportComboBox,
-                                beginDatePicker,
-                                endDatePicker,
-                                adultsTextField
-                        )
-                );
-                if (searchingResult.isPresent()) {
-                    refreshTripPlansGrid();
-                    refreshItinerariesGrid();
-                }
-            } catch (Exception exception) {
-                Notification.show("Exception: " + exception);
-            }
-        });
+//        Button customSearchButton = new Button("Search", e -> {
+//            readViewForms();
+//            searchForItinerary(newTripPlanFromReadInput());
+//        });
         Button addToTripPlansButton = new Button("Add to Trip Plans", e -> {
-            itineraryService.createTripPlan(newTripPlanFromInput(
-                    originAirportComboBox,
-                    destinationAirportComboBox,
-                    beginDatePicker,
-                    endDatePicker,
-                    adultsTextField
-            ));
+            readViewForms();
+            addNewTripPlan();
             refreshTripPlansGrid();
         });
 
         VerticalLayout searchButtonsLayout = new VerticalLayout();
-        searchButtonsLayout.add(customSearchButton, addToTripPlansButton);
+//        searchButtonsLayout.add(customSearchButton, addToTripPlansButton);
+        searchButtonsLayout.add(addToTripPlansButton);
         HorizontalLayout customSearchFieldsLayout = new HorizontalLayout(
                 originAirportComboBox,
                 destinationAirportComboBox,
@@ -114,8 +103,8 @@ public class ItinerariesView extends VerticalLayout {
         add(customSearchFieldsLayout);
         tripPlanGrid.addColumn(TripPlan::getOriginIata).setHeader("Origin");
         tripPlanGrid.addColumn(TripPlan::getDestinationIata).setHeader("Destination");
-        tripPlanGrid.addColumn(t  -> itineraryService.getCityForTripPlanDestination(t)).setHeader("City");
-        tripPlanGrid.addColumn(t  -> itineraryService.getWeatherForTripPlanDestination(t)).setHeader("Weather");
+        tripPlanGrid.addColumn(t -> itineraryService.getCityForTripPlanDestination(t)).setHeader("City");
+        tripPlanGrid.addColumn(t -> itineraryService.getWeatherForTripPlanDestination(t)).setHeader("Weather");
         tripPlanGrid.addColumn(TripPlan::getBeginDate).setHeader("Begin trip date");
         tripPlanGrid.addColumn(TripPlan::getEndDate).setHeader("End trip date");
         tripPlanGrid.addColumn(TripPlan::getAdults).setHeader("Passengers");
@@ -129,18 +118,7 @@ public class ItinerariesView extends VerticalLayout {
                 })).setHeader("Manage");
         tripPlanGrid.addComponentColumn(t -> new Button("Search",
                 e -> {
-                    try {
-                        Optional<Itinerary> searchingResult = itineraryService.searchForItineraryBasedOnTripPlan(t);
-                        if (searchingResult.isPresent()) {
-                            refreshTripPlansGrid();
-                            refreshItinerariesGrid();
-                        }
-                    } catch (ItineraryNotFoundException exception) {
-                        Notification.show("Itinerary not found!");
-                    } finally {
-                        refreshItinerariesGrid();
-                        refreshTripPlansGrid();
-                    }
+                    searchForItinerary(t);
                 }));
         tripPlanGrid.addThemeVariants(GridVariant.LUMO_COMPACT);
         add(tripPlanGrid);
@@ -165,31 +143,33 @@ public class ItinerariesView extends VerticalLayout {
         add(itineraryGrid);
     }
 
-    @EventListener(ApplicationReadyEvent.class)
     private void setUpAirports() {
-        try {
-            airportSet.addAll(airportService.getAirports());
-        } catch (Exception e) {
-
-        }
+        airportSet.addAll(airportService.getAirports());
     }
 
     public void refreshItinerariesGrid() {
-        itineraryGrid.setItems(itineraryService.getItineraries());
+        itineraryGrid.setItems(itineraryService.getItinerariesByUser(currentUser));
     }
 
     public void refreshTripPlansGrid() {
-        tripPlanGrid.setItems(itineraryService.getTripPlans());
+        tripPlanGrid.setItems(itineraryService.getTripPlansByUser(currentUser));
     }
 
-    public TripPlan newTripPlanFromInput(ComboBox<Airport> origin, ComboBox<Airport> destination, DatePicker begin, DatePicker end, TextField adults) {
-        return new TripPlan(
-                origin.getValue().getIataCode(),
-                destination.getValue().getIataCode(),
-                begin.getValue(),
-                end.getValue(),
-                Integer.parseInt(adults.getValue())
-        );
+    public void refreshAll() {
+        refreshTripPlansGrid();
+        refreshItinerariesGrid();
+    }
+
+    public TripPlan newTripPlanFromReadInput() throws UserNotFoundException {
+        User currentUser = userService.getUserByName(securityService.getAuthenticatedUser().getUsername());
+        return TripPlan.builder()
+                .user(currentUser)
+                .originIata(originAirport.getIataCode())
+                .destinationIata(destinationAirport.getIataCode())
+                .beginDate(beginDate)
+                .endDate(endDate)
+                .adults(adults)
+                .build();
     }
 
     private void removeItinerary(Itinerary itinerary) {
@@ -200,7 +180,7 @@ public class ItinerariesView extends VerticalLayout {
         } catch (Exception e) {
             Notification.show("Exception when trying to remove itinerary: " + e);
         }
-        this.refreshItinerariesGrid();
+        refreshAll();
     }
 
     private void removeTripPlan(TripPlan tripPlan) {
@@ -211,6 +191,47 @@ public class ItinerariesView extends VerticalLayout {
         } catch (Exception e) {
             Notification.show("Exception when trying to remove trip plan: " + e);
         }
-        this.refreshTripPlansGrid();
+        refreshAll();
+    }
+
+    private void setCurrentUser() {
+        try {
+            currentUser = userService.getUserByName(securityService.getAuthenticatedUser().getUsername());
+        } catch (UserNotFoundException e) {
+            Notification.show("User not found: " + e);
+        }
+    }
+
+    private void readViewForms() {
+        this.originAirport = originAirportComboBox.getValue();
+        this.destinationAirport = destinationAirportComboBox.getValue();
+        this.beginDate = beginDatePicker.getValue();
+        this.endDate = endDatePicker.getValue();
+        this.adults = Integer.parseInt(adultsTextField.getValue());
+    }
+
+    private void addNewTripPlan() {
+        itineraryService.createTripPlan(
+                TripPlan.builder()
+                        .originIata(originAirport.getIataCode())
+                        .destinationIata(destinationAirport.getIataCode())
+                        .beginDate(beginDate)
+                        .endDate(endDate)
+                        .adults(adults)
+                        .user(currentUser)
+                        .build()
+        );
+    }
+    private void searchForItinerary(TripPlan tripPlan) {
+        try {
+            Itinerary searchingResult = itineraryService.searchForItineraryBasedOnTripPlan(tripPlan);
+            Itinerary savedItinerary = itineraryService.createItinerary(searchingResult);
+            //TODO - notification
+        } catch (Exception exception) {
+            Notification.show("Itinerary not found!: " + exception);
+        } finally {
+            refreshItinerariesGrid();
+            refreshTripPlansGrid();
+        }
     }
 }
