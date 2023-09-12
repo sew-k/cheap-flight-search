@@ -268,8 +268,9 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 
 1. **User**
 - [x] using application as default User - *developed ADMIN and USER roles, also possible act as Anonymous [2023.08.24]*
-- [ ] User authentication using Spring Security - *implemented [2023.08.23, 2023.08.31 - with using of DB]*
+- [x] User authentication using Spring Security - *implemented [2023.08.23, 2023.08.31 - with using of DB]*
 - [ ] managing dataset by Administrator - *not completed yet*
+- [ ] to add realtions with User in Itineraries entity. Needed for managing itineraries independent of User's trip plans.
 
 2. **Calendar**
 - [ ] full year calendar view with holiday plan visualized on it
