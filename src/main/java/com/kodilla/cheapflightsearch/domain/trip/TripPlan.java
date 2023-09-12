@@ -68,17 +68,4 @@ public class TripPlan {
     public int hashCode() {
         return Objects.hash(originIata, destinationIata, beginDate, endDate, adults);
     }
-
-    @Override
-    public String toString() {
-        return "TripPlan{" +
-                "tripPlanId=" + tripPlanId +
-                ", user=" + user +
-                ", originIata='" + originIata + '\'' +
-                ", destinationIata='" + destinationIata + '\'' +
-                ", beginDate=" + beginDate +
-                ", endDate=" + endDate +
-                ", adults=" + adults +
-                '}';
-    }
 }
