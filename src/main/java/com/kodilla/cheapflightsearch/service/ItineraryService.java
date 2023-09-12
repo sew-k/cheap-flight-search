@@ -57,6 +57,13 @@ public class ItineraryService {
 
     public void deleteItinerary(Long id) throws ItineraryNotFoundException {
         if (itineraryRepository.existsById(id)) {
+            Long tripPlanId = null;
+            tripPlanId = itineraryRepository.findById(id).orElse(null).getTripPlan().getTripPlanId();
+            if (tripPlanId != null) {
+                TripPlan tripPlanToUpdate = tripPlanRepository.findById(tripPlanId).get();
+                tripPlanToUpdate.setItinerary(null);
+                tripPlanRepository.save(tripPlanToUpdate);
+            }
             itineraryRepository.deleteById(id);
         } else {
             throw new ItineraryNotFoundException();
@@ -72,7 +79,17 @@ public class ItineraryService {
     }
 
     public Itinerary createItinerary(Itinerary itinerary) {
+        if (itinerary.getTripPlan() != null) {
+            TripPlan tripPlanToUpdate = tripPlanRepository.findById(itinerary.getItineraryId()).get();
+            tripPlanToUpdate.setItinerary(itinerary);
+            tripPlanRepository.save(tripPlanToUpdate);
+        }
         return itineraryRepository.save(itinerary);
+    }
+
+    public boolean checkIfItineraryExists(Itinerary itineraryToCheck) {
+        return itineraryRepository.findAll().stream()
+                .anyMatch(i -> i.getTripPlan().equals(itineraryToCheck.getTripPlan()));
     }
 
     public List<Itinerary> getPurchasedItineraries() {
@@ -81,10 +98,17 @@ public class ItineraryService {
                 .collect(Collectors.toList());
     }
 
-    public Itinerary searchForItineraryBasedOnTripPlan(TripPlan tripPlan) throws Exception {
-        Itinerary result = skyscannerService.searchCreateGetItinerary(skyscannerMapper.mapTripPlanToFlightSearchDto(tripPlan));
-        result.setTripPlan(tripPlan);
-        return result;
+    public void createItineraryBasedOnTripPlan(TripPlan tripPlan) throws Exception {
+        Itinerary searchingResult = skyscannerService.searchCreateGetItinerary(skyscannerMapper.mapTripPlanToFlightSearchDto(tripPlan));
+        searchingResult.setTripPlan(tripPlan);
+        if (tripPlan.getItinerary() != null) {
+            searchingResult.setItineraryId(tripPlan.getItinerary().getItineraryId());
+        }
+        Itinerary savedItinerary = itineraryRepository.save(searchingResult);
+        if (tripPlan.getItinerary() == null) {
+            tripPlan.setItinerary(savedItinerary);
+            tripPlanRepository.save(tripPlan);
+        }
     }
 
     public void switchItineraryPurchased(Itinerary itinerary) {

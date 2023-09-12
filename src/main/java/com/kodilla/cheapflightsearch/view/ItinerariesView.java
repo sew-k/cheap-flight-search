@@ -222,11 +222,11 @@ public class ItinerariesView extends VerticalLayout {
                         .build()
         );
     }
+
     private void searchForItinerary(TripPlan tripPlan) {
         try {
-            Itinerary searchingResult = itineraryService.searchForItineraryBasedOnTripPlan(tripPlan);
-            Itinerary savedItinerary = itineraryService.createItinerary(searchingResult);
-            //TODO - notification
+            itineraryService.createItineraryBasedOnTripPlan(tripPlan);
+            Notification.show("Itinerary successfully saved!");
         } catch (Exception exception) {
             Notification.show("Itinerary not found!: " + exception);
         } finally {

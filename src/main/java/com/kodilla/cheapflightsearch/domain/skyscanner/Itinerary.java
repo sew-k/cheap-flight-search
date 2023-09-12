@@ -12,12 +12,11 @@ import javax.validation.constraints.NotNull;
 @Entity(name = "itineraries")
 public class Itinerary {
     @Id
-    @NotNull
     @GeneratedValue
-    @Column(name = "itinerary_id", unique = true)
+    @Column(name = "itinerary_id")
     private Long itineraryId;
     @NotNull
-    @Column(name = "itinerary_mark", unique = true)
+    @Column(name = "itinerary_mark")
     private String itineraryMark;
     @NotNull
     @Column(name = "price")
