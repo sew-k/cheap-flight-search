@@ -20,5 +20,6 @@ public interface TripPlanRepository extends CrudRepository<TripPlan, Long> {
     Optional<TripPlan> findById(Long id);
     @Override
     void deleteById(Long id);
+    boolean existsById(Long id);
     List<TripPlan> findByUser(User user);
 }
