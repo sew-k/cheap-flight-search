@@ -27,21 +27,7 @@ class ItineraryRepositoryTestSuite {
     @Test
     void testSaveUpdate() {
         //Given
-        Route route = new Route(
-                new Airport("Poland", "Warsaw", "WAW"),
-                new Airport("Germany", "Cologne", "CGN"),
-                Set.of(DayOfWeek.FRIDAY, DayOfWeek.SUNDAY),
-                true
-        );
-        TripPlan tripPlan = new TripPlan(
-                route.getOrigin().getIataCode(),
-                route.getDestination().getIataCode(),
-                LocalDate.of(2023,10,10),
-                LocalDate.of(2023,10,11),
-                1
-        );
-        tripPlanRepository.save(tripPlan);
-        Itinerary itinerary = new Itinerary("itinerary mark", 199.99, tripPlan,"link");
+        Itinerary itinerary = new Itinerary("itinerary mark", 199.99, null,"link");
         itineraryRepository.save(itinerary);
         Long id = itinerary.getItineraryId();
 
@@ -70,21 +56,7 @@ class ItineraryRepositoryTestSuite {
     @Test
     void testExistsById() {
         //Given
-        Route route = new Route(
-                new Airport("Poland", "Warsaw", "WAW"),
-                new Airport("Germany", "Cologne", "CGN"),
-                Set.of(DayOfWeek.FRIDAY, DayOfWeek.SUNDAY),
-                true
-        );
-        TripPlan tripPlan = new TripPlan(
-                route.getOrigin().getIataCode(),
-                route.getDestination().getIataCode(),
-                LocalDate.of(2023,10,10),
-                LocalDate.of(2023,10,11),
-                1
-        );
-        tripPlanRepository.save(tripPlan);
-        Itinerary itinerary = new Itinerary("itinerary mark", 199.99, tripPlan,"link");
+        Itinerary itinerary = new Itinerary("itinerary mark", 199.99, null,"link");
         itineraryRepository.save(itinerary);
         Long id = itinerary.getItineraryId();
 
