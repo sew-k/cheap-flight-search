@@ -57,14 +57,13 @@ public class ItineraryService {
 
     public void deleteItinerary(Long id) throws ItineraryNotFoundException {
         if (itineraryRepository.existsById(id)) {
-            Long tripPlanId = null;
-            tripPlanId = itineraryRepository.findById(id).orElse(null).getTripPlan().getTripPlanId();
-            if (tripPlanId != null) {
-                TripPlan tripPlanToUpdate = tripPlanRepository.findById(tripPlanId).get();
+            Itinerary itineraryToDelete = itineraryRepository.findById(id).get();
+            if (itineraryToDelete.getTripPlan() != null) {
+                TripPlan tripPlanToUpdate = tripPlanRepository.findById(itineraryToDelete.getTripPlan().getTripPlanId()).get();
                 tripPlanToUpdate.setItinerary(null);
                 tripPlanRepository.save(tripPlanToUpdate);
             }
-            itineraryRepository.deleteById(id);
+            itineraryRepository.deleteById(itineraryToDelete.getItineraryId());
         } else {
             throw new ItineraryNotFoundException();
         }

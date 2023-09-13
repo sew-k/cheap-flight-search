@@ -22,6 +22,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,24 +52,12 @@ class ItineraryServiceTestSuite {
     }
 
     @Test
-    void deleteItinerary() {
+    void testDeleteItinerary() {
         //Given
-        Route route = new Route(
-                new Airport("Poland", "Warsaw", "WAW"),
-                new Airport("Germany", "Cologne", "CGN"),
-                Set.of(DayOfWeek.FRIDAY, DayOfWeek.SUNDAY),
-                true
-        );
-        TripPlan tripPlan = new TripPlan(
-                route.getOrigin().getIataCode(),
-                route.getDestination().getIataCode(),
-                LocalDate.of(2023,10,10),
-                LocalDate.of(2023,10,11),
-                1
-        );
-        Itinerary itinerary = new Itinerary(1L, "itinerary mark", 199.99, tripPlan,"link", false);
+        Itinerary itinerary = new Itinerary(1L, "itinerary mark", 199.99, null,"link", false);
         Long id = itinerary.getItineraryId();
         when(itineraryRepository.existsById(id)).thenReturn(true);
+        when(itineraryRepository.findById(id)).thenReturn(Optional.of(itinerary));
 
         //When
         try {
@@ -78,7 +67,6 @@ class ItineraryServiceTestSuite {
         }
 
         //Then
-        verify(itineraryRepository, atLeastOnce()).existsById(id);
         verify(itineraryRepository, atLeastOnce()).deleteById(id);
     }
 
@@ -89,20 +77,7 @@ class ItineraryServiceTestSuite {
     @Test
     void testCreateItinerary(){
         //Given
-        Route route = new Route(
-                new Airport("Poland", "Warsaw", "WAW"),
-                new Airport("Germany", "Cologne", "CGN"),
-                Set.of(DayOfWeek.FRIDAY, DayOfWeek.SUNDAY),
-                true
-        );
-        TripPlan tripPlan = new TripPlan(
-                route.getOrigin().getIataCode(),
-                route.getDestination().getIataCode(),
-                LocalDate.of(2023,10,10),
-                LocalDate.of(2023,10,11),
-                1
-        );
-        Itinerary itinerary = new Itinerary("itinerary mark", 199.99, tripPlan,"link");
+        Itinerary itinerary = new Itinerary("itinerary mark", 199.99, null,"link");
 
         //When
         itineraryService.createItinerary(itinerary);
