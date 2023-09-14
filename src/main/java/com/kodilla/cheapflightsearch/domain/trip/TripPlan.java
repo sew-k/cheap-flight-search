@@ -38,7 +38,7 @@ public class TripPlan {
     @Column(name = "adults")
     private int adults;
     @OneToOne(
-            cascade = CascadeType.DETACH,
+            cascade = CascadeType.REMOVE,
             fetch = FetchType.EAGER
     )
     @JoinColumn(name = "itinerary_id")
@@ -69,5 +69,10 @@ public class TripPlan {
         return adults == tripPlan.adults && originIata.equals(tripPlan.originIata)
                 && destinationIata.equals(tripPlan.destinationIata) && beginDate.equals(tripPlan.beginDate)
                 && endDate.equals(tripPlan.endDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(user, originIata, destinationIata, beginDate, endDate, adults);
     }
 }
