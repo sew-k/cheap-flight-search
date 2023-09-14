@@ -98,7 +98,9 @@ public class ItineraryService {
     }
 
     public void createItineraryBasedOnTripPlan(TripPlan tripPlan) throws Exception {
-        Itinerary searchingResult = skyscannerService.searchCreateGetItinerary(skyscannerMapper.mapTripPlanToFlightSearchDto(tripPlan));
+        Itinerary searchingResult = skyscannerService.searchCreateGetItinerary(
+                skyscannerMapper.mapTripPlanToFlightSearchDto(tripPlan)
+        );
         searchingResult.setTripPlan(tripPlan);
         if (tripPlan.getItinerary() != null) {
             searchingResult.setItineraryId(tripPlan.getItinerary().getItineraryId());
@@ -203,10 +205,10 @@ public class ItineraryService {
         Optional<TripPlan> tripPlanToDelete = tripPlanRepository.findById(id);
         if (tripPlanToDelete.isPresent()) {
             itineraryRepository.findByTripPlan(tripPlanToDelete.get()).stream()
-                            .forEach(i -> {
-                                i.setTripPlan(null);
-                                itineraryRepository.save(i);
-                            });
+                    .forEach(i -> {
+                        i.setTripPlan(null);
+                        itineraryRepository.save(i);
+                    });
             tripPlanRepository.deleteById(id);
         } else {
             throw new TripPlanNotFoundException();
