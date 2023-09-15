@@ -5,6 +5,7 @@ import com.kodilla.cheapflightsearch.domain.user.User;
 import com.kodilla.cheapflightsearch.domain.user.UserDto;
 import com.kodilla.cheapflightsearch.repository.CalendarRepository;
 import com.kodilla.cheapflightsearch.service.ItineraryService;
+import com.kodilla.cheapflightsearch.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,9 @@ public class UserMapper {
     CalendarRepository calendarRepository;
     @Autowired
     ItineraryService itineraryService;
+    @Autowired
+    RouteService routeService;
+
     public User mapToUser(final UserDto userDto) {
         return new User(
                 userDto.getUserId(),
@@ -25,9 +29,11 @@ public class UserMapper {
                 userDto.getRole(),
                 userDto.getPassword(),
                 calendarRepository.findById(userDto.getCalendarId()).orElse(new Calendar()),
-                itineraryService.getTripPlansByUserId(userDto.getUserId())
+                itineraryService.getTripPlansByUserId(userDto.getUserId()),
+                routeService.getRoutesByUserId(userDto.getUserId())
         );
     }
+
     public UserDto mapToUserDto(final User user) {
         return UserDto.builder()
                 .userId(user.getUserId())
@@ -38,9 +44,11 @@ public class UserMapper {
                 .calendarId(user.getCalendar().getCalendarId())
                 .build();
     }
+
     public List<UserDto> mapToUserDtoList(final List<User> userList) {
         return userList.stream().map(this::mapToUserDto).collect(Collectors.toList());
     }
+
     public List<User> mapToUserList(final List<UserDto> userDtoList) {
         return userDtoList.stream().map(this::mapToUser).collect(Collectors.toList());
     }
