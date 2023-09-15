@@ -1,8 +1,12 @@
 package com.kodilla.cheapflightsearch.view;
 
 import com.kodilla.cheapflightsearch.domain.trip.*;
+import com.kodilla.cheapflightsearch.domain.user.User;
+import com.kodilla.cheapflightsearch.exception.UserNotFoundException;
 import com.kodilla.cheapflightsearch.service.AirportService;
 import com.kodilla.cheapflightsearch.service.RouteService;
+import com.kodilla.cheapflightsearch.service.SecurityService;
+import com.kodilla.cheapflightsearch.service.UserService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -23,9 +27,11 @@ import javax.annotation.security.PermitAll;
 import java.time.DayOfWeek;
 import java.util.HashSet;
 import java.util.Set;
+
 @PermitAll
 @com.vaadin.flow.router.Route(value = "main/routes")
 public class RoutesView extends VerticalLayout {
+    private User currentUser = null;
     private Airport originAirport;
     private Airport destinationAirport;
     private Grid<Route> routesGrid = new Grid<>(Route.class, false);
@@ -34,6 +40,10 @@ public class RoutesView extends VerticalLayout {
     RouteService routeService;
     @Autowired
     AirportService airportService;
+    @Autowired
+    UserService userService;
+    @Autowired
+    SecurityService securityService;
 
     public RoutesView() {
         ComboBox<Airport> originAirportComboBox = new ComboBox<>("Origin airport");
@@ -54,7 +64,7 @@ public class RoutesView extends VerticalLayout {
                 DayOfWeek.SATURDAY,
                 DayOfWeek.SUNDAY
         );
-        selectionDaysOfWeekComboBox.setValue();                   //TODO temporarily stubbed
+        selectionDaysOfWeekComboBox.setValue();
         Button addToRoutesButton = new Button("Add to routes", i -> {
             originAirport = originAirportComboBox.getValue();
             destinationAirport = destinationAirportComboBox.getValue();
@@ -63,8 +73,9 @@ public class RoutesView extends VerticalLayout {
                         originAirport,
                         destinationAirport,
                         selectionDaysOfWeekComboBox.getValue(),
-                        false
-                        ));
+                        false,
+                        currentUser
+                ));
                 refreshRoutesGrid();
             } else {
                 Notification.show("Incorrect input values!");
@@ -77,6 +88,7 @@ public class RoutesView extends VerticalLayout {
                 selectionDaysOfWeekComboBox
         );
         add(new Button("Refresh all", e -> {
+            setCurrentUser();
             setUpAirports();
             refreshRoutesGrid();
         }));
@@ -104,14 +116,19 @@ public class RoutesView extends VerticalLayout {
                     button.addThemeVariants(ButtonVariant.LUMO_ICON,
                             ButtonVariant.LUMO_ERROR,
                             ButtonVariant.LUMO_TERTIARY);
-                    button.addClickListener(e -> routeService.switchFavourite(route));
-                    button.setIcon(new Icon(VaadinIcon.EYE));
+                    button.addClickListener(e -> {
+                        routeService.switchFavourite(route);
+                        refreshRoutesGrid();
+                    });
+                    button.setIcon(getFavouriteIndicator(route));
                 })).setHeader("Favourite");
         add(routesGrid);
     }
+
     public void refreshRoutesGrid() {
         routesGrid.setItems(routeService.getRoutes());
     }
+
     private void removeRoute(Route route) {
         if (route == null)
             return;
@@ -122,6 +139,7 @@ public class RoutesView extends VerticalLayout {
         }
         this.refreshRoutesGrid();
     }
+
     @EventListener(ApplicationReadyEvent.class)
     private void setUpAirports() {
         try {
@@ -129,6 +147,22 @@ public class RoutesView extends VerticalLayout {
             airportSet.addAll(airportService.getAirports());
         } catch (Exception e) {
 
+        }
+    }
+
+    private Icon getFavouriteIndicator(Route route) {
+        if (route.isFavourite()) {
+            return new Icon(VaadinIcon.STAR);
+        } else {
+            return new Icon(VaadinIcon.STAR_O);
+        }
+    }
+
+    private void setCurrentUser() {
+        try {
+            currentUser = userService.getUserByName(securityService.getAuthenticatedUser().getUsername());
+        } catch (UserNotFoundException e) {
+            Notification.show("User not found: " + e);
         }
     }
 }
