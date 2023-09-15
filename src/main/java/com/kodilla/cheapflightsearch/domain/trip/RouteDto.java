@@ -17,4 +17,6 @@ public class RouteDto {
     private String origin;
     private String destination;
     private List<DayOfWeek> daysOfWeek;
+    private boolean favourite;
+    private Long userId;
 }

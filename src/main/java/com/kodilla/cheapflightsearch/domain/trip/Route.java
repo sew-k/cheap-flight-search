@@ -1,5 +1,6 @@
 package com.kodilla.cheapflightsearch.domain.trip;
 
+import com.kodilla.cheapflightsearch.domain.user.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -37,6 +38,17 @@ public class Route {
     private Set<DayOfWeek> daysOfWeek = new HashSet<>();
     @Column(name = "favourite")
     private boolean favourite;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public Route(Airport origin, Airport destination, Set<DayOfWeek> daysOfWeek, boolean favourite, User user) {
+        this.origin = origin;
+        this.destination = destination;
+        this.daysOfWeek = daysOfWeek;
+        this.favourite = favourite;
+        this.user = user;
+    }
 
     public Route(Airport origin, Airport destination, Set<DayOfWeek> daysOfWeek, boolean favourite) {
         this.origin = origin;
