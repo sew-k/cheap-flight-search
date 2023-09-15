@@ -40,7 +40,6 @@ public class MainView extends VerticalLayout {
         add(new H1("CheapFlightSearch"));
         add(new Button("Quick search", e -> UI.getCurrent().getPage().open("main/quick_search")));
         add(new Button("Routes", e -> UI.getCurrent().getPage().open("main/routes")));
-        add(new Button("Airports", e -> UI.getCurrent().getPage().open("main/airports")));
         add(new Button("Calendar", e -> UI.getCurrent().getPage().open("main/calendar")));
         add(new Button("Itineraries", e -> UI.getCurrent().getPage().open("main/itineraries")));
         ifAdministratorAddOptions();
@@ -56,6 +55,7 @@ public class MainView extends VerticalLayout {
         if (username != null && securityService.getAuthenticatedUser().getAuthorities()
                 .contains(adminSimpleGrantedAuthority())) {
             add(new Button("Manage Users", e -> UI.getCurrent().getPage().open("main/users")));
+            add(new Button("Airports", e -> UI.getCurrent().getPage().open("main/airports")));
         }
     }
     private SimpleGrantedAuthority adminSimpleGrantedAuthority() {
