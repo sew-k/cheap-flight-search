@@ -4,6 +4,7 @@ import com.kodilla.cheapflightsearch.domain.calendar.HolidayPlan;
 import com.kodilla.cheapflightsearch.domain.trip.Airport;
 import com.kodilla.cheapflightsearch.domain.trip.Route;
 import com.kodilla.cheapflightsearch.domain.trip.TripPlan;
+import com.kodilla.cheapflightsearch.domain.user.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,7 +27,8 @@ class TripPlanMapperTestSuite {
                 new Airport("Poland", "Warsaw", "WAW"),
                 new Airport("Germany", "Berlin", "BER"),
                 Set.of(DayOfWeek.MONDAY, DayOfWeek.FRIDAY),
-                true
+                true,
+                new User()
                 );
         HolidayPlan holidayPlan = new HolidayPlan(
                 LocalDate.of(2025,1,1),
