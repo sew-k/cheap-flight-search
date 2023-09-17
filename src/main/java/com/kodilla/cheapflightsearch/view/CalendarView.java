@@ -3,20 +3,20 @@ package com.kodilla.cheapflightsearch.view;
 import com.kodilla.cheapflightsearch.domain.calendar.Calendar;
 import com.kodilla.cheapflightsearch.domain.calendar.HolidayPlan;
 import com.kodilla.cheapflightsearch.domain.user.User;
+import com.kodilla.cheapflightsearch.exception.UserNotFoundException;
 import com.kodilla.cheapflightsearch.service.CalendarService;
+import com.kodilla.cheapflightsearch.service.SecurityService;
 import com.kodilla.cheapflightsearch.service.UserService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,39 +26,33 @@ import java.time.LocalDate;
 @PermitAll
 @Route(value = "main/calendar")
 public class CalendarView extends VerticalLayout {
+    private Calendar currentCalendar;
+    private User currentUser = null;
+    private Grid<HolidayPlan> holidaysGrid = new Grid<>(HolidayPlan.class);
     @Autowired
     CalendarService calendarService;
-    private Calendar calendar;                                 //TODO temporarily. To associate with User
-
-    private Grid<HolidayPlan> holidaysGrid = new Grid<>(HolidayPlan.class);
+    @Autowired
+    SecurityService securityService;
+    @Autowired
+    UserService userService;
 
     public CalendarView() {
         DatePicker beginDatePicker = new DatePicker("Begin Holiday date");
         beginDatePicker.setWeekNumbersVisible(true);
-        beginDatePicker.setValue(LocalDate.of(2023, 8, 4));                     //TODO temporarily stubbed
+        beginDatePicker.setValue(LocalDate.now());
         DatePicker endDatePicker = new DatePicker("End Holiday date");
         endDatePicker.setWeekNumbersVisible(true);
-        endDatePicker.setValue(LocalDate.of(2023, 8, 6));                       //TODO temporarily stubbed
-        HorizontalLayout addHolidaysToCalendarLayout = new HorizontalLayout(
-                beginDatePicker,
-                endDatePicker
-        );
+        endDatePicker.setValue(LocalDate.now().plusDays(1l));
         add(new Button("Back to Main", e -> UI.getCurrent().getPage().open("main")));
-        TextField currentUserTextField = new TextField("Current User");
-        if (UserService.getCurrentUser() != null) {
-            currentUserTextField.setValue(UserService.getCurrentUser().getUsername());
-        }
-        currentUserTextField.setEnabled(false);
-        add(currentUserTextField);
-        add(new Button("Get calendar", c -> {
-            setCurrentUserCalendarToCurrent();
+        add(new Button("Refresh all", e -> {
+            setCurrentUser();
+            setCurrentCalendar();
             refreshHolidaysGridForCalendar();
         }));
-        add(addHolidaysToCalendarLayout);
-        add(new Button("Add to calendar", h -> {
+        Button addHolidaysButton = new Button("Add to calendar", event -> {
             try {
                 calendarService.setNewHolidayPlanInCalendar(
-                        calendar.getCalendarId(),
+                        currentCalendar.getCalendarId(),
                         new HolidayPlan(
                                 beginDatePicker.getValue(),
                                 endDatePicker.getValue()
@@ -69,7 +63,13 @@ public class CalendarView extends VerticalLayout {
             } finally {
                 refreshHolidaysGridForCalendar();
             }
-        }));
+        });
+        HorizontalLayout addHolidaysToCalendarLayout = new HorizontalLayout(
+                beginDatePicker,
+                endDatePicker,
+                addHolidaysButton
+        );
+        add(addHolidaysToCalendarLayout);
         holidaysGrid.setColumns("beginDate", "endDate");
         holidaysGrid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, holidayPlan) -> {
@@ -90,12 +90,12 @@ public class CalendarView extends VerticalLayout {
         }
     }
 
-    public void setCurrentUserCalendarToCurrent() {
-        this.calendar = UserService.getCurrentUser().getCalendar();
+    public void setCurrentCalendar() {
+        this.currentCalendar = currentUser.getCalendar();
     }
 
     public Calendar getCurrentCalendar() {
-        return this.calendar;
+        return this.currentCalendar;
     }
 
     private void removeHolidayPlan(HolidayPlan holidayPlan) {
@@ -111,5 +111,12 @@ public class CalendarView extends VerticalLayout {
             Notification.show("Exception when trying to remove holiday plan: " + e);
         }
         this.refreshHolidaysGridForCalendar();
+    }
+    private void setCurrentUser() {
+        try {
+            currentUser = userService.getUserByName(securityService.getAuthenticatedUser().getUsername());
+        } catch (UserNotFoundException e) {
+            Notification.show("User not found: " + e);
+        }
     }
 }
