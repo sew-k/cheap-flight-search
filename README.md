@@ -307,5 +307,5 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 
 3. ~~Not handled exception when User duplicates searching requests for Itineraries~~ - FIXED
 4. ~~CalendarView is now useless due to not store current data about User and it's calendar~~ - FIXED
-5. CalendarView not connected to authenticated User since Spring Security has been developed
-6. Routes without relations to User entity - unable to manage this by User
+5. ~~CalendarView not connected to authenticated User since Spring Security has been developed~~ - FIXED
+6. ~~Routes without relations to User entity - unable to manage this by User~~ - FIXED
