@@ -14,7 +14,6 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    public static User currentUser;
 
     public List<User> getUsers() {
         return userRepository.findAll();
@@ -64,21 +63,4 @@ public class UserService {
     public User getUserByEmail(String email) throws UserNotFoundException {
         return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
     }
-
-    public static User getCurrentUser() {
-        return currentUser;
-    }
-
-    public static void setCurrentUser(User currentUser) {
-        UserService.currentUser = currentUser;
-    }
-
-//    public boolean checkLogin(String username, String password) {
-//        Optional<User> userToCheck = userRepository.findByUsername(username);
-//        if (userToCheck.isPresent() && passwordEncoder.matches(password, userToCheck.get().getPassword())) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
 }
