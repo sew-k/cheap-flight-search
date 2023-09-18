@@ -31,26 +31,6 @@ public class UserView extends VerticalLayout {
 
     public UserView() {
         add(new Button("Back to Main", e -> UI.getCurrent().getPage().open("main")));
-        add(new Button("Add User", e -> {
-            userService.createUser(
-                    new User(
-                            "JohnTest",
-                            "john_test@test.com",
-                            UserRole.USER,
-                            "password",
-                            new Calendar()
-                    ));
-            Notification.show("user added");
-            refreshUserGrid();
-        }));
-        add(new Button("Set current User", e -> {
-            if (selectedUser != null) {
-                UserService.setCurrentUser(selectedUser);
-                Notification.show("User selected. Current user is: " + UserService.getCurrentUser().getUsername());
-            } else {
-                Notification.show("Select user first!");
-            }
-        }));
         add(new Button("Show all users", e -> {
             refreshUserGrid();
             Notification.show("Showing all users");
