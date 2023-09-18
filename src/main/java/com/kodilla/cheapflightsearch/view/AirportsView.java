@@ -5,11 +5,15 @@ import com.kodilla.cheapflightsearch.service.AirportService;
 import com.kodilla.cheapflightsearch.service.WeatherService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -32,10 +36,28 @@ public class AirportsView extends VerticalLayout {
         airportsGrid.addColumn(Airport::getCountry).setHeader("Country").setSortable(true);
         airportsGrid.addColumn(Airport::getCity).setHeader("City").setSortable(true);
         airportsGrid.addColumn(a -> airportService.getWeatherForAirport(a)).setHeader("Weather").setSortable(true);
+        airportsGrid.addColumn(
+                new ComponentRenderer<>(Button::new, (button, airport) -> {
+                    button.addThemeVariants(ButtonVariant.LUMO_ICON,
+                            ButtonVariant.LUMO_ERROR,
+                            ButtonVariant.LUMO_TERTIARY);
+                    button.addClickListener(e -> this.removeAirport(airport));
+                    button.setIcon(new Icon(VaadinIcon.TRASH));
+                })).setHeader("Manage airports");
         add(airportsGrid);
     }
 
-    public void refreshAirportsGrid() {
+    private void removeAirport(Airport airport) {
+        try {
+            airportService.deleteAirport(airport.getAirportId());
+        } catch (Exception exception) {
+            Notification.show("Exception when trying to remove an airport: " + exception);
+        } finally {
+            refreshAirportsGrid();
+        }
+    }
+
+    private void refreshAirportsGrid() {
         airportsGrid.setItems(airportService.getAirports());
     }
 
