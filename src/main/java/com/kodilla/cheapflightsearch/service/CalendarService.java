@@ -1,10 +1,12 @@
 package com.kodilla.cheapflightsearch.service;
 
+import com.kodilla.cheapflightsearch.domain.user.User;
 import com.kodilla.cheapflightsearch.exception.CalendarNotFoundException;
 import com.kodilla.cheapflightsearch.domain.calendar.Calendar;
 import com.kodilla.cheapflightsearch.domain.calendar.HolidayPlan;
 import com.kodilla.cheapflightsearch.repository.CalendarRepository;
 import com.kodilla.cheapflightsearch.repository.HolidayPlanRepository;
+import com.kodilla.cheapflightsearch.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +41,7 @@ public class CalendarService {
             throw new CalendarNotFoundException();
         }
     }
+
     public Calendar updateCalendar(Calendar calendar) throws CalendarNotFoundException {
         if (calendarRepository.findById(calendar.getCalendarId()).isPresent()) {
             return calendarRepository.save(calendar);
@@ -62,11 +65,17 @@ public class CalendarService {
         calendar.getHolidayPlanList().remove(holidayPlanRepository.findById(holidayPlan.getHolidayPlanId()).get());
         return updateCalendar(id, calendar);
     }
+
     public Calendar removeHolidayPlanFromCalendar(Calendar calendar, HolidayPlan holidayPlan) throws CalendarNotFoundException {
         calendar.getHolidayPlanList().remove(holidayPlanRepository.findById(holidayPlan.getHolidayPlanId()).get());
         return updateCalendar(calendar.getCalendarId(), calendar);
     }
+
     public boolean isCalendarExisting(Long id) {
         return calendarRepository.existsById(id);
+    }
+
+    public List<HolidayPlan> getHolidayPlansByUser(User user) {
+        return calendarRepository.findById(user.getCalendar().getCalendarId()).orElse(new Calendar()).getHolidayPlanList();
     }
 }
