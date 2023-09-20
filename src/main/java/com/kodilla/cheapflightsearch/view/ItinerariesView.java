@@ -71,18 +71,16 @@ public class ItinerariesView extends VerticalLayout {
         originAirportComboBox.setPattern("IATA code");
         originAirportComboBox.setAllowCustomValue(true);
         originAirportComboBox.setItems(airportSet);
+        originAirportComboBox.setClearButtonVisible(true);
         destinationAirportComboBox.setPattern("IATA code");
         destinationAirportComboBox.setAllowCustomValue(true);
         destinationAirportComboBox.setItems(airportSet);
+        destinationAirportComboBox.setClearButtonVisible(true);
         beginDatePicker.setWeekNumbersVisible(true);
         beginDatePicker.setValue(LocalDate.now());
         endDatePicker.setWeekNumbersVisible(true);
-        endDatePicker.setValue(LocalDate.now());
+        endDatePicker.setValue(LocalDate.now().plusDays(1L));
 
-//        Button customSearchButton = new Button("Search", e -> {
-//            readViewForms();
-//            searchForItinerary(newTripPlanFromReadInput());
-//        });
         Button addToTripPlansButton = new Button("Add to Trip Plans", e -> {
             readViewForms();
             addNewTripPlan();
@@ -90,7 +88,6 @@ public class ItinerariesView extends VerticalLayout {
         });
 
         VerticalLayout searchButtonsLayout = new VerticalLayout();
-//        searchButtonsLayout.add(customSearchButton, addToTripPlansButton);
         searchButtonsLayout.add(addToTripPlansButton);
         HorizontalLayout customSearchFieldsLayout = new HorizontalLayout(
                 originAirportComboBox,
