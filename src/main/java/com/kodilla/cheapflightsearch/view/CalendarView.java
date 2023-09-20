@@ -23,11 +23,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.PermitAll;
 import java.time.LocalDate;
+
 @PermitAll
 @Route(value = "main/calendar")
 public class CalendarView extends VerticalLayout {
     private Calendar currentCalendar;
     private User currentUser = null;
+    private LocalDate beginDate;
+    private LocalDate endDate;
+    private DatePicker beginDatePicker = new DatePicker("Begin Holiday date");
+    private DatePicker endDatePicker = new DatePicker("End Holiday date");
     private Grid<HolidayPlan> holidaysGrid = new Grid<>(HolidayPlan.class);
     @Autowired
     CalendarService calendarService;
@@ -37,10 +42,8 @@ public class CalendarView extends VerticalLayout {
     UserService userService;
 
     public CalendarView() {
-        DatePicker beginDatePicker = new DatePicker("Begin Holiday date");
         beginDatePicker.setWeekNumbersVisible(true);
         beginDatePicker.setValue(LocalDate.now());
-        DatePicker endDatePicker = new DatePicker("End Holiday date");
         endDatePicker.setWeekNumbersVisible(true);
         endDatePicker.setValue(LocalDate.now().plusDays(1l));
         add(new Button("Back to Main", e -> UI.getCurrent().getPage().open("main")));
@@ -50,19 +53,9 @@ public class CalendarView extends VerticalLayout {
             refreshHolidaysGridForCalendar();
         }));
         Button addHolidaysButton = new Button("Add to calendar", event -> {
-            try {
-                calendarService.setNewHolidayPlanInCalendar(
-                        currentCalendar.getCalendarId(),
-                        new HolidayPlan(
-                                beginDatePicker.getValue(),
-                                endDatePicker.getValue()
-                        )
-                );
-            } catch (Exception e) {
-                Notification.show("Exception when adding new holiday plan to calendar: " + e);
-            } finally {
-                refreshHolidaysGridForCalendar();
-            }
+            readViewForms();
+            setNewHolidayPlanInCalendar();
+            refreshHolidaysGridForCalendar();
         });
         HorizontalLayout addHolidaysToCalendarLayout = new HorizontalLayout(
                 beginDatePicker,
@@ -83,11 +76,9 @@ public class CalendarView extends VerticalLayout {
     }
 
     public void refreshHolidaysGridForCalendar() {
-        try {
-            holidaysGrid.setItems(getCurrentCalendar().getHolidayPlanList());
-        } catch (Exception e) {
-            Notification.show("Exception when trying to refresh: " + e);
-        }
+//        holidaysGrid.setItems(getCurrentCalendar().getHolidayPlanList());
+        holidaysGrid.setItems(calendarService.getHolidayPlansByUser(currentUser));
+//        tripPlanGrid.setItems(itineraryService.getTripPlansByUser(currentUser));
     }
 
     public void setCurrentCalendar() {
@@ -112,11 +103,27 @@ public class CalendarView extends VerticalLayout {
         }
         this.refreshHolidaysGridForCalendar();
     }
+
     private void setCurrentUser() {
         try {
             currentUser = userService.getUserByName(securityService.getAuthenticatedUser().getUsername());
         } catch (UserNotFoundException e) {
             Notification.show("User not found: " + e);
         }
+    }
+
+    private void readViewForms() {
+        this.beginDate = beginDatePicker.getValue();
+        this.endDate = endDatePicker.getValue();
+    }
+
+    private void setNewHolidayPlanInCalendar() {
+        calendarService.setNewHolidayPlanInCalendar(
+                currentCalendar.getCalendarId(),
+                new HolidayPlan(
+                        beginDatePicker.getValue(),
+                        endDatePicker.getValue()
+                )
+        );
     }
 }
