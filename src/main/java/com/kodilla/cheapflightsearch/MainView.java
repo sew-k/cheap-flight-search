@@ -39,11 +39,14 @@ public class MainView extends VerticalLayout {
         add(authenticationLayout);
         add(new H1("CheapFlightSearch"));
         add(new Button("Quick search", e -> UI.getCurrent().getPage().open("main/quick_search")));
-        add(new Button("Routes", e -> UI.getCurrent().getPage().open("main/routes")));
-        add(new Button("Calendar", e -> UI.getCurrent().getPage().open("main/calendar")));
-        add(new Button("Itineraries", e -> UI.getCurrent().getPage().open("main/itineraries")));
+        add(new Button("Custom Itineraries", e -> UI.getCurrent().getPage().open("main/itineraries")));
+        add(new Button("My Routes", e -> UI.getCurrent().getPage().open("main/routes")));
+        add(new Button("My Calendar", e -> UI.getCurrent().getPage().open("main/calendar")));
+        add(new Button("Travel Suggestions", e -> UI.getCurrent().getPage().open("main/suggestions")));
+
         ifAdministratorAddOptions();
     }
+
     private void setCurrentUsername() {
         try {
             username = securityService.getAuthenticatedUser().getUsername();
@@ -51,6 +54,7 @@ public class MainView extends VerticalLayout {
             Notification.show("No user logged in. Using application as Anonymous.");
         }
     }
+
     private void ifAdministratorAddOptions() {
         if (username != null && securityService.getAuthenticatedUser().getAuthorities()
                 .contains(adminSimpleGrantedAuthority())) {
@@ -58,6 +62,7 @@ public class MainView extends VerticalLayout {
             add(new Button("Airports", e -> UI.getCurrent().getPage().open("main/airports")));
         }
     }
+
     private SimpleGrantedAuthority adminSimpleGrantedAuthority() {
         return new SimpleGrantedAuthority("ROLE_" + UserRole.ADMIN);
     }
