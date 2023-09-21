@@ -269,7 +269,7 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 1. **User**
 - [x] using application as default User - *developed ADMIN and USER roles, also possible act as Anonymous [2023.08.24]*
 - [x] User authentication using Spring Security - *implemented [2023.08.23, 2023.08.31 - with using of DB]*
-- [ ] managing dataset by Administrator - *not completed yet*
+- [x] managing dataset by Administrator - *implemented [2023.09.20]*
 
 2. **Calendar**
 - [ ] full year calendar view with holiday plan visualized on it
@@ -283,18 +283,20 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 - [ ] when incorrect data input
 - [ ] for error responses from external API's
 
-4. **Vaadin** - view layer
+5. **Vaadin** - view layer
 - [ ] to split onto frontend and backend separate applications (to consider)
 - [ ] development of more responsive UI
+- [ ] **QuickSearchView** - origin and destination airport - to enable also choosing from saved airports (and custom IATA code input)
+- [ ] **SuggestionsView** - to add new view containing searching results based on User's holiday plans and favourite routes.
 
-5. Application deploy
+6. Application deploy
 - [ ] deploying backend on *replit* (to consider) 
 - [ ] deploying database on cloud
 
-6. Skyscanner
+7. Skyscanner
 - [ ] search results for more actual and correct data from Skyscanner API
 
-7. Scheduled actions
+8. Scheduled actions
 - [ ] scheduled reminder email about upcoming trip - with for example weather data in destination city
 - [ ] setting scheduled searching engine feature for finding cheapest flights to purchase
 - [ ] scheduled information email with latest prices of favourite itineraries 
@@ -303,7 +305,7 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 
 1. ~~There is an issue of using Swagger (swagger-ui) for API endpoints documentation in the project~~ - FIXED
 
-2. Before searching for itineraries in ItineraryView it is needed to set up data by clicking "set airports" button
+2. ~~Before searching for itineraries in ItineraryView it is needed to set up data by clicking "set airports" button~~ - out of date
 
 3. ~~Not handled exception when User duplicates searching requests for Itineraries~~ - FIXED
 4. ~~CalendarView is now useless due to not store current data about User and it's calendar~~ - FIXED
