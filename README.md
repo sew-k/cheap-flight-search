@@ -311,3 +311,7 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 4. ~~CalendarView is now useless due to not store current data about User and it's calendar~~ - FIXED
 5. ~~CalendarView not connected to authenticated User since Spring Security has been developed~~ - FIXED
 6. ~~Routes without relations to User entity - unable to manage this by User~~ - FIXED
+7. When searching multiple Itineraries basing on holiday plans and favourite routes, it is unable to get from Itinerary 
+information such as origin/ destination/ dates etc.
+8. When adding the same holiday plan, application adds new instead of modify existing or skip changes.
+9. **SuggestionsView**: If only one flight available (without flight back for example) - this result shouldn't be taken into account.
