@@ -66,6 +66,7 @@ public class RoutesView extends VerticalLayout {
         );
         selectionDaysOfWeekComboBox.setValue();
         Button addToRoutesButton = new Button("Add to routes", i -> {
+            setCurrentUser();
             originAirport = originAirportComboBox.getValue();
             destinationAirport = destinationAirportComboBox.getValue();
             if (airportSet.contains(originAirport) && airportSet.contains(destinationAirport)) {
