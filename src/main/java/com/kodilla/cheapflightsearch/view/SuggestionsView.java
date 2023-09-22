@@ -2,6 +2,7 @@ package com.kodilla.cheapflightsearch.view;
 
 import com.kodilla.cheapflightsearch.domain.calendar.HolidayPlan;
 import com.kodilla.cheapflightsearch.domain.skyscanner.Itinerary;
+import com.kodilla.cheapflightsearch.domain.trip.Route;
 import com.kodilla.cheapflightsearch.domain.user.User;
 import com.kodilla.cheapflightsearch.exception.UserNotFoundException;
 import com.kodilla.cheapflightsearch.service.*;
@@ -15,7 +16,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.PermitAll;
@@ -23,14 +23,13 @@ import java.text.NumberFormat;
 import java.util.*;
 
 @PermitAll
-@Route(value = "main/suggestions")
+@com.vaadin.flow.router.Route(value = "main/suggestions")
 public class SuggestionsView extends VerticalLayout {
     private Grid<Itinerary> itineraryGrid = new Grid<>(Itinerary.class, false);
     private User currentUser = null;
     private int adults = 1; //TODO temporarily stubbed
     private List<HolidayPlan> holidayPlans = new ArrayList<>();
-    private List<com.kodilla.cheapflightsearch.domain.trip.Route> routes = new ArrayList<>();
-
+    private List<Route> routes = new ArrayList<>();
     private static final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("pl", "PL"));
     @Autowired
     SecurityService securityService;
@@ -54,11 +53,15 @@ public class SuggestionsView extends VerticalLayout {
             refreshAll();
         }));
 
-        itineraryGrid.addColumn(i -> i.getTripPlan().getOriginIata()).setHeader("Origin");
-        itineraryGrid.addColumn(i -> i.getTripPlan().getDestinationIata()).setHeader("Destination");
-        itineraryGrid.addColumn(i -> i.getTripPlan().getBeginDate()).setHeader("Begin trip date");
-        itineraryGrid.addColumn(i -> i.getTripPlan().getEndDate()).setHeader("End trip date");
-        itineraryGrid.addColumn(i -> i.getTripPlan().getAdults()).setHeader("Passengers");
+
+        //TODO itinerary does not have its own trip plan!
+//        itineraryGrid.addColumn(i -> i.getTripPlan().getOriginIata()).setHeader("Origin");
+//        itineraryGrid.addColumn(i -> i.getTripPlan().getDestinationIata()).setHeader("Destination");
+//        itineraryGrid.addColumn(i -> i.getTripPlan().getBeginDate()).setHeader("Begin trip date");
+//        itineraryGrid.addColumn(i -> i.getTripPlan().getEndDate()).setHeader("End trip date");
+//        itineraryGrid.addColumn(i -> i.getTripPlan().getAdults()).setHeader("Passengers");
+
+
         itineraryGrid.addColumn(i -> currencyFormatter.format(i.getPrice())).setHeader("Price");
         itineraryGrid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, i) -> {
