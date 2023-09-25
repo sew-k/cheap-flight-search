@@ -55,13 +55,44 @@ class SimpleEmailServiceTestSuite {
     @Test
     void testSend_shouldThrowException() {
         //Given
-        Mail testMail = Mail.builder()
+        Mail testMailWithoutRecipient = Mail.builder()
                 .subject("cheap-flight-search test mail")
                 .message("Test mail message")
                 .build();
 
         //When & Then
-        assertThrows(MailException.class, () -> simpleEmailService.send(testMail));
+        assertThrows(MailException.class, () -> simpleEmailService.send(testMailWithoutRecipient));
     }
 
+    @Test
+    void testCreateMailMessage() {
+        //Given
+        Mail testMail = Mail.builder()
+                .mailTo("cheapflightsearch.app@gmail.com")
+                .mailToCc("other.test@gmail.com")
+                .subject("cheap-flight-search test mail")
+                .message("Test mail message")
+                .build();
+
+        //When
+        SimpleMailMessage simpleTestMail = simpleEmailService.createMailMessage(testMail);
+
+        //Then
+        assertEquals(testMail.getMailTo(), simpleTestMail.getTo()[0]);
+        assertEquals(testMail.getMailToCc(), simpleTestMail.getCc()[0]);
+        assertEquals(testMail.getSubject(), simpleTestMail.getSubject());
+        assertEquals(testMail.getMessage(), simpleTestMail.getText());
+    }
+
+    @Test
+    void testCreateMailMessage_shouldThrowException() {
+        //Given
+        Mail testMailWithoutRecipient = Mail.builder()
+                .subject("cheap-flight-search test mail")
+                .message("Test mail message")
+                .build();
+
+        //When & Then
+        assertThrows(MailException.class, () -> simpleEmailService.createMailMessage(testMailWithoutRecipient));
+    }
 }
