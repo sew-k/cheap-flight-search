@@ -3,6 +3,7 @@ package com.kodilla.cheapflightsearch.service;
 import com.kodilla.cheapflightsearch.domain.email.Mail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.MailException;
+import org.springframework.mail.MailParseException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
@@ -26,9 +27,14 @@ public class SimpleEmailService {
         javaMailSender.send(createMailMessage(mail));
     }
 
-    private SimpleMailMessage createMailMessage(final Mail mail) {
+    public SimpleMailMessage createMailMessage(final Mail mail) throws MailException {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(mail.getMailTo());
+        Optional <String> optionalTo = Optional.ofNullable(mail.getMailTo());
+        if (optionalTo.isPresent()) {
+            mailMessage.setTo(mail.getMailTo());
+        } else {
+            throw new MailParseException("No message recipient!");
+        }
         String toCc = mail.getMailToCc();
         Optional<String> optionalToCc = Optional.ofNullable(toCc);
         if (optionalToCc.isPresent()) {
