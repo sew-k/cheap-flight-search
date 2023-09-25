@@ -299,7 +299,12 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 8. Scheduled actions
 - [ ] scheduled reminder email about upcoming trip - with for example weather data in destination city
 - [ ] setting scheduled searching engine feature for finding cheapest flights to purchase
-- [ ] scheduled information email with latest prices of favourite itineraries 
+- [ ] scheduled information email with latest prices of favourite itineraries
+
+9. Email creation and management
+- [ ] creating SimpleMailMessage with searching results
+- [ ] creating SimpleMailMessage with reminder about upcoming (purchased) trips
+- [ ] to add email configuration management in application view layer
 
 ## Troubleshooting
 
