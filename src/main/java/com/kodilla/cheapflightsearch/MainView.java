@@ -39,11 +39,9 @@ public class MainView extends VerticalLayout {
         add(authenticationLayout);
         add(new H1("CheapFlightSearch"));
         add(new Button("Quick search", e -> UI.getCurrent().getPage().open("main/quick_search")));
-        add(new Button("Custom Itineraries", e -> UI.getCurrent().getPage().open("main/itineraries")));
+        add(new Button("My Itineraries", e -> UI.getCurrent().getPage().open("main/itineraries")));
         add(new Button("My Routes", e -> UI.getCurrent().getPage().open("main/routes")));
         add(new Button("My Calendar", e -> UI.getCurrent().getPage().open("main/calendar")));
-        add(new Button("Travel Suggestions", e -> UI.getCurrent().getPage().open("main/suggestions")));
-
         ifAdministratorAddOptions();
     }
 
