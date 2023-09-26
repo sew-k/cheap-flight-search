@@ -11,6 +11,7 @@ import com.kodilla.cheapflightsearch.exception.TripPlanNotFoundException;
 import com.kodilla.cheapflightsearch.mapper.SkyscannerMapper;
 import com.kodilla.cheapflightsearch.mapper.TripPlanMapper;
 import com.kodilla.cheapflightsearch.repository.ItineraryRepository;
+import com.kodilla.cheapflightsearch.repository.RouteRepository;
 import com.kodilla.cheapflightsearch.repository.TripPlanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,8 @@ public class ItineraryService {
     private final SkyscannerService skyscannerService;
     private final SkyscannerMapper skyscannerMapper;
     private final TripPlanRepository tripPlanRepository;
+    private final RouteRepository routeRepository;
+    private final CalendarService calendarService;
     private final TripPlanMapper tripPlanMapper;
     private final AirportService airportService;
 
@@ -117,6 +120,7 @@ public class ItineraryService {
         itineraryRepository.save(itinerary);
     }
 
+    //TODO better to use method 'createTripPlansFromFavouriteRoutesAndHolidayPlans' and remove this
     public List<Itinerary> searchForItinerariesMatchingFavouriteRoutesAndHolidayPlans(List<HolidayPlan> holidayPlanList,
                                                                                       List<Route> routes,
                                                                                       int adults
@@ -225,6 +229,36 @@ public class ItineraryService {
 
     public TripPlan createTripPlan(TripPlan tripPlan) {
         return tripPlanRepository.save(tripPlan);
+    }
+
+    public List<TripPlan> createTripPlansFromFavouriteRoutesAndHolidayPlans(User currentUser, int adults) {
+        List<Route> routes = routeRepository.findByUser(currentUser);
+        List<HolidayPlan> holidayPlans = calendarService.getHolidayPlansByUser(currentUser); //TODO maybe is better to add relations to user from calendar side to use repository here
+        List<TripPlan> tripPlans = new ArrayList<>();
+        for (Route route : routes) {
+            for (HolidayPlan holidayPlan : holidayPlans) {
+                if (checkMatchingRoutesAndTripPlans(route, holidayPlan)) {
+                    TripPlan newTripPlan = TripPlan.builder()
+                            .originIata(route.getOrigin().getIataCode())
+                            .destinationIata(route.getDestination().getIataCode())
+                            .beginDate(holidayPlan.getBeginDate())
+                            .endDate(holidayPlan.getEndDate())
+                            .adults(adults)
+                            .user(currentUser)
+                            .build();
+                    tripPlans.add(newTripPlan);
+                }
+            }
+        }
+        return tripPlans.stream()
+                .map(tp -> tripPlanRepository.save(tp))
+                .collect(Collectors.toList());
+    }
+
+    private boolean checkMatchingRoutesAndTripPlans(Route route, HolidayPlan holidayPlan) {
+        return ((route.getDaysOfWeek().contains(holidayPlan.getBeginDate().getDayOfWeek()))
+                && (route.getDaysOfWeek().contains(holidayPlan.getEndDate().getDayOfWeek())))
+                && (route.isFavourite());
     }
 
     public String getWeatherForTripPlanDestination(TripPlan tripPlan) {
