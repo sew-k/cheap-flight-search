@@ -1,6 +1,7 @@
 package com.kodilla.cheapflightsearch.repository;
 
 import com.kodilla.cheapflightsearch.domain.trip.*;
+import com.kodilla.cheapflightsearch.domain.user.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,4 +22,5 @@ public interface RouteRepository extends CrudRepository<Route, Long> {
     void deleteById(Long id);
     Optional<Route> findByOrigin(Airport origin);
     Optional<Route> findByDestination(Airport destination);
+    List<Route> findByUser(User user);
 }
