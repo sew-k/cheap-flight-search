@@ -287,7 +287,7 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 - [ ] to split onto frontend and backend separate applications (to consider)
 - [ ] development of more responsive UI
 - [ ] **QuickSearchView** - origin and destination airport - to enable also choosing from saved airports (and custom IATA code input)
-- [ ] **SuggestionsView** - to add new view containing searching results based on User's holiday plans and favourite routes.
+- [ ] **ItinerariesView** - to add new feature: searching results based on User's holiday plans and favourite routes.
 
 6. Application deploy
 - [ ] deploying backend on *replit* (to consider) 
@@ -319,4 +319,4 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 7. When searching multiple Itineraries basing on holiday plans and favourite routes, it is unable to get from Itinerary 
 information such as origin/ destination/ dates etc.
 8. When adding the same holiday plan, application adds new instead of modify existing or skip changes.
-9. **SuggestionsView**: If only one flight available (without flight back for example) - this result shouldn't be taken into account.
+9. ~~**SuggestionsView**: If only one flight available (without flight back for example) - this result shouldn't be taken into account.~~ - FIXED (deleted, logic moved to other view)
