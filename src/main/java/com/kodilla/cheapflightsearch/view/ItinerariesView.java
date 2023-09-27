@@ -47,7 +47,7 @@ public class ItinerariesView extends VerticalLayout {
     private ComboBox<Airport> destinationAirportComboBox = new ComboBox<>("Destination airport");
     private DatePicker beginDatePicker = new DatePicker("Begin trip date");
     private DatePicker endDatePicker = new DatePicker("End trip date");
-    private TextField adultsTextField = new TextField("Passengers", "1-5");
+    private TextField adultsTextField = new TextField("Passengers", "1", "1-5");
 
     private static final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("pl", "PL"));
     @Autowired
@@ -81,14 +81,19 @@ public class ItinerariesView extends VerticalLayout {
         endDatePicker.setWeekNumbersVisible(true);
         endDatePicker.setValue(LocalDate.now().plusDays(1L));
 
-        Button addToTripPlansButton = new Button("Add to Trip Plans", e -> {
+        Button addCustomTripPlanButton = new Button("Add custom", e -> {
             readViewForms();
             addNewTripPlan();
             refreshTripPlansGrid();
         });
+        Button createMultipleTripPlansButton = new Button("Create multiple", e -> {
+            readViewForms();
+            createMultipleTripPlans();
+            refreshTripPlansGrid();
+        });
 
         VerticalLayout searchButtonsLayout = new VerticalLayout();
-        searchButtonsLayout.add(addToTripPlansButton);
+        searchButtonsLayout.add(addCustomTripPlanButton);
         HorizontalLayout customSearchFieldsLayout = new HorizontalLayout(
                 originAirportComboBox,
                 destinationAirportComboBox,
@@ -97,7 +102,7 @@ public class ItinerariesView extends VerticalLayout {
                 adultsTextField,
                 searchButtonsLayout
         );
-        add(customSearchFieldsLayout);
+        add(customSearchFieldsLayout, createMultipleTripPlansButton);
         tripPlanGrid.addColumn(TripPlan::getOriginIata).setHeader("Origin");
         tripPlanGrid.addColumn(TripPlan::getDestinationIata).setHeader("Destination");
         tripPlanGrid.addColumn(t -> itineraryService.getCityForTripPlanDestination(t)).setHeader("City");
@@ -138,6 +143,10 @@ public class ItinerariesView extends VerticalLayout {
                 e -> UI.getCurrent().getPage().open(i.getPurchaseLink())));
         itineraryGrid.addThemeVariants(GridVariant.LUMO_COMPACT);
         add(itineraryGrid);
+    }
+
+    private void createMultipleTripPlans() {
+        itineraryService.createTripPlansFromFavouriteRoutesAndHolidayPlans(currentUser, adults);
     }
 
     private void setUpAirports() {
@@ -227,8 +236,7 @@ public class ItinerariesView extends VerticalLayout {
         } catch (Exception exception) {
             Notification.show("Itinerary not found!: " + exception);
         } finally {
-            refreshItinerariesGrid();
-            refreshTripPlansGrid();
+            refreshAll();
         }
     }
 }
