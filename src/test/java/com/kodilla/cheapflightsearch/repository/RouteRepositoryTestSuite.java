@@ -11,12 +11,14 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest
 class RouteRepositoryTestSuite {
     @Autowired
     RouteRepository routeRepository;
     @Autowired
     AirportRepository airportRepository;
+
     @Test
     void testFindAll() {
         //Given
@@ -142,6 +144,7 @@ class RouteRepositoryTestSuite {
             System.out.println("Exception when tear down in \"testDeleteById()\": " + e);
         }
     }
+
     @Test
     void testDeleteByIdAirportsShouldRemain() {
         //Given
