@@ -305,6 +305,7 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 - [ ] creating SimpleMailMessage with searching results
 - [ ] creating SimpleMailMessage with reminder about upcoming (purchased) trips
 - [ ] to add email configuration management in application view layer
+- [ ] creating MimeMessage instead of SimpleMailMessage to implement buttons with direct url to purchase chosen itinerary
 
 ## Troubleshooting
 
@@ -316,7 +317,8 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 4. ~~CalendarView is now useless due to not store current data about User and it's calendar~~ - FIXED
 5. ~~CalendarView not connected to authenticated User since Spring Security has been developed~~ - FIXED
 6. ~~Routes without relations to User entity - unable to manage this by User~~ - FIXED
-7. When searching multiple Itineraries basing on holiday plans and favourite routes, it is unable to get from Itinerary 
-information such as origin/ destination/ dates etc.
+7. ~~When searching multiple Itineraries basing on holiday plans and favourite routes, it is unable to get from Itinerary 
+information such as origin/ destination/ dates etc.~~ -  - FIXED (deleted, logic moved to ItineraryView)
 8. When adding the same holiday plan, application adds new instead of modify existing or skip changes.
-9. ~~**SuggestionsView**: If only one flight available (without flight back for example) - this result shouldn't be taken into account.~~ - FIXED (deleted, logic moved to other view)
+9. ~~**SuggestionsView**: If only one flight available (without flight back for example) - this result shouldn't be taken into account.~~ - FIXED (deleted, logic moved to ItineraryView)
+10. If a direct flight is unavailable, the search engine provides a route to an intermediate stop. This only happens during the initial search for this route. When refreshing, the entire route with transfers is searched.
