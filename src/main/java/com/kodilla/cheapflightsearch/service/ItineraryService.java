@@ -233,7 +233,8 @@ public class ItineraryService {
 
     public List<TripPlan> createTripPlansFromFavouriteRoutesAndHolidayPlans(User currentUser, int adults) {
         List<Route> routes = routeRepository.findByUser(currentUser);
-        List<HolidayPlan> holidayPlans = calendarService.getHolidayPlansByUser(currentUser); //TODO maybe is better to add relations to user from calendar side to use repository here
+        List<HolidayPlan> holidayPlans = calendarService.getHolidayPlansByUser(currentUser); //TODO maybe is better to add relations to user from calendar side to use repository here;
+        List<TripPlan> currentUserTripPlans = tripPlanRepository.findByUser(currentUser);
         List<TripPlan> tripPlans = new ArrayList<>();
         for (Route route : routes) {
             for (HolidayPlan holidayPlan : holidayPlans) {
@@ -251,6 +252,7 @@ public class ItineraryService {
             }
         }
         return tripPlans.stream()
+                .filter(tp -> !currentUserTripPlans.contains(tp))
                 .map(tp -> tripPlanRepository.save(tp))
                 .collect(Collectors.toList());
     }
