@@ -228,7 +228,12 @@ public class ItineraryService {
     }
 
     public TripPlan createTripPlan(TripPlan tripPlan) {
-        return tripPlanRepository.save(tripPlan);
+        User user = tripPlan.getUser();
+        TripPlan updatedTripPlan = tripPlan;
+        if (!tripPlanRepository.findByUser(user).contains(tripPlan)) {
+            updatedTripPlan = tripPlanRepository.save(tripPlan);
+        }
+        return updatedTripPlan;
     }
 
     public List<TripPlan> createTripPlansFromFavouriteRoutesAndHolidayPlans(User currentUser, int adults) {
