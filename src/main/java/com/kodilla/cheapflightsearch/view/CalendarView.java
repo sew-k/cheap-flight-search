@@ -48,9 +48,7 @@ public class CalendarView extends VerticalLayout {
         endDatePicker.setValue(LocalDate.now().plusDays(1l));
         add(new Button("Back to Main", e -> UI.getCurrent().getPage().open("main")));
         add(new Button("Refresh all", e -> {
-            setCurrentUser();
-            setCurrentCalendar();
-            refreshHolidaysGridForCalendar();
+            refreshAll();
         }));
         Button addHolidaysButton = new Button("Add to calendar", event -> {
             readViewForms();
@@ -75,10 +73,14 @@ public class CalendarView extends VerticalLayout {
         add(holidaysGrid);
     }
 
+    private void refreshAll() {
+        setCurrentUser();
+        setCurrentCalendar();
+        refreshHolidaysGridForCalendar();
+    }
+
     public void refreshHolidaysGridForCalendar() {
-//        holidaysGrid.setItems(getCurrentCalendar().getHolidayPlanList());
         holidaysGrid.setItems(calendarService.getHolidayPlansByUser(currentUser));
-//        tripPlanGrid.setItems(itineraryService.getTripPlansByUser(currentUser));
     }
 
     public void setCurrentCalendar() {
@@ -118,12 +120,19 @@ public class CalendarView extends VerticalLayout {
     }
 
     private void setNewHolidayPlanInCalendar() {
-        calendarService.setNewHolidayPlanInCalendar(
-                currentCalendar.getCalendarId(),
-                new HolidayPlan(
-                        beginDatePicker.getValue(),
-                        endDatePicker.getValue()
-                )
+        HolidayPlan holidayPlanToSet = new HolidayPlan(
+                beginDatePicker.getValue(),
+                endDatePicker.getValue()
         );
+        try {
+            calendarService.setNewHolidayPlanInCalendar(
+                    currentCalendar.getCalendarId(),
+                    holidayPlanToSet
+            );
+        } catch (Exception e) {
+            Notification.show("Exception: " + e);
+        } finally {
+            refreshAll();
+        }
     }
 }
