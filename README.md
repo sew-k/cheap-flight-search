@@ -4,7 +4,7 @@
 
 The main purpose of this application is to practice building and development of application based on REST API services with implementation of various tools and integration data from external sources.
 
-Application enables:
+Application features:
 - multiple searching for cheapest, direct itineraries to user's favourites destinations based on user's annual holiday plan and weather in specified destinations
 - managing stored data, including holiday plans, favourite routes, purchased (or not) itineraries
 - (*in future*) searching for travel basing on weather data
@@ -66,6 +66,12 @@ Not deployed on cloud yet. Only local testing possible;
 
 7. **Quick search** for itinerary
 - http://localhost:8080/main/quick_search
+
+8. **Sign up** form for new User
+- http://localhost:8080/signup
+
+9. **Log in** form for stored User
+- http://localhost:8080/login
 
 ## Endpoints
 
@@ -287,7 +293,7 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 - [ ] to split onto frontend and backend separate applications (to consider)
 - [ ] development of more responsive UI
 - [ ] **QuickSearchView** - origin and destination airport - to enable also choosing from saved airports (and custom IATA code input)
-- [ ] **ItinerariesView** - to add new feature: searching results based on User's holiday plans and favourite routes.
+- [x] **ItinerariesView** - to add new feature: searching results based on User's holiday plans and favourite routes - *implemented*
 
 6. Application deploy
 - [ ] deploying backend on *replit* (to consider) 
@@ -297,6 +303,7 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 - [ ] search results for more actual and correct data from Skyscanner API
 
 8. Scheduled actions
+- [ ] it is needed to resolve how every User's personal configuration of scheduled actions (ex. email sending) will be stored and managed
 - [ ] scheduled reminder email about upcoming trip - with for example weather data in destination city
 - [ ] setting scheduled searching engine feature for finding cheapest flights to purchase
 - [ ] scheduled information email with latest prices of favourite itineraries
@@ -310,15 +317,13 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 ## Troubleshooting
 
 1. ~~There is an issue of using Swagger (swagger-ui) for API endpoints documentation in the project~~ - FIXED
-
 2. ~~Before searching for itineraries in ItineraryView it is needed to set up data by clicking "set airports" button~~ - out of date
-
 3. ~~Not handled exception when User duplicates searching requests for Itineraries~~ - FIXED
 4. ~~CalendarView is now useless due to not store current data about User and it's calendar~~ - FIXED
 5. ~~CalendarView not connected to authenticated User since Spring Security has been developed~~ - FIXED
 6. ~~Routes without relations to User entity - unable to manage this by User~~ - FIXED
 7. ~~When searching multiple Itineraries basing on holiday plans and favourite routes, it is unable to get from Itinerary 
-information such as origin/ destination/ dates etc.~~ -  - FIXED (deleted, logic moved to ItineraryView)
-8. When adding the same holiday plan, application adds new instead of modify existing or skip changes.
+information such as origin/ destination/ dates etc.~~ - FIXED (deleted, logic moved to ItineraryView)
+8. ~~When adding the same holiday plan, application adds new instead of modify existing or skip changes.~~ - FIXED
 9. ~~**SuggestionsView**: If only one flight available (without flight back for example) - this result shouldn't be taken into account.~~ - FIXED (deleted, logic moved to ItineraryView)
 10. If a direct flight is unavailable, the search engine provides a route to an intermediate stop. This only happens during the initial search for this route. When refreshing, the entire route with transfers is searched.
