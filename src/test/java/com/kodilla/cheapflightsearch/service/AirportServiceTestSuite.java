@@ -1,7 +1,6 @@
 package com.kodilla.cheapflightsearch.service;
 
 import com.kodilla.cheapflightsearch.domain.trip.Airport;
-import com.kodilla.cheapflightsearch.domain.weather.Weather;
 import com.kodilla.cheapflightsearch.exception.AirportNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+
 @SpringBootTest
 class AirportServiceTestSuite {
     @Autowired
@@ -261,11 +260,13 @@ class AirportServiceTestSuite {
 
         }
     }
+
     @Test
     void testCheckIfAirportExistsByIata_NotExisting() {
         //Given & When & Then
         assertFalse(airportService.checkIfAirportExistsByIata("iata_not_existing"));
     }
+
     @Test
     void testGetWeatherForAirport() {
         //Given
