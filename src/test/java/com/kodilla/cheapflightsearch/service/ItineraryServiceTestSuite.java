@@ -9,14 +9,12 @@ import com.kodilla.cheapflightsearch.exception.ItineraryNotFoundException;
 import com.kodilla.cheapflightsearch.mapper.SkyscannerMapper;
 import com.kodilla.cheapflightsearch.mapper.TripPlanMapper;
 import com.kodilla.cheapflightsearch.repository.ItineraryRepository;
-import com.kodilla.cheapflightsearch.repository.TripPlanRepository;
 import com.kodilla.cheapflightsearch.webclient.skyscanner.requestdata.FlightSearchRequestDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -44,40 +42,73 @@ class ItineraryServiceTestSuite {
 
     @Test
     void getItineraries() {
+        //When
+        itineraryService.getItineraries();
 
+        //Then
+        verify(itineraryRepository, atLeastOnce()).findAll();
     }
 
     @Test
-    void getItinerary() {
-    }
-
-    @Test
-    void testDeleteItinerary() {
+    void getItinerary() throws Exception {
         //Given
-        Itinerary itinerary = new Itinerary(1L, "itinerary mark", 199.99, null,"link", false);
+        Long id = 1L;
+        when(itineraryRepository.findById(id)).thenReturn(Optional.of(new Itinerary()));
+
+        //When
+        itineraryService.getItinerary(id);
+
+        //Then
+        verify(itineraryRepository, atLeastOnce()).findById(id);
+    }
+
+    @Test
+    void testDeleteItinerary() throws Exception {
+        //Given
+        Itinerary itinerary = new Itinerary(1L, "itinerary mark", 199.99, null, "link", false);
         Long id = itinerary.getItineraryId();
         when(itineraryRepository.existsById(id)).thenReturn(true);
         when(itineraryRepository.findById(id)).thenReturn(Optional.of(itinerary));
 
         //When
-        try {
-            itineraryService.deleteItinerary(id);
-        } catch (Exception e) {
-
-        }
+        itineraryService.deleteItinerary(id);
 
         //Then
         verify(itineraryRepository, atLeastOnce()).deleteById(id);
     }
 
     @Test
-    void testUpdateItinerary() {
+    void testUpdateItinerary() throws Exception {
+        //Given
+        Long id = 1L;
+        Itinerary itinerary = new Itinerary();
+        when(itineraryRepository.findById(id)).thenReturn(Optional.of(itinerary));
+
+        //When
+        itineraryService.updateItinerary(id, itinerary);
+
+        //Then
+        verify(itineraryRepository, atLeastOnce()).findById(id);
+        verify(itineraryRepository, atLeastOnce()).save(itinerary);
     }
 
     @Test
-    void testCreateItinerary(){
+    void testUpdateItinerary_notExisting() {
         //Given
-        Itinerary itinerary = new Itinerary("itinerary mark", 199.99, null,"link");
+        Long id = 1L;
+        Itinerary itinerary = new Itinerary();
+        when(itineraryRepository.findById(id)).thenReturn(Optional.empty());
+
+        //When & Then
+        assertThrows(ItineraryNotFoundException.class, () -> itineraryService.updateItinerary(id, itinerary));
+        verify(itineraryRepository, atLeastOnce()).findById(id);
+        verify(itineraryRepository, never()).save(itinerary);
+    }
+
+    @Test
+    void testCreateItinerary() {
+        //Given
+        Itinerary itinerary = new Itinerary("itinerary mark", 199.99, null, "link");
 
         //When
         itineraryService.createItinerary(itinerary);
@@ -88,6 +119,22 @@ class ItineraryServiceTestSuite {
 
     @Test
     void getPurchasedItineraries() {
+        //Given
+        Itinerary itinerary1 = new Itinerary();
+        itinerary1.setPurchased(true);
+        Itinerary itinerary2 = new Itinerary();
+        itinerary2.setPurchased(true);
+        Itinerary itinerary3 = new Itinerary();
+        List<Itinerary> itineraries = List.of(itinerary1, itinerary2, itinerary3);
+        when(itineraryRepository.findAll()).thenReturn(itineraries);
+
+        //When
+        List<Itinerary> fetchedItineraries = itineraryService.getPurchasedItineraries();
+
+        //Then
+        verify(itineraryRepository, atLeastOnce()).findAll();
+        assertFalse(fetchedItineraries.isEmpty());
+        assertEquals(2, fetchedItineraries.size());
     }
 
     @Test
@@ -176,6 +223,7 @@ class ItineraryServiceTestSuite {
         assertFalse(resultList.isEmpty());
         assertEquals(1, resultList.size());
     }
+
     @Test
     void testSearchForItinerariesMatchingRoutesAndHolidayPlans_DatesNotMatching() {
         //Given
