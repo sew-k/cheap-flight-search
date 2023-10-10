@@ -100,18 +100,22 @@ public class ItineraryService {
                 .collect(Collectors.toList());
     }
 
-    public void createItineraryBasedOnTripPlan(TripPlan tripPlan) throws Exception {
-        Itinerary searchingResult = skyscannerService.searchCreateGetItinerary(
-                skyscannerMapper.mapTripPlanToFlightSearchDto(tripPlan)
-        );
-        searchingResult.setTripPlan(tripPlan);
-        if (tripPlan.getItinerary() != null) {
-            searchingResult.setItineraryId(tripPlan.getItinerary().getItineraryId());
-        }
-        Itinerary savedItinerary = itineraryRepository.save(searchingResult);
-        if (tripPlan.getItinerary() == null) {
-            tripPlan.setItinerary(savedItinerary);
-            tripPlanRepository.save(tripPlan);
+    public void createItineraryBasedOnTripPlan(TripPlan tripPlan) throws ItineraryNotFoundException {
+        try {
+            Itinerary searchingResult = skyscannerService.searchCreateGetItinerary(
+                    skyscannerMapper.mapTripPlanToFlightSearchDto(tripPlan)
+            );
+            searchingResult.setTripPlan(tripPlan);
+            if (tripPlan.getItinerary() != null) {
+                searchingResult.setItineraryId(tripPlan.getItinerary().getItineraryId());
+            }
+            Itinerary savedItinerary = itineraryRepository.save(searchingResult);
+            if (tripPlan.getItinerary() == null) {
+                tripPlan.setItinerary(savedItinerary);
+                tripPlanRepository.save(tripPlan);
+            }
+        } catch (Exception e) {
+            throw new ItineraryNotFoundException();
         }
     }
 
