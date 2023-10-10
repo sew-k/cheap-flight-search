@@ -9,6 +9,7 @@ import com.kodilla.cheapflightsearch.exception.ItineraryNotFoundException;
 import com.kodilla.cheapflightsearch.mapper.SkyscannerMapper;
 import com.kodilla.cheapflightsearch.mapper.TripPlanMapper;
 import com.kodilla.cheapflightsearch.repository.ItineraryRepository;
+import com.kodilla.cheapflightsearch.repository.TripPlanRepository;
 import com.kodilla.cheapflightsearch.webclient.skyscanner.requestdata.FlightSearchRequestDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,6 +40,8 @@ class ItineraryServiceTestSuite {
     private TripPlanMapper tripPlanMapper;
     @Mock
     private ItineraryRepository itineraryRepository;
+    @Mock
+    private TripPlanRepository tripPlanRepository;
 
     @Test
     void getItineraries() {
@@ -118,7 +121,7 @@ class ItineraryServiceTestSuite {
     }
 
     @Test
-    void getPurchasedItineraries() {
+    void testGetPurchasedItineraries() {
         //Given
         Itinerary itinerary1 = new Itinerary();
         itinerary1.setPurchased(true);
@@ -138,7 +141,38 @@ class ItineraryServiceTestSuite {
     }
 
     @Test
-    void searchForItineraryBasedOnTripPlan() {
+    void testCreateItineraryBasedOnTripPlan() throws Exception {
+        //Given
+        Itinerary foundItinerary = new Itinerary(
+                "mark",
+                999.99,
+                "link"
+        );
+        TripPlan tripPlan = new TripPlan(
+                "WAW12",
+                "WMI21",
+                LocalDate.of(2030, 01, 01),
+                LocalDate.of(2030, 01, 02),
+                1
+        );
+        FlightSearchRequestDto flightSearchRequestDto = new FlightSearchRequestDto(
+                1,
+                "WAW12",
+                "WMI21",
+                LocalDate.of(2030, 01, 01),
+                LocalDate.of(2030, 01, 02)
+        );
+        when(skyscannerMapper.mapTripPlanToFlightSearchDto(tripPlan)).thenReturn(flightSearchRequestDto);
+        when(skyscannerService.searchCreateGetItinerary(flightSearchRequestDto)).thenReturn(foundItinerary);
+
+        //When
+        itineraryService.createItineraryBasedOnTripPlan(tripPlan);
+
+        //Then
+        assertEquals(tripPlan.getOriginIata(), foundItinerary.getTripPlan().getOriginIata());
+        assertEquals(tripPlan.getDestinationIata(), foundItinerary.getTripPlan().getDestinationIata());
+        verify(itineraryRepository, atLeastOnce()).save(foundItinerary);
+        verify(tripPlanRepository, atLeastOnce()).save(tripPlan);
     }
 
     @Test
