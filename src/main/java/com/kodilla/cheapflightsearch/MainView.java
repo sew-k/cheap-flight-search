@@ -3,6 +3,7 @@ package com.kodilla.cheapflightsearch;
 import com.kodilla.cheapflightsearch.domain.user.UserRole;
 import com.kodilla.cheapflightsearch.service.SecurityService;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
@@ -18,46 +19,78 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @RouteAlias(value = "")
 public class MainView extends VerticalLayout {
     private final SecurityService securityService;
-    private String username;
+    private String currentUsername;
+    private final float MINIMUM_MENU_BUTTONS_WIDTH = 200f;
 
     public MainView(SecurityService securityService) {
         this.securityService = securityService;
         this.setAlignItems(Alignment.CENTER);
+        addAuthenticationLayout();
+        addMainTitle();
+        addMenuButtons();
+    }
+
+    private void addAuthenticationLayout() {
         HorizontalLayout authenticationLayout = new HorizontalLayout();
         setCurrentUsername();
         Button signupButton = new Button("Sign up", e -> UI.getCurrent().getPage().open("signup"));
         Button loginButton = new Button("Log in", e -> UI.getCurrent().getPage().open("login"));
         Button logoutButton = new Button("Log out ", e -> securityService.logout());
-        if (username == null) {
+        if (!securityService.isCurrentUserAllowed()) {
             logoutButton.setEnabled(false);
         } else {
             logoutButton.setEnabled(true);
-            logoutButton.setText("Log out: " + username);
+            logoutButton.setText("Log out: " + currentUsername);
         }
         authenticationLayout.add(signupButton, loginButton, logoutButton);
         authenticationLayout.setAlignItems(Alignment.STRETCH);
         add(authenticationLayout);
+    }
+
+    private void addMainTitle() {
         add(new H1("CheapFlightSearch"));
-        add(new Button("Quick search", e -> UI.getCurrent().getPage().open("main/quick_search")));
-        add(new Button("My Itineraries", e -> UI.getCurrent().getPage().open("main/itineraries")));
-        add(new Button("My Routes", e -> UI.getCurrent().getPage().open("main/routes")));
-        add(new Button("My Calendar", e -> UI.getCurrent().getPage().open("main/calendar")));
-        ifAdministratorAddOptions();
+    }
+
+    private void addMenuButtons() {
+        Button quickSearchButton = new Button("Quick search",
+                e -> UI.getCurrent().getPage().open("main/quick_search"));
+        Button myItinerariesButton = new Button("My Itineraries",
+                e -> UI.getCurrent().getPage().open("main/itineraries"));
+        Button myRoutesButton = new Button("My Routes",
+                e -> UI.getCurrent().getPage().open("main/routes"));
+        Button myCalendarButton = new Button("My Calendar",
+                e -> UI.getCurrent().getPage().open("main/calendar"));
+        quickSearchButton.setMinWidth(MINIMUM_MENU_BUTTONS_WIDTH, Unit.PIXELS);
+        myItinerariesButton.setMinWidth(MINIMUM_MENU_BUTTONS_WIDTH, Unit.PIXELS);
+        myRoutesButton.setMinWidth(MINIMUM_MENU_BUTTONS_WIDTH, Unit.PIXELS);
+        myCalendarButton.setMinWidth(MINIMUM_MENU_BUTTONS_WIDTH, Unit.PIXELS);
+        add(quickSearchButton);
+        add(myItinerariesButton);
+        add(myRoutesButton);
+        add(myCalendarButton);
+
+        ifLoggedUserIsAdministratorAddOptions();
     }
 
     private void setCurrentUsername() {
-        try {
-            username = securityService.getAuthenticatedUser().getUsername();
-        } catch (Exception e) {
+        if (securityService.isCurrentUserAllowed()) {
+            currentUsername = securityService.getAuthenticatedUser().getUsername();
+        } else {
             Notification.show("No user logged in. Using application as Anonymous.");
         }
     }
 
-    private void ifAdministratorAddOptions() {
-        if (username != null && securityService.getAuthenticatedUser().getAuthorities()
+    private void ifLoggedUserIsAdministratorAddOptions() {
+        if (securityService.isCurrentUserAllowed() && securityService.getAuthenticatedUser().getAuthorities()
                 .contains(adminSimpleGrantedAuthority())) {
-            add(new Button("Manage Users", e -> UI.getCurrent().getPage().open("main/users")));
-            add(new Button("Airports", e -> UI.getCurrent().getPage().open("main/airports")));
+            Button manageUsersButton = new Button("Manage Users",
+                    e -> UI.getCurrent().getPage().open("main/users"));
+            Button airports = new Button("Airports",
+                    e -> UI.getCurrent().getPage().open("main/airports"));
+            manageUsersButton.setMinWidth(MINIMUM_MENU_BUTTONS_WIDTH, Unit.PIXELS);
+            airports.setMinWidth(MINIMUM_MENU_BUTTONS_WIDTH, Unit.PIXELS);
+            add(manageUsersButton);
+            add(airports);
         }
     }
 
