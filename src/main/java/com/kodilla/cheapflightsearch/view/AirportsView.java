@@ -2,8 +2,8 @@ package com.kodilla.cheapflightsearch.view;
 
 import com.kodilla.cheapflightsearch.domain.trip.Airport;
 import com.kodilla.cheapflightsearch.service.AirportService;
-import com.kodilla.cheapflightsearch.service.WeatherService;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -19,23 +19,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.RolesAllowed;
 
+import static com.kodilla.cheapflightsearch.view.ViewsConfig.MINIMUM_OPTION_BUTTONS_WIDTH;
+
 @RolesAllowed("ADMIN")
 @Route(value = "main/airports")
 public class AirportsView extends VerticalLayout {
     @Autowired
     AirportService airportService;
-    @Autowired
-    WeatherService weatherService;
     private Grid<Airport> airportsGrid = new Grid<>(Airport.class, false);
 
     public AirportsView() {
-        add(new Button("Back to Main", e -> UI.getCurrent().getPage().open("main")));
-        add(new Button("New Airport", e -> newAirportDialog().open()));
-        add(new Button("Refresh", e -> refreshAirportsGrid()));
+        addOptionButtons();
+        addGrid();
+    }
+
+    private void addOptionButtons() {
+        Button backToMainButton = new Button("Back to Main", e -> UI.getCurrent().getPage().open("main"));
+        Button newAirportButton = new Button("New Airport", e -> newAirportDialog().open());
+        Button refreshButton = new Button("Refresh", e -> refreshAirportsGrid());
+        backToMainButton.setMinWidth(MINIMUM_OPTION_BUTTONS_WIDTH, Unit.PIXELS);
+        newAirportButton.setMinWidth(MINIMUM_OPTION_BUTTONS_WIDTH, Unit.PIXELS);
+        refreshButton.setMinWidth(MINIMUM_OPTION_BUTTONS_WIDTH, Unit.PIXELS);
+        add(backToMainButton);
+        add(newAirportButton);
+        add(refreshButton);
+    }
+
+    private void addGrid() {
         airportsGrid.addColumn(Airport::getIataCode).setHeader("IATA code").setSortable(true);
         airportsGrid.addColumn(Airport::getCountry).setHeader("Country").setSortable(true);
         airportsGrid.addColumn(Airport::getCity).setHeader("City").setSortable(true);
-        airportsGrid.addColumn(a -> airportService.getWeatherForAirport(a)).setHeader("Weather").setSortable(true);
+        airportsGrid.addColumn(airport -> airportService.getWeatherForAirport(airport)).setHeader("Weather").setSortable(true);
         airportsGrid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, airport) -> {
                     button.addThemeVariants(ButtonVariant.LUMO_ICON,
@@ -50,18 +64,14 @@ public class AirportsView extends VerticalLayout {
     private void removeAirport(Airport airport) {
         try {
             airportService.deleteAirport(airport.getAirportId());
-        } catch (Exception exception) {
-            Notification.show("Exception when trying to remove an airport: " + exception);
+        } catch (Exception e) {
+            Notification.show("Exception when trying to remove an airport: " + e);
         } finally {
             refreshAirportsGrid();
         }
     }
 
-    private void refreshAirportsGrid() {
-        airportsGrid.setItems(airportService.getAirports());
-    }
-
-    public Dialog newAirportDialog() {
+    private Dialog newAirportDialog() {
         Dialog newAirportDialog = new Dialog();
         newAirportDialog.setHeaderTitle("New airport");
         TextField countryTextField = new TextField("Country");
@@ -81,8 +91,12 @@ public class AirportsView extends VerticalLayout {
         return newAirportDialog;
     }
 
-    public Button createSaveAirportButton(Dialog newAirportDialog, TextField countryTextField,
-                                          TextField cityTextField, TextField iataCodeTextField) {
+    private void refreshAirportsGrid() {
+        airportsGrid.setItems(airportService.getAirports());
+    }
+
+    private Button createSaveAirportButton(Dialog newAirportDialog, TextField countryTextField,     //TODO to validate this input
+                                           TextField cityTextField, TextField iataCodeTextField) {
         return new Button("Save", e -> {
             if (!airportService.checkIfAirportExistsByIata(iataCodeTextField.getValue())) {
                 airportService.createAirport(
