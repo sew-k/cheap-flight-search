@@ -6,6 +6,7 @@ import com.kodilla.cheapflightsearch.domain.user.UserRole;
 import com.kodilla.cheapflightsearch.exception.UserAlreadyExistsException;
 import com.kodilla.cheapflightsearch.service.UserService;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H1;
@@ -18,6 +19,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import static com.kodilla.cheapflightsearch.view.ViewsConfig.MINIMUM_SUBMIT_COMPONENTS_WIDTH;
 
 @Route(value = "signup")
 @PageTitle("Sign up | CheapFlightSearch")
@@ -34,16 +37,31 @@ public class SignupView extends VerticalLayout {
         setSizeFull();
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
-        Button submitButton = new Button("Submit", event -> {
-            tryToSubmit();
-        });
-        submitButton.setAutofocus(true);
-        submitButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        addTitle();
+        addTextFields();
+        addSubmitButton();
+    }
+
+    private void addTitle() {
         add(new H1("CheapFlightSearch"));
         add(new H2("Sign up"));
+    }
+
+    private void addTextFields() {
+        usernameField.setMinWidth(MINIMUM_SUBMIT_COMPONENTS_WIDTH, Unit.PIXELS);
+        emailField.setMinWidth(MINIMUM_SUBMIT_COMPONENTS_WIDTH, Unit.PIXELS);
+        passwordField.setMinWidth(MINIMUM_SUBMIT_COMPONENTS_WIDTH, Unit.PIXELS);
+        usernameField.setAutofocus(true);
         add(usernameField);
         add(emailField);
         add(passwordField);
+    }
+
+    private void addSubmitButton() {
+        Button submitButton = new Button("Submit", event -> tryToSubmit());
+        submitButton.setAutofocus(true);
+        submitButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        submitButton.setMinWidth(MINIMUM_SUBMIT_COMPONENTS_WIDTH, Unit.PIXELS);
         add(submitButton);
     }
 
