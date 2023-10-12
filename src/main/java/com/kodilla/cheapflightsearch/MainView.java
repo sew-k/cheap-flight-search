@@ -14,13 +14,14 @@ import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import static com.kodilla.cheapflightsearch.view.ViewsConfig.MINIMUM_MENU_BUTTONS_WIDTH;
+
 @AnonymousAllowed
 @Route(value = "main")
 @RouteAlias(value = "")
 public class MainView extends VerticalLayout {
     private final SecurityService securityService;
     private String currentUsername;
-    private final float MINIMUM_MENU_BUTTONS_WIDTH = 200f;
 
     public MainView(SecurityService securityService) {
         this.securityService = securityService;
