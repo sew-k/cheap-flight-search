@@ -10,6 +10,7 @@ import com.kodilla.cheapflightsearch.service.ItineraryService;
 import com.kodilla.cheapflightsearch.service.SecurityService;
 import com.kodilla.cheapflightsearch.service.UserService;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -31,6 +32,8 @@ import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.*;
 
+import static com.kodilla.cheapflightsearch.view.ViewsConfig.*;
+
 @PermitAll
 @Route(value = "main/itineraries")
 public class ItinerariesView extends VerticalLayout {
@@ -48,8 +51,10 @@ public class ItinerariesView extends VerticalLayout {
     private DatePicker beginDatePicker = new DatePicker("Begin trip date");
     private DatePicker endDatePicker = new DatePicker("End trip date");
     private TextField adultsTextField = new TextField("Passengers", "1", "1-5");
+    private static final NumberFormat CURRENCY_FORMATTER = NumberFormat.getCurrencyInstance(
+            new Locale("pl", "PL")
+    );
 
-    private static final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("pl", "PL"));
     @Autowired
     SecurityService securityService;
     @Autowired
@@ -60,49 +65,52 @@ public class ItinerariesView extends VerticalLayout {
     AirportService airportService;
 
     public ItinerariesView() {
+        addOptionButtons();
+        addInputComponents();
+        addTripPlansGrid();
+        addItineraryGrid();
+    }
 
-        add(new Button("Back to Main", e -> UI.getCurrent().getPage().open("main")));
-        add(new Button("Refresh all", e -> {
+    private void addOptionButtons() {
+        Button backToMainButton = new Button("Back to Main", e -> UI.getCurrent().getPage().open("main"));
+        Button refreshButton = new Button("Refresh", e -> {
             setCurrentUser();
             setUpAirports();
             refreshAll();
-        }));
+        });
+        backToMainButton.setMinWidth(MINIMUM_OPTION_BUTTONS_WIDTH, Unit.PIXELS);
+        refreshButton.setMinWidth(MINIMUM_OPTION_BUTTONS_WIDTH, Unit.PIXELS);
+        add(backToMainButton);
+        add(refreshButton);
+    }
 
-        originAirportComboBox.setPattern("IATA code");
-        originAirportComboBox.setAllowCustomValue(true);
-        originAirportComboBox.setItems(airportSet);
-        originAirportComboBox.setClearButtonVisible(true);
-        destinationAirportComboBox.setPattern("IATA code");
-        destinationAirportComboBox.setAllowCustomValue(true);
-        destinationAirportComboBox.setItems(airportSet);
-        destinationAirportComboBox.setClearButtonVisible(true);
-        beginDatePicker.setWeekNumbersVisible(true);
-        beginDatePicker.setValue(LocalDate.now());
-        endDatePicker.setWeekNumbersVisible(true);
-        endDatePicker.setValue(LocalDate.now().plusDays(1L));
-
-        Button addCustomTripPlanButton = new Button("Add custom", e -> {
+    private void addInputComponents() {
+        setupAirportComboBoxComponents();
+        setupDatePickerComponents();
+        setupAdultsTextFieldComponent();
+        Button createCustomTripPlanButton = new Button("Add custom", e -> {
             readViewForms();
             addNewTripPlan();
             refreshTripPlansGrid();
         });
+        createCustomTripPlanButton.setMinWidth(MINIMUM_OPTION_BUTTONS_WIDTH, Unit.PIXELS);
         Button createMultipleTripPlansButton = new Button("Create multiple", e -> {
             readViewForms();
             createMultipleTripPlans();
             refreshTripPlansGrid();
         });
-
-        VerticalLayout searchButtonsLayout = new VerticalLayout();
-        searchButtonsLayout.add(addCustomTripPlanButton);
+        createMultipleTripPlansButton.setMinWidth(MINIMUM_OPTION_BUTTONS_WIDTH, Unit.PIXELS);
         HorizontalLayout customSearchFieldsLayout = new HorizontalLayout(
                 originAirportComboBox,
                 destinationAirportComboBox,
                 beginDatePicker,
                 endDatePicker,
-                adultsTextField,
-                searchButtonsLayout
+                adultsTextField
         );
-        add(customSearchFieldsLayout, createMultipleTripPlansButton);
+        add(customSearchFieldsLayout, createCustomTripPlanButton, createMultipleTripPlansButton);
+    }
+
+    private void addTripPlansGrid() {
         tripPlanGrid.addColumn(TripPlan::getOriginIata).setHeader("Origin");
         tripPlanGrid.addColumn(TripPlan::getDestinationIata).setHeader("Destination");
         tripPlanGrid.addColumn(t -> itineraryService.getCityForTripPlanDestination(t)).setHeader("City");
@@ -124,13 +132,15 @@ public class ItinerariesView extends VerticalLayout {
                 }));
         tripPlanGrid.addThemeVariants(GridVariant.LUMO_COMPACT);
         add(tripPlanGrid);
+    }
 
+    private void addItineraryGrid() {
         itineraryGrid.addColumn(i -> i.getTripPlan().getOriginIata()).setHeader("Origin");
         itineraryGrid.addColumn(i -> i.getTripPlan().getDestinationIata()).setHeader("Destination");
         itineraryGrid.addColumn(i -> i.getTripPlan().getBeginDate()).setHeader("Begin trip date");
         itineraryGrid.addColumn(i -> i.getTripPlan().getEndDate()).setHeader("End trip date");
         itineraryGrid.addColumn(i -> i.getTripPlan().getAdults()).setHeader("Passengers");
-        itineraryGrid.addColumn(i -> currencyFormatter.format(i.getPrice())).setHeader("Price");
+        itineraryGrid.addColumn(i -> CURRENCY_FORMATTER.format(i.getPrice())).setHeader("Price");
         itineraryGrid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, i) -> {
                     button.addThemeVariants(ButtonVariant.LUMO_ICON,
@@ -145,6 +155,32 @@ public class ItinerariesView extends VerticalLayout {
         add(itineraryGrid);
     }
 
+    private void setupAirportComboBoxComponents() {
+        originAirportComboBox.setPattern("IATA code");
+        originAirportComboBox.setAllowCustomValue(true);
+        originAirportComboBox.setItems(airportSet);
+        originAirportComboBox.setClearButtonVisible(true);
+        originAirportComboBox.setMinWidth(MINIMUM_AIRPORT_COMPONENTS_WIDTH, Unit.PIXELS);
+        destinationAirportComboBox.setPattern("IATA code");
+        destinationAirportComboBox.setAllowCustomValue(true);
+        destinationAirportComboBox.setItems(airportSet);
+        destinationAirportComboBox.setClearButtonVisible(true);
+        destinationAirportComboBox.setMinWidth(MINIMUM_AIRPORT_COMPONENTS_WIDTH, Unit.PIXELS);
+    }
+
+    private void setupDatePickerComponents() {
+        beginDatePicker.setWeekNumbersVisible(true);
+        beginDatePicker.setValue(LocalDate.now());
+        beginDatePicker.setMinWidth(MINIMUM_DATE_COMPONENTS_WIDTH, Unit.PIXELS);
+        endDatePicker.setWeekNumbersVisible(true);
+        endDatePicker.setValue(LocalDate.now().plusDays(1L));
+        endDatePicker.setMinWidth(MINIMUM_DATE_COMPONENTS_WIDTH, Unit.PIXELS);
+    }
+
+    private void setupAdultsTextFieldComponent() {
+        adultsTextField.setMaxWidth(ADULTS_COMPONENTS_WIDTH, Unit.PIXELS);
+    }
+
     private void createMultipleTripPlans() {
         itineraryService.createTripPlansFromFavouriteRoutesAndHolidayPlans(currentUser, adults);
     }
@@ -153,29 +189,17 @@ public class ItinerariesView extends VerticalLayout {
         airportSet.addAll(airportService.getAirports());
     }
 
-    public void refreshItinerariesGrid() {
+    private void refreshItinerariesGrid() {
         itineraryGrid.setItems(itineraryService.getItinerariesByUser(currentUser));
     }
 
-    public void refreshTripPlansGrid() {
+    private void refreshTripPlansGrid() {
         tripPlanGrid.setItems(itineraryService.getTripPlansByUser(currentUser));
     }
 
-    public void refreshAll() {
+    private void refreshAll() {
         refreshTripPlansGrid();
         refreshItinerariesGrid();
-    }
-
-    public TripPlan newTripPlanFromReadInput() throws UserNotFoundException {
-        User currentUser = userService.getUserByName(securityService.getAuthenticatedUser().getUsername());
-        return TripPlan.builder()
-                .user(currentUser)
-                .originIata(originAirport.getIataCode())
-                .destinationIata(destinationAirport.getIataCode())
-                .beginDate(beginDate)
-                .endDate(endDate)
-                .adults(adults)
-                .build();
     }
 
     private void removeItinerary(Itinerary itinerary) {
