@@ -327,3 +327,4 @@ information such as origin/ destination/ dates etc.~~ - FIXED (deleted, logic mo
 8. ~~When adding the same holiday plan, application adds new instead of modify existing or skip changes.~~ - FIXED
 9. ~~**SuggestionsView**: If only one flight available (without flight back for example) - this result shouldn't be taken into account.~~ - FIXED (deleted, logic moved to ItineraryView)
 10. If a direct flight is unavailable, the search engine provides a route to an intermediate stop. This only happens during the initial search for this route. When refreshing, the entire route with transfers is searched.
+11. When using 'quick search', and other input data using there is an issue of changing all 'trip plan data' related with printed itineraries.
