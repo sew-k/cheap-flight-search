@@ -1,10 +1,9 @@
 package com.kodilla.cheapflightsearch.view;
 
-import com.kodilla.cheapflightsearch.domain.calendar.Calendar;
 import com.kodilla.cheapflightsearch.domain.user.User;
-import com.kodilla.cheapflightsearch.domain.user.UserRole;
 import com.kodilla.cheapflightsearch.service.UserService;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
@@ -13,13 +12,14 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
+
+import static com.kodilla.cheapflightsearch.view.ViewsConfig.MINIMUM_OPTION_BUTTONS_WIDTH;
 
 @RolesAllowed("ADMIN")
 @Route(value = "main/users")
@@ -30,24 +30,30 @@ public class UserView extends VerticalLayout {
     UserService userService;
 
     public UserView() {
-        add(new Button("Back to Main", e -> UI.getCurrent().getPage().open("main")));
-        add(new Button("Show all users", e -> {
+        addOptionButtons();
+        addUsersGrid();
+    }
+
+    private void addOptionButtons() {
+        Button backToMainButton = new Button("Back to Main", e -> UI.getCurrent().getPage().open("main"));
+        Button showAllUsersButton = new Button("Show all users", e -> {
             refreshUserGrid();
             Notification.show("Showing all users");
-        }));
-        userGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        userGrid.addSelectionListener(selection -> {
-            Optional<User> selectedUser = selection.getFirstSelectedItem();
-            if (selectedUser.isPresent()) {
-                this.selectedUser = selectedUser.get();
-            }
         });
+        backToMainButton.setMinWidth(MINIMUM_OPTION_BUTTONS_WIDTH, Unit.PIXELS);
+        showAllUsersButton.setMinWidth(MINIMUM_OPTION_BUTTONS_WIDTH, Unit.PIXELS);
+        add(backToMainButton);
+        add(showAllUsersButton);
+    }
+
+    private void addUsersGrid() {
+        userGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        userGrid.addSelectionListener(selection -> selectUser(selection));
         userGrid.addColumn(User::getUserId).setHeader("User ID");
         userGrid.addColumn(User::getUsername).setHeader("Username");
         userGrid.addColumn(User::getEmail).setHeader("e-mail");
         userGrid.addColumn(User::getRole).setHeader("User role");
         userGrid.addColumn(u -> u.getCalendar().getCalendarId()).setHeader("Calendar ID");
-
         userGrid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, user) -> {
                     button.addThemeVariants(ButtonVariant.LUMO_ICON,
@@ -62,29 +68,17 @@ public class UserView extends VerticalLayout {
                     button.setIcon(new Icon(VaadinIcon.TRASH));
                 })).setHeader("Manage");
         add(userGrid);
-        setSizeFull();
-        try {
-            Thread.sleep(1000);
-            refreshUserGrid();
-        } catch (Exception e) {
+    }
 
+    private void selectUser(SelectionEvent<Grid<User>, User> selection) {
+        Optional<User> selectedUser = selection.getFirstSelectedItem();
+        if (selectedUser.isPresent()) {
+            this.selectedUser = selectedUser.get();
         }
     }
 
     private void refreshUserGrid() {
         userGrid.setItems(userService.getUsers());
-    }
-
-    private void removeSelectedUsers() {
-        Set<User> usersToRemove = new HashSet<>(userGrid.getSelectedItems());
-        for (User user : usersToRemove) {
-            try {
-                userService.deleteUser(user.getUserId());
-            } catch (Exception e) {
-                //TODO - catch exception
-            }
-        }
-        refreshUserGrid();
     }
 
     private void removeUser(User user) {
@@ -97,5 +91,4 @@ public class UserView extends VerticalLayout {
         }
         this.refreshUserGrid();
     }
-
 }
