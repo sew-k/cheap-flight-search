@@ -34,12 +34,16 @@ public class SignupView extends VerticalLayout {
 
     public SignupView() {
         addClassName("login_view");
-        setSizeFull();
-        setAlignItems(Alignment.CENTER);
-        setJustifyContentMode(JustifyContentMode.CENTER);
+        pageSetup();
         addTitle();
         addTextFields();
         addSubmitButton();
+    }
+
+    private void pageSetup() {
+        setSizeFull();
+        setAlignItems(Alignment.CENTER);
+        setJustifyContentMode(JustifyContentMode.CENTER);
     }
 
     private void addTitle() {
