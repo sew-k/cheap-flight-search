@@ -8,6 +8,7 @@ import com.kodilla.cheapflightsearch.service.CalendarService;
 import com.kodilla.cheapflightsearch.service.SecurityService;
 import com.kodilla.cheapflightsearch.service.UserService;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -23,6 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.PermitAll;
 import java.time.LocalDate;
+
+import static com.kodilla.cheapflightsearch.view.ViewsConfig.MINIMUM_DATE_COMPONENTS_WIDTH;
+import static com.kodilla.cheapflightsearch.view.ViewsConfig.MINIMUM_OPTION_BUTTONS_WIDTH;
 
 @PermitAll
 @Route(value = "main/calendar")
@@ -42,25 +46,51 @@ public class CalendarView extends VerticalLayout {
     UserService userService;
 
     public CalendarView() {
-        beginDatePicker.setWeekNumbersVisible(true);
-        beginDatePicker.setValue(LocalDate.now());
-        endDatePicker.setWeekNumbersVisible(true);
-        endDatePicker.setValue(LocalDate.now().plusDays(1l));
-        add(new Button("Back to Main", e -> UI.getCurrent().getPage().open("main")));
-        add(new Button("Refresh all", e -> {
+        addOptionButtons();
+        addInputComponents();
+        addHolidaysGrid();
+    }
+
+    private void addOptionButtons() {
+        Button backToMainButton = new Button("Back to Main", e -> UI.getCurrent().getPage().open("main"));
+        Button refreshButton = new Button("Refresh", e -> {
+            setCurrentUser();
+            setCurrentCalendar();
             refreshAll();
-        }));
-        Button addHolidaysButton = new Button("Add to calendar", event -> {
+        });
+        backToMainButton.setMinWidth(MINIMUM_OPTION_BUTTONS_WIDTH, Unit.PIXELS);
+        refreshButton.setMinWidth(MINIMUM_OPTION_BUTTONS_WIDTH, Unit.PIXELS);
+        add(backToMainButton);
+        add(refreshButton);
+    }
+
+    private void addInputComponents() {
+        setupDatePickerComponents();
+        Button addHolidaysButton = new Button("Add to calendar", e -> {
             readViewForms();
             setNewHolidayPlanInCalendar();
             refreshHolidaysGridForCalendar();
         });
-        HorizontalLayout addHolidaysToCalendarLayout = new HorizontalLayout(
+        addHolidaysButton.setMinWidth(MINIMUM_OPTION_BUTTONS_WIDTH, Unit.PIXELS);
+        HorizontalLayout inputHolidaysToCalendarLayout = new HorizontalLayout(
                 beginDatePicker,
                 endDatePicker,
                 addHolidaysButton
         );
-        add(addHolidaysToCalendarLayout);
+        inputHolidaysToCalendarLayout.setAlignItems(Alignment.BASELINE);
+        add(inputHolidaysToCalendarLayout);
+    }
+
+    private void setupDatePickerComponents() {
+        beginDatePicker.setWeekNumbersVisible(true);
+        beginDatePicker.setValue(LocalDate.now());
+        beginDatePicker.setMinWidth(MINIMUM_DATE_COMPONENTS_WIDTH, Unit.PIXELS);
+        endDatePicker.setWeekNumbersVisible(true);
+        endDatePicker.setValue(LocalDate.now().plusDays(1L));
+        endDatePicker.setMinWidth(MINIMUM_DATE_COMPONENTS_WIDTH, Unit.PIXELS);
+    }
+
+    private void addHolidaysGrid() {
         holidaysGrid.setColumns("beginDate", "endDate");
         holidaysGrid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, holidayPlan) -> {
@@ -74,8 +104,6 @@ public class CalendarView extends VerticalLayout {
     }
 
     private void refreshAll() {
-        setCurrentUser();
-        setCurrentCalendar();
         refreshHolidaysGridForCalendar();
     }
 
@@ -97,13 +125,14 @@ public class CalendarView extends VerticalLayout {
         try {
             calendarService.updateCalendar(
                     calendarService.removeHolidayPlanFromCalendar(
-                            this.getCurrentCalendar(),
+                            getCurrentCalendar(),
                             holidayPlan)
             );
+            setCurrentCalendar();
         } catch (Exception e) {
             Notification.show("Exception when trying to remove holiday plan: " + e);
         }
-        this.refreshHolidaysGridForCalendar();
+        refreshAll();
     }
 
     private void setCurrentUser() {
