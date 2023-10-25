@@ -6,7 +6,7 @@ The main purpose of this application is to practice building and development of 
 
 Application features:
 - multiple searching for cheapest, direct itineraries to user's favourites destinations based on user's annual holiday plan and weather in specified destinations
-- managing stored data, including holiday plans, favourite routes, purchased (or not) itineraries
+- managing stored data, including holiday plans, favourite routes, purchased (or not purchased) itineraries
 - (*in future*) searching for travel basing on weather data
 - (*in future*) scheduling - regular (for example daily) searching for itineraries for choosing cheapest ones
 - (*in future*) scheduling - possibility to get email with reminder of purchased itinerary with weather forecast data on arrival day to destination
@@ -17,15 +17,16 @@ Application shares view layer implemented in Vaadin framework. Possibility to te
 
 ### Requirements
 
-Not deployed on cloud yet. Only local testing possible;
+Only local testing possible;
 
 1. MySQL database and user with all privileges as follows:
-````
-- database name: flights_db
-- url: //localhost:3306
-- username=passenger_user
-- password=Pass123
-````
+    ````
+    - database name: flights_db
+    - url: //localhost:3306
+    - username=passenger_user
+    - password=Pass123
+    ````
+   
 2. Java 17 JDK.
 
 3. IDE with Gradle build tool, such as IntelliJ to compile and run code.
@@ -42,36 +43,46 @@ Not deployed on cloud yet. Only local testing possible;
 
 3. Build and run application in your IDE.
 
-4. Test application endpoints by Postman or use it in favourite browser.
+4. Test application endpoints by Postman or use it (by frontend layer) in favourite browser.
 
 ### Frontend pages
 
 1. Application **main page**
 - http://localhost:8080/main
+- ![Image not found](https://snipboard.io/JC8XMf.jpg)
 
 2. **Airports** managing
 - http://localhost:8080/main/airports
+- ![Image not found](https://snipboard.io/6DOTfL.jpg)
 
 3. **Calendar** and vacation plans managing
 - http://localhost:8080/main/calendar
+- ![Image not found](https://snipboard.io/cjZ3mo.jpg)
 
 4. **User** data managing (panel for Administrator only) - access from main page currently disabled
 - http://localhost:8080/main/users
+- ![Image not found](https://snipboard.io/Hl8ndy.jpg)
 
 5. **Routes** (and favourite ones) managing
 - http://localhost:8080/main/routes
+- ![Image not found](https://snipboard.io/c9JWEK.jpg)
 
 6. **Itineraries** searching, trip plans managing
 - http://localhost:8080/main/itineraries
+- ![Image not found](https://snipboard.io/wVnXt1.jpg)
+- ![Image not found](https://snipboard.io/0jHrIk.jpg)
 
 7. **Quick search** for itinerary
 - http://localhost:8080/main/quick_search
+- ![Image not found](https://snipboard.io/JWr4FY.jpg)
 
 8. **Sign up** form for new User
 - http://localhost:8080/signup
+- ![Image not found](https://snipboard.io/rjl8Bb.jpg)
 
 9. **Log in** form for stored User
 - http://localhost:8080/login
+- ![Image not found](https://snipboard.io/paBOSb.jpg)
 
 ## Endpoints
 
