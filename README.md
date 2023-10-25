@@ -489,7 +489,13 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 
 ### Weather
 
-*- to be completed*
+#### Get weather by city name
+- **URL**: `/v1/cheapflightsearch/weather/{city}`
+- **Method**: GET
+- **Parameters**:
+  - ```{city} - name of the city```
+- **Response**:
+  - ```float - current temperature in Celsius degrees```
       
 ## Features to be implemented
 
