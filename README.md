@@ -86,7 +86,11 @@ Only local testing possible;
 
 ## Endpoints
 
-All API endpoints documentation is available through Swagger: http://localhost:8080/swagger-ui/ 
+All API endpoints documentation is available through Swagger: http://localhost:8080/swagger-ui/
+
+- ![Image not found](https://snipboard.io/ZKvSwo.jpg)
+
+Manual description of all endpoints listed below:
 
 ### Airports 
 
