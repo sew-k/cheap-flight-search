@@ -193,7 +193,101 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 
 ### Routes
 
-*- to be completed*
+#### Get all routes
+- **URL**: `/v1/cheapflightsearch/routes`
+- **Method**: GET
+- **Parameters**: -
+- **Response**:
+  - json
+    ```
+    [
+       {
+        "daysOfWeek": [
+          "FRIDAY"
+        ],
+        "destination": String,
+        "favourite": true,
+        "origin": String,
+        "routeId": int,
+        "userId": int
+       },
+       {
+        ...
+       }
+    ]
+    ```
+
+#### Get route by ID
+- **URL**: `/v1/cheapflightsearch/routes/{id}`
+- **Method**: GET
+- **Parameters**:
+  - ```{id} - ID of the route in database```
+- **Response**:
+  - json
+    ```
+    {
+        "daysOfWeek": [
+            "FRIDAY"
+        ],
+        "destination": String,
+        "favourite": true,
+        "origin": String,
+        "routeId": int,
+        "userId": int
+    }
+    ```
+
+#### Save new route to database
+- **URL**: `/v1/cheapflightsearch/routes`
+- **Method**: POST
+- **Parameters**:
+  - json
+    ```
+    {
+        "daysOfWeek": [
+           "FRIDAY"
+        ],
+        "destination": String,
+        "favourite": true,
+        "origin": String,
+        "routeId": int,
+        "userId": int
+    }
+    ```
+- **Response**: void
+
+#### Update route with ID
+- **URL**: `/v1/cheapflightsearch/routes/update/{id}`
+- **Method**: PUT
+- **Parameters**:
+  - ```{id} - ID of the route to update in database```
+  - json
+    ```
+    {
+        "daysOfWeek": [
+           "FRIDAY"
+        ],
+        "destination": String,
+        "favourite": true,
+        "origin": String,
+        "routeId": int,
+        "userId": int
+    }
+    ```
+- **Response**:
+  - json (updated route)
+    ```
+    {
+        "daysOfWeek": [
+           "FRIDAY"
+        ],
+        "destination": String,
+        "favourite": true,
+        "origin": String,
+        "routeId": int,
+        "userId": int
+    }
+    ```
 
 ### Itineraries
 
@@ -218,8 +312,8 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 #### Get itinerary by ID
 - **URL**: `/v1/cheapflightsearch/itineraries/{id}`
 - **Method**: GET
-- **Parameters**: 
--   ```{id} - ID of the itinerary in database```
+- **Parameters**:
+  - ```{id} - ID of the itinerary in database```
 - **Response**:
   - json
     ```
@@ -233,7 +327,7 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 - **URL**: `/v1/cheapflightsearch/itineraries/{id}`
 - **Method**: DELETE
 - **Parameters**:
--   ```{id} - ID of the itinerary in database```
+  - ```{id} - ID of the itinerary in database```
 - **Response**: void
 
 #### Update itinerary with ID
