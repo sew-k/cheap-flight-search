@@ -358,7 +358,134 @@ All API endpoints documentation is available through Swagger: http://localhost:8
 
 ### Users
 
-*- to be completed*
+#### Get all users
+- **URL**: `/v1/cheapflightsearch/users`
+- **Method**: GET
+- **Parameters**: -
+- **Response**:
+  - json
+    ```
+    [
+       {
+           "calendarId": int,
+           "email": String,
+           "password": String,
+           "role": UserRole,
+           "userId": int,
+           "username": String
+       },
+       {
+           ...
+       }
+    ]
+    ```
+
+#### Get user by ID
+- **URL**: `/v1/cheapflightsearch/users/{id}`
+- **Method**: GET
+- **Parameters**:
+  - ```{id} - ID of the user in database```
+- **Response**:
+  - json
+    ```
+    {
+        "calendarId": int,
+        "email": String,
+        "password": String,
+        "role": UserRole,
+        "userId": int,
+        "username": String
+    }
+    ```
+
+#### Get user by email
+- **URL**: `/v1/cheapflightsearch/users/email/{email}`
+- **Method**: GET
+- **Parameters**:
+  - ```{email} - user's email```
+- **Response**:
+  - json
+    ```
+    {
+        "calendarId": int,
+        "email": String,
+        "password": String,
+        "role": UserRole,
+        "userId": int,
+        "username": String
+    }
+    ```
+
+#### Get user by username
+- **URL**: `/v1/cheapflightsearch/users/username/{username}`
+- **Method**: GET
+- **Parameters**:
+  - ```{username} - user's username```
+- **Response**:
+  - json
+    ```
+    {
+        "calendarId": int,
+        "email": String,
+        "password": String,
+        "role": UserRole,
+        "userId": int,
+        "username": String
+    }
+    ```
+
+#### Save new user to database
+- **URL**: `/v1/cheapflightsearch/users`
+- **Method**: POST
+- **Parameters**:
+  - json
+    ```
+    {
+        "calendarId": int,
+        "email": String,
+        "password": String,
+        "role": UserRole,
+        "userId": int,
+        "username": String
+    }
+    ```
+- **Response**: void
+
+#### Update user with ID
+- **URL**: `/v1/cheapflightsearch/users/update/{id}`
+- **Method**: PUT
+- **Parameters**:
+  - ```{id} - ID of the user to update in database```
+  - json
+    ```
+    {
+        "calendarId": int,
+        "email": String,
+        "password": String,
+        "role": UserRole,
+        "userId": int,
+        "username": String
+    }
+    ```
+- **Response**:
+  - json (updated user)
+    ```
+    {
+        "calendarId": int,
+        "email": String,
+        "password": String,
+        "role": UserRole,
+        "userId": int,
+        "username": String
+    }
+    ```
+
+#### Delete user with ID
+- **URL**: `/v1/cheapflightsearch/users/{id}`
+- **Method**: DELETE
+- **Parameters**:
+  - ```{id} - ID of the user in database```
+- **Response**: void
 
 ### Weather
 
