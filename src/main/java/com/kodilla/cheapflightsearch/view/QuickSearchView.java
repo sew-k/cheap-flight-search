@@ -2,6 +2,7 @@ package com.kodilla.cheapflightsearch.view;
 
 import com.kodilla.cheapflightsearch.domain.skyscanner.Itinerary;
 import com.kodilla.cheapflightsearch.domain.trip.Airport;
+import com.kodilla.cheapflightsearch.domain.trip.TripPlan;
 import com.kodilla.cheapflightsearch.service.AirportService;
 import com.kodilla.cheapflightsearch.service.SkyscannerService;
 import com.kodilla.cheapflightsearch.webclient.skyscanner.requestdata.FlightSearchRequestDto;
@@ -47,6 +48,7 @@ public class QuickSearchView extends VerticalLayout {
     private Set<Airport> airportSet = new HashSet<>();
     private Grid<Itinerary> itineraryGrid = new Grid<>(Itinerary.class, false);
     private List<Itinerary> itineraryList = new ArrayList<>();
+    private List<TripPlan> tripPlanList = new ArrayList<>();            //TODO - add trip plans to list and join with itinerary
     private static final NumberFormat CURRENCY_FORMATTER = NumberFormat.getCurrencyInstance(new Locale("pl", "PL"));
     @Autowired
     SkyscannerService skyscannerService;
@@ -57,39 +59,6 @@ public class QuickSearchView extends VerticalLayout {
         addOptionButtons();
         addInputComponents();
         addItineraryGrid();
-
-//        originAirportComboBox.setItems(airportSet);
-//        originAirportComboBox.setClearButtonVisible(true);
-//        destinationAirportComboBox.setItems(airportSet);
-//        destinationAirportComboBox.setClearButtonVisible(true);
-//        beginDatePicker.setWeekNumbersVisible(true);
-//        endDatePicker.setWeekNumbersVisible(true);
-//        HorizontalLayout searchFieldsLayout = new HorizontalLayout(
-//                originAirportComboBox,
-//                destinationAirportComboBox,
-//                beginDatePicker,
-//                endDatePicker,
-//                adultsTextField
-//        );
-//        add(searchFieldsLayout);
-//        add(quickSearchButton);
-//        itineraryGrid.addColumn(itinerary -> originAirport).setHeader("Origin");
-//        itineraryGrid.addColumn(itinerary -> destinationAirport).setHeader("Destination");
-//        itineraryGrid.addColumn(itinerary -> beginDate).setHeader("Begin trip date");
-//        itineraryGrid.addColumn(itinerary -> endDate).setHeader("End trip date");
-//        itineraryGrid.addColumn(itinerary -> adults).setHeader("Passengers");
-//        itineraryGrid.addColumn(itinerary -> CURRENCY_FORMATTER.format(itinerary.getPrice())).setHeader("Price");
-//        itineraryGrid.addColumn(
-//                new ComponentRenderer<>(Button::new, (button, itinerary) -> {
-//                    button.addThemeVariants(ButtonVariant.LUMO_ICON,
-//                            ButtonVariant.LUMO_ERROR,
-//                            ButtonVariant.LUMO_TERTIARY);
-//                    button.addClickListener(e -> this.removeItinerary(itinerary));
-//                    button.setIcon(new Icon(VaadinIcon.TRASH));
-//                })).setHeader("Manage");
-//        itineraryGrid.addComponentColumn(i -> new Button("Press to buy",
-//                e -> UI.getCurrent().getPage().open(i.getPurchaseLink())));
-//        add(itineraryGrid);
     }
 
     private void addInputComponents() {
@@ -185,9 +154,13 @@ public class QuickSearchView extends VerticalLayout {
             Itinerary itinerary = skyscannerService.searchCreateGetItinerary(flightSearchRequestDto);
             Notification.show("ItineraryID: " + itinerary.getItineraryId());
             Notification.show("Best price for this flight is: " + Double.toString(itinerary.getPrice()) + " PLN");
+
+            //TODO to add tripPlan to it's list
+
             itineraryList.add(itinerary);
-        } catch (Exception exception) {
-            Notification.show("Exception: " + exception);
+
+        } catch (Exception e) {
+            Notification.show("Exception: " + e);
         } finally {
             Notification.show("Searching end");
             refreshItinerariesGrid();
