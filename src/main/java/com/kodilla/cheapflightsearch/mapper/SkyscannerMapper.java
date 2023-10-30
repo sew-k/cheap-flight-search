@@ -17,7 +17,8 @@ public class SkyscannerMapper {
     @Autowired
     ObjectMapper objectMapper;
 
-    public ItineraryDto mapSkyscannerClientDtoToItineraryDto(SkyscannerItineraryCreateDto skyscannerItineraryCreateDto) throws Exception {
+    public ItineraryDto mapSkyscannerClientDtoToItineraryDto(
+            SkyscannerItineraryCreateDto skyscannerItineraryCreateDto) throws Exception {
         String itineraryMark;
         float amount;
         String deepLink;
