@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.DayOfWeek;
-import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,7 +16,7 @@ public class RouteDto {
     private Long routeId;
     private String origin;
     private String destination;
-    private List<DayOfWeek> daysOfWeek;
+    private Set<DayOfWeek> daysOfWeek;
     private boolean favourite;
     private Long userId;
 }
