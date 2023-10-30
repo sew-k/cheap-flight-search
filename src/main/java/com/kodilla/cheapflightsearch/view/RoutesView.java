@@ -42,7 +42,6 @@ public class RoutesView extends VerticalLayout {
     private ComboBox<Airport> destinationAirportComboBox = new ComboBox<>("Destination airport");
     private MultiSelectComboBox<DayOfWeek> selectionDaysOfWeekComboBox = new MultiSelectComboBox<>("Days of week");
 
-
     @Autowired
     RouteService routeService;
     @Autowired
@@ -176,7 +175,7 @@ public class RoutesView extends VerticalLayout {
     }
 
     public void refreshRoutesGrid() {
-        routesGrid.setItems(routeService.getRoutes());
+        routesGrid.setItems(routeService.getRoutesByUserId(currentUser.getUserId()));
     }
 
     private void removeRoute(Route route) {
