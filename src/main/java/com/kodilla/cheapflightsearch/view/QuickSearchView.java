@@ -85,11 +85,11 @@ public class QuickSearchView extends VerticalLayout {
     }
 
     private void addItineraryGrid() {
-        itineraryGrid.addColumn(i -> originAirport).setHeader("Origin");
-        itineraryGrid.addColumn(i -> destinationAirport).setHeader("Destination");
-        itineraryGrid.addColumn(i -> beginDate).setHeader("Begin trip date");
-        itineraryGrid.addColumn(i -> endDate).setHeader("End trip date");
-        itineraryGrid.addColumn(i -> adults).setHeader("Passengers");
+        itineraryGrid.addColumn(i -> i.getTripPlan().getOriginIata()).setHeader("Origin");
+        itineraryGrid.addColumn(i -> i.getTripPlan().getDestinationIata()).setHeader("Destination");
+        itineraryGrid.addColumn(i -> i.getTripPlan().getBeginDate()).setHeader("Begin trip date");
+        itineraryGrid.addColumn(i -> i.getTripPlan().getEndDate()).setHeader("End trip date");
+        itineraryGrid.addColumn(i -> i.getTripPlan().getAdults()).setHeader("Passengers");
         itineraryGrid.addColumn(i -> CURRENCY_FORMATTER.format(i.getPrice())).setHeader("Price");
         itineraryGrid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, i) -> {
@@ -151,20 +151,40 @@ public class QuickSearchView extends VerticalLayout {
                 beginDate,
                 endDate);
         try {
-            Itinerary itinerary = skyscannerService.searchCreateGetItinerary(flightSearchRequestDto);
-            Notification.show("ItineraryID: " + itinerary.getItineraryId());
-            Notification.show("Best price for this flight is: " + Double.toString(itinerary.getPrice()) + " PLN");
+            Itinerary newItinerary = skyscannerService.searchCreateGetItinerary(flightSearchRequestDto);
+            Notification.show("Best price for this flight is: " + Double.toString(newItinerary.getPrice()) + " PLN");
+            TripPlan newTripPlan = TripPlan.builder()
+                    .originIata(originAirport.getIataCode())
+                    .destinationIata(destinationAirport.getIataCode())
+                    .beginDate(beginDate)
+                    .endDate(endDate)
+                    .adults(adults)
+                    .itinerary(newItinerary)
+                    .build();
+            newItinerary.setTripPlan(newTripPlan);
 
-            //TODO to add tripPlan to it's list
-
-            itineraryList.add(itinerary);
-
+            if (needToUpdateExistingItinerary(newItinerary)) {
+                removeOutdatedItineraryWithSameTripPlan(newItinerary);
+            }
+            itineraryList.add(newItinerary);
+            tripPlanList.add(newTripPlan);
         } catch (Exception e) {
             Notification.show("Exception: " + e);
         } finally {
-            Notification.show("Searching end");
             refreshItinerariesGrid();
         }
+    }
+
+    private boolean needToUpdateExistingItinerary(Itinerary itinerary) {
+        return itineraryList.stream()
+                .anyMatch(i -> i.getTripPlan().equals(itinerary.getTripPlan()));
+    }
+
+    private void removeOutdatedItineraryWithSameTripPlan(Itinerary newItinerary) {
+        Itinerary itineraryToRemove = itineraryList.stream()
+                .filter(i -> i.getTripPlan().equals(newItinerary.getTripPlan()))
+                .findFirst().get();
+        itineraryList.remove(itineraryToRemove);
     }
 
     private void setUpAirports() {
