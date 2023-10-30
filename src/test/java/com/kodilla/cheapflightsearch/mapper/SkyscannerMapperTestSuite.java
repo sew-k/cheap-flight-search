@@ -2,12 +2,15 @@ package com.kodilla.cheapflightsearch.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kodilla.cheapflightsearch.domain.skyscanner.ItineraryDto;
+import com.kodilla.cheapflightsearch.domain.trip.TripPlan;
+import com.kodilla.cheapflightsearch.webclient.skyscanner.requestdata.FlightSearchRequestDto;
 import com.kodilla.cheapflightsearch.webclient.skyscanner.responsedata.*;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -92,5 +95,39 @@ class SkyscannerMapperTestSuite {
 //        assertEquals(itineraryId, itineraryDto.getItineraryId());
         assertEquals(817.990f, itineraryDto.getPrice());
         assertEquals("https://skyscanner.pxf.io/c/2850210/1103265/13416", itineraryDto.getPurchaseLink().substring(0,49));
+    }
+
+    @Test
+    void mapTripPlanToFlightSearchDto() {
+        //Given
+        TripPlan tripPlan = new TripPlan(
+                "OriginIATA",
+                "DestinationIATA",
+                LocalDate.of(2030, 01, 01),
+                LocalDate.of(2023, 01, 02),
+                2
+        );
+
+        //When
+        FlightSearchRequestDto resultFlightSearchRequestDto = skyscannerMapper.mapTripPlanToFlightSearchDto(tripPlan);
+
+        //Then
+        assertEquals(tripPlan.getAdults(), resultFlightSearchRequestDto.getQuery().getAdults());
+        assertEquals(tripPlan.getOriginIata(),
+                resultFlightSearchRequestDto.getQuery().getQueryLegs().get(0).getOriginPlaceId().getIata());
+        assertEquals(tripPlan.getDestinationIata(),
+                resultFlightSearchRequestDto.getQuery().getQueryLegs().get(0).getDestinationPlaceId().getIata());
+        assertEquals(tripPlan.getBeginDate().getYear(),
+                resultFlightSearchRequestDto.getQuery().getQueryLegs().get(0).getDate().getYear());
+        assertEquals(tripPlan.getBeginDate().getDayOfMonth(),
+                resultFlightSearchRequestDto.getQuery().getQueryLegs().get(0).getDate().getDay());
+        assertEquals(tripPlan.getBeginDate().getMonthValue(),
+                resultFlightSearchRequestDto.getQuery().getQueryLegs().get(0).getDate().getMonth());
+        assertEquals(tripPlan.getEndDate().getYear(),
+                resultFlightSearchRequestDto.getQuery().getQueryLegs().get(1).getDate().getYear());
+        assertEquals(tripPlan.getEndDate().getDayOfMonth(),
+                resultFlightSearchRequestDto.getQuery().getQueryLegs().get(1).getDate().getDay());
+        assertEquals(tripPlan.getEndDate().getMonthValue(),
+                resultFlightSearchRequestDto.getQuery().getQueryLegs().get(1).getDate().getMonth());
     }
 }
