@@ -6,8 +6,6 @@ import com.kodilla.cheapflightsearch.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +21,7 @@ public class RouteMapper {
                 routeDto.getRouteId(),
                 airportService.getAirportByIata(routeDto.getOrigin()),
                 airportService.getAirportByIata(routeDto.getDestination()),
-                routeDto.getDaysOfWeek().stream().collect(Collectors.toSet()),
+                routeDto.getDaysOfWeek(),
                 routeDto.isFavourite(),
                 userService.getUser(routeDto.getUserId())
         );
@@ -34,7 +32,7 @@ public class RouteMapper {
                 .routeId(route.getRouteId())
                 .origin(route.getOrigin().getIataCode())
                 .destination(route.getDestination().getIataCode())
-                .daysOfWeek(route.getDaysOfWeek().stream().toList())
+                .daysOfWeek(route.getDaysOfWeek())
                 .favourite(route.isFavourite())
                 .userId(route.getUser().getUserId())
                 .build();
