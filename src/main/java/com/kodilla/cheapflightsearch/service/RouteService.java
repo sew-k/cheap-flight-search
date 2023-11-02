@@ -1,7 +1,6 @@
 package com.kodilla.cheapflightsearch.service;
 
 import com.kodilla.cheapflightsearch.exception.RouteNotFoundException;
-import com.kodilla.cheapflightsearch.domain.trip.Airport;
 import com.kodilla.cheapflightsearch.domain.trip.Route;
 import com.kodilla.cheapflightsearch.repository.RouteRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,14 +40,6 @@ public class RouteService {
 
     public Route createRoute(Route route) {
         return routeRepository.save(route);
-    }
-
-    public Route getRouteByOrigin(Airport origin) throws RouteNotFoundException {
-        return routeRepository.findByOrigin(origin).orElseThrow(RouteNotFoundException::new);
-    }
-
-    public Route getRouteByDestination(Airport destination) throws RouteNotFoundException {
-        return routeRepository.findByDestination(destination).orElseThrow(RouteNotFoundException::new);
     }
 
     public List<Route> getFavouriteRoutes() {
