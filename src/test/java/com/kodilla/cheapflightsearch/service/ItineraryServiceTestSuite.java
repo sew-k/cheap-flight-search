@@ -5,6 +5,7 @@ import com.kodilla.cheapflightsearch.domain.skyscanner.Itinerary;
 import com.kodilla.cheapflightsearch.domain.trip.Airport;
 import com.kodilla.cheapflightsearch.domain.trip.Route;
 import com.kodilla.cheapflightsearch.domain.trip.TripPlan;
+import com.kodilla.cheapflightsearch.domain.user.User;
 import com.kodilla.cheapflightsearch.exception.ItineraryNotFoundException;
 import com.kodilla.cheapflightsearch.mapper.SkyscannerMapper;
 import com.kodilla.cheapflightsearch.mapper.TripPlanMapper;
@@ -19,7 +20,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -44,7 +44,7 @@ class ItineraryServiceTestSuite {
     private TripPlanRepository tripPlanRepository;
 
     @Test
-    void getItineraries() {
+    void testGetItineraries() {
         //When
         itineraryService.getItineraries();
 
@@ -53,7 +53,7 @@ class ItineraryServiceTestSuite {
     }
 
     @Test
-    void getItinerary() throws Exception {
+    void testGetItinerary() throws Exception {
         //Given
         Long id = 1L;
         when(itineraryRepository.findById(id)).thenReturn(Optional.of(new Itinerary()));
@@ -63,6 +63,71 @@ class ItineraryServiceTestSuite {
 
         //Then
         verify(itineraryRepository, atLeastOnce()).findById(id);
+    }
+
+    @Test
+    void testGetItinerary_notExisting() throws Exception {
+        //Given
+        Long id = 999L;
+
+        //When & Then
+        assertThrows(ItineraryNotFoundException.class, () -> itineraryService.getItinerary(id));
+        verify(itineraryRepository, atLeastOnce()).findById(id);
+    }
+
+    @Test
+    void testGetItinerariesByUser() {
+        //Given
+        User user1 = new User("username1", "userEmail1", "userPassword1");
+        User user2 = new User("username2", "userEmail2", "userPassword2");
+        TripPlan tripPlan1 = new TripPlan();
+        TripPlan tripPlan2 = new TripPlan();
+        TripPlan tripPlan3 = new TripPlan();
+        tripPlan1.setUser(user1);
+        tripPlan2.setUser(user1);
+        tripPlan3.setUser(user2);
+        Itinerary itinerary1 = new Itinerary();
+        Itinerary itinerary2 = new Itinerary();
+        Itinerary itinerary3 = new Itinerary();
+        itinerary1.setTripPlan(tripPlan1);
+        itinerary2.setTripPlan(tripPlan2);
+        itinerary3.setTripPlan(tripPlan3);
+        when(itineraryRepository.findAll()).thenReturn(List.of(itinerary1, itinerary2, itinerary3));
+
+        //When
+        List<Itinerary> resultList = itineraryService.getItinerariesByUser(user1);
+
+        //Then
+        assertFalse(resultList.isEmpty());
+        assertEquals(2, resultList.size());
+    }
+
+    @Test
+    void testGetItineraryByItineraryMark() throws Exception {
+        //Given
+        Itinerary itinerary4 = new Itinerary("mark4", 194.10, "link4");
+        Itinerary itinerary5 = new Itinerary("mark5", 195.10, "link5");
+        Itinerary itinerary6 = new Itinerary("mark6", 196.10, "link6");
+        when(itineraryRepository.findAll()).thenReturn(List.of(itinerary4, itinerary5, itinerary6));
+
+        //When
+        Optional<Itinerary> fetchedItinerary = Optional.ofNullable(itineraryService.getItineraryByItineraryMark("mark5"));
+
+        //Then
+        assertTrue(fetchedItinerary.isPresent());
+        assertEquals(itinerary5, fetchedItinerary.get());
+    }
+
+    @Test
+    void testGetItineraryByItineraryMark_notExisting() throws Exception {
+        //Given
+        Itinerary itinerary4 = new Itinerary("mark4", 194.10, "link4");
+        Itinerary itinerary5 = new Itinerary("mark5", 195.10, "link5");
+        Itinerary itinerary6 = new Itinerary("mark6", 196.10, "link6");
+        when(itineraryRepository.findAll()).thenReturn(List.of(itinerary4, itinerary5, itinerary6));
+
+        //When & Then
+        assertThrows(ItineraryNotFoundException.class, () -> itineraryService.getItineraryByItineraryMark("mark99"));
     }
 
     @Test
@@ -78,6 +143,19 @@ class ItineraryServiceTestSuite {
 
         //Then
         verify(itineraryRepository, atLeastOnce()).deleteById(id);
+    }
+
+    @Test
+    void testDeleteItinerary_notExisting() throws Exception {
+        //Given
+        Long id = 999L;
+
+        //When
+        when(itineraryRepository.existsById(id)).thenReturn(false);
+
+        //Then
+        assertThrows(ItineraryNotFoundException.class, () -> itineraryService.deleteItinerary(id));
+        verify(itineraryRepository, atLeastOnce()).existsById(id);
     }
 
     @Test
@@ -197,7 +275,7 @@ class ItineraryServiceTestSuite {
     }
 
     @Test
-    void testSearchForItinerariesMatchingRoutesAndHolidayPlans_DatesMatching() {
+    void testSearchForItinerariesMatchingRoutesAndHolidayPlans_DatesMatching() throws Exception {
         //Given
         Route route = new Route(
                 new Airport("Poland", "Warsaw", "WAW"),
@@ -223,34 +301,21 @@ class ItineraryServiceTestSuite {
                 LocalDate.of(2023, 9, 22),
                 LocalDate.of(2023, 9, 24)
         );
-        List<Itinerary> resultList = new ArrayList<>();
         Itinerary itinerary = new Itinerary();
-        try {
-            when(skyscannerService.searchCreateGetItinerary(flightSearchRequestDto)).thenReturn(itinerary);
-        } catch (Exception e) {
-
-        }
+        when(skyscannerService.searchCreateGetItinerary(flightSearchRequestDto)).thenReturn(itinerary);
         when(tripPlanMapper.mapRouteAndHolidayPlanToTripPlan(holidayPlan, route, 1)).thenReturn(tripPlan);
         when(skyscannerMapper.mapTripPlanToFlightSearchDto(tripPlan)).thenReturn(flightSearchRequestDto);
         when(itineraryRepository.save(itinerary)).thenReturn(itinerary);
 
         //When
-        try {
-            resultList = itineraryService.searchForItinerariesMatchingFavouriteRoutesAndHolidayPlans(
-                    List.of(holidayPlan),
-                    List.of(route),
-                    1
-            );
-        } catch (Exception e) {
-
-        }
+        List<Itinerary> resultList = itineraryService.searchForItinerariesMatchingFavouriteRoutesAndHolidayPlans(
+                List.of(holidayPlan),
+                List.of(route),
+                1
+        );
 
         //Then
-        try {
-            verify(skyscannerService, atLeastOnce()).searchCreateGetItinerary(flightSearchRequestDto);
-        } catch (Exception e) {
-
-        }
+        verify(skyscannerService, atLeastOnce()).searchCreateGetItinerary(flightSearchRequestDto);
         verify(tripPlanMapper, atLeastOnce()).mapRouteAndHolidayPlanToTripPlan(holidayPlan, route, 1);
         verify(skyscannerMapper, atLeastOnce()).mapTripPlanToFlightSearchDto(tripPlan);
         verify(itineraryRepository, atLeastOnce()).save(itinerary);
@@ -259,7 +324,7 @@ class ItineraryServiceTestSuite {
     }
 
     @Test
-    void testSearchForItinerariesMatchingRoutesAndHolidayPlans_DatesNotMatching() {
+    void testSearchForItinerariesMatchingRoutesAndHolidayPlans_DatesNotMatching() throws Exception {
         //Given
         Route route = new Route(
                 new Airport("Poland", "Warsaw", "WAW"),
@@ -285,26 +350,17 @@ class ItineraryServiceTestSuite {
                 LocalDate.of(2023, 9, 22),
                 LocalDate.of(2023, 9, 24)
         );
-        List<Itinerary> resultList = new ArrayList<>();
         Itinerary itinerary = new Itinerary();
 
         //When
-        try {
-            resultList = itineraryService.searchForItinerariesMatchingFavouriteRoutesAndHolidayPlans(
-                    List.of(holidayPlan),
-                    List.of(route),
-                    1
-            );
-        } catch (Exception e) {
-
-        }
+        List<Itinerary> resultList = itineraryService.searchForItinerariesMatchingFavouriteRoutesAndHolidayPlans(
+                List.of(holidayPlan),
+                List.of(route),
+                1
+        );
 
         //Then
-        try {
-            verify(skyscannerService, never()).searchCreateGetItinerary(flightSearchRequestDto);
-        } catch (Exception e) {
-
-        }
+        verify(skyscannerService, never()).searchCreateGetItinerary(flightSearchRequestDto);
         verify(tripPlanMapper, never()).mapRouteAndHolidayPlanToTripPlan(holidayPlan, route, 1);
         verify(skyscannerMapper, never()).mapTripPlanToFlightSearchDto(tripPlan);
         verify(itineraryRepository, never()).save(itinerary);
