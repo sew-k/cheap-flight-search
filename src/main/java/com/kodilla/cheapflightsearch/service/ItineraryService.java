@@ -90,8 +90,7 @@ public class ItineraryService {
     }
 
     public boolean checkIfItineraryExists(Itinerary itineraryToCheck) {
-        return itineraryRepository.findAll().stream()
-                .anyMatch(i -> i.getTripPlan().equals(itineraryToCheck.getTripPlan()));
+        return itineraryRepository.existsById(itineraryToCheck.getItineraryId());
     }
 
     public List<Itinerary> getPurchasedItineraries() {
