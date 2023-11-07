@@ -5,10 +5,7 @@ import com.kodilla.cheapflightsearch.domain.trip.Airport;
 import com.kodilla.cheapflightsearch.domain.trip.TripPlan;
 import com.kodilla.cheapflightsearch.domain.user.User;
 import com.kodilla.cheapflightsearch.exception.UserNotFoundException;
-import com.kodilla.cheapflightsearch.service.AirportService;
-import com.kodilla.cheapflightsearch.service.ItineraryService;
-import com.kodilla.cheapflightsearch.service.SecurityService;
-import com.kodilla.cheapflightsearch.service.UserService;
+import com.kodilla.cheapflightsearch.service.*;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
@@ -62,6 +59,8 @@ public class ItinerariesView extends VerticalLayout {
     @Autowired
     ItineraryService itineraryService;
     @Autowired
+    TripPlanService tripPlanService;
+    @Autowired
     AirportService airportService;
 
     public ItinerariesView() {
@@ -113,8 +112,8 @@ public class ItinerariesView extends VerticalLayout {
     private void addTripPlansGrid() {
         tripPlanGrid.addColumn(TripPlan::getOriginIata).setHeader("Origin");
         tripPlanGrid.addColumn(TripPlan::getDestinationIata).setHeader("Destination");
-        tripPlanGrid.addColumn(t -> itineraryService.getCityForTripPlanDestination(t)).setHeader("City");
-        tripPlanGrid.addColumn(t -> itineraryService.getWeatherForTripPlanDestination(t)).setHeader("Weather");
+        tripPlanGrid.addColumn(t -> tripPlanService.getCityForTripPlanDestination(t)).setHeader("City");
+        tripPlanGrid.addColumn(t -> tripPlanService.getWeatherForTripPlanDestination(t)).setHeader("Weather");
         tripPlanGrid.addColumn(TripPlan::getBeginDate).setHeader("Begin trip date");
         tripPlanGrid.addColumn(TripPlan::getEndDate).setHeader("End trip date");
         tripPlanGrid.addColumn(TripPlan::getAdults).setHeader("Passengers");
@@ -182,7 +181,7 @@ public class ItinerariesView extends VerticalLayout {
     }
 
     private void createMultipleTripPlans() {
-        itineraryService.createTripPlansFromFavouriteRoutesAndHolidayPlans(currentUser, adults);
+        tripPlanService.createTripPlansFromFavouriteRoutesAndHolidayPlans(currentUser, adults);
     }
 
     private void setUpAirports() {
@@ -194,7 +193,7 @@ public class ItinerariesView extends VerticalLayout {
     }
 
     private void refreshTripPlansGrid() {
-        tripPlanGrid.setItems(itineraryService.getTripPlansByUser(currentUser));
+        tripPlanGrid.setItems(tripPlanService.getTripPlansByUser(currentUser));
     }
 
     private void refreshAll() {
@@ -217,7 +216,7 @@ public class ItinerariesView extends VerticalLayout {
         if (tripPlan == null)
             return;
         try {
-            itineraryService.deleteTripPlan(tripPlan.getTripPlanId());
+            tripPlanService.deleteTripPlan(tripPlan.getTripPlanId());
         } catch (Exception e) {
             Notification.show("Exception when trying to remove trip plan: " + e);
         }
@@ -241,7 +240,7 @@ public class ItinerariesView extends VerticalLayout {
     }
 
     private void addNewTripPlan() {
-        itineraryService.createTripPlan(
+        tripPlanService.createTripPlan(
                 TripPlan.builder()
                         .originIata(originAirport.getIataCode())
                         .destinationIata(destinationAirport.getIataCode())
