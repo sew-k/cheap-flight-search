@@ -55,7 +55,7 @@ public class TripPlanService {
     }
 
     public TripPlan updateTripPlan(Long id, TripPlan tripPlan) throws TripPlanNotFoundException {
-        if (tripPlanRepository.findById(id).isPresent()) {
+        if (tripPlanRepository.existsById(id)) {
             return tripPlanRepository.save(tripPlan);
         } else {
             throw new TripPlanNotFoundException();
