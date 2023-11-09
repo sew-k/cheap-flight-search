@@ -1,9 +1,12 @@
 package com.kodilla.cheapflightsearch.service;
 
 import com.kodilla.cheapflightsearch.domain.calendar.Calendar;
+import com.kodilla.cheapflightsearch.domain.trip.Airport;
 import com.kodilla.cheapflightsearch.domain.trip.TripPlan;
 import com.kodilla.cheapflightsearch.domain.user.User;
 import com.kodilla.cheapflightsearch.domain.user.UserRole;
+import com.kodilla.cheapflightsearch.exception.AirportNotFoundException;
+import com.kodilla.cheapflightsearch.exception.TripPlanNotFoundException;
 import com.kodilla.cheapflightsearch.repository.TripPlanRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +27,8 @@ class TripPlanServiceTestSuite {
     private TripPlanService tripPlanService;
     @Mock
     private TripPlanRepository tripPlanRepository;
+    @Mock
+    private AirportService airportService;
 
     @Test
     void getTripPlans() {
@@ -128,13 +133,58 @@ class TripPlanServiceTestSuite {
         TripPlan savedTripPlan = tripPlanService.updateTripPlan(1L, tripPlanToSave);
 
         //Then
+        assertDoesNotThrow(() -> tripPlanService.updateTripPlan(1L, tripPlanToSave));
         verify(tripPlanRepository, atLeastOnce()).existsById(id);
         verify(tripPlanRepository, atLeastOnce()).save(tripPlanToSave);
         assertEquals(tripPlanToSave, savedTripPlan);
     }
 
     @Test
+    void updateTripPlan_notExisting() throws Exception {
+        //Given
+        Long id = 99L;
+        TripPlan tripPlanToSave = new TripPlan();
+        when(tripPlanRepository.existsById(id)).thenReturn(false);
+
+        //When & Then
+        assertThrows(TripPlanNotFoundException.class, () -> tripPlanService.updateTripPlan(id, tripPlanToSave));
+        verify(tripPlanRepository, atLeastOnce()).existsById(id);
+    }
+
+    @Test
     void createTripPlan() {
+        //Given
+        TripPlan tripPlanToCreate = new TripPlan(
+                "iataOrigin6",
+                "iataDest6",
+                LocalDate.of(2030, 05, 01),
+                LocalDate.of(2030, 05, 02),
+                1
+        );
+        User user3 = new User(
+                3L,
+                "username3",
+                "userEmail3",
+                UserRole.USER,
+                "userPassword3",
+                new Calendar()
+        );
+        TripPlan otherTripPlan = new TripPlan(
+                "iataOrigin7",
+                "iataDest7",
+                LocalDate.of(2030, 05, 01),
+                LocalDate.of(2030, 05, 02),
+                1);
+        tripPlanToCreate.setUser(user3);
+        otherTripPlan.setUser(user3);
+        when(tripPlanRepository.findByUser(user3)).thenReturn(List.of(otherTripPlan));
+        when(tripPlanRepository.save(tripPlanToCreate)).thenReturn(tripPlanToCreate);
+
+        //When
+        TripPlan createdTripPlan = tripPlanService.createTripPlan(tripPlanToCreate);
+
+        //Then
+        assertEquals(tripPlanToCreate, createdTripPlan);
     }
 
     @Test
@@ -146,6 +196,44 @@ class TripPlanServiceTestSuite {
     }
 
     @Test
-    void getCityForTripPlanDestination() {
+    void getCityForTripPlanDestination() throws Exception {
+        //Given
+        String destinationIata = "WAW";
+        TripPlan tripPlan = new TripPlan(
+                "RAD",
+                destinationIata,
+                LocalDate.of(2030, 05, 01),
+                LocalDate.of(2030, 05, 02),
+                1
+        );
+        when(airportService.getAirportByIata(destinationIata)).thenReturn(
+                new Airport("Poland", "Warsaw", "WAW")
+        );
+
+        //When
+        String resultCity = tripPlanService.getCityForTripPlanDestination(tripPlan);
+
+        //Then
+        assertEquals("Warsaw", resultCity);
+    }
+
+    @Test
+    void getCityForTripPlanDestination_notFound() throws Exception {
+        //Given
+        String destinationIata = "WWW";
+        TripPlan tripPlan = new TripPlan(
+                "RAD",
+                destinationIata,
+                LocalDate.of(2030, 05, 01),
+                LocalDate.of(2030, 05, 02),
+                1
+        );
+        when(airportService.getAirportByIata(destinationIata)).thenThrow(new AirportNotFoundException());
+
+        //When
+        String resultCity = tripPlanService.getCityForTripPlanDestination(tripPlan);
+
+        //Then
+        assertEquals("Not found", resultCity);
     }
 }
