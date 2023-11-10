@@ -1,12 +1,16 @@
 package com.kodilla.cheapflightsearch.service;
 
 import com.kodilla.cheapflightsearch.domain.calendar.Calendar;
+import com.kodilla.cheapflightsearch.domain.calendar.HolidayPlan;
 import com.kodilla.cheapflightsearch.domain.trip.Airport;
+import com.kodilla.cheapflightsearch.domain.trip.Route;
 import com.kodilla.cheapflightsearch.domain.trip.TripPlan;
 import com.kodilla.cheapflightsearch.domain.user.User;
 import com.kodilla.cheapflightsearch.domain.user.UserRole;
 import com.kodilla.cheapflightsearch.exception.AirportNotFoundException;
 import com.kodilla.cheapflightsearch.exception.TripPlanNotFoundException;
+import com.kodilla.cheapflightsearch.repository.ItineraryRepository;
+import com.kodilla.cheapflightsearch.repository.RouteRepository;
 import com.kodilla.cheapflightsearch.repository.TripPlanRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,9 +18,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -28,7 +35,13 @@ class TripPlanServiceTestSuite {
     @Mock
     private TripPlanRepository tripPlanRepository;
     @Mock
+    private ItineraryRepository itineraryRepository;
+    @Mock
     private AirportService airportService;
+    @Mock
+    private CalendarService calendarService;
+    @Mock
+    private RouteRepository routeRepository;
 
     @Test
     void getTripPlans() {
@@ -117,8 +130,28 @@ class TripPlanServiceTestSuite {
     }
 
     @Test
-    void deleteTripPlan() {
+    void deleteTripPlan() throws Exception {
+        //Given
+        Long id = 1L;
+        TripPlan tripPlan = new TripPlan();
+        when(tripPlanRepository.findById(id)).thenReturn(Optional.of(tripPlan));
+        when(itineraryRepository.findByTripPlan(tripPlan)).thenReturn(new ArrayList<>());
 
+        //When
+        tripPlanService.deleteTripPlan(id);
+
+        //Then
+        verify(tripPlanRepository, atLeastOnce()).deleteById(id);
+    }
+
+    @Test
+    void deleteTripPlan_notExisting() throws Exception {
+        //Given
+        Long id = 99L;
+        when(tripPlanRepository.findById(id)).thenReturn(Optional.ofNullable(null));
+
+        //When & Then
+        assertThrows(TripPlanNotFoundException.class, () -> tripPlanService.deleteTripPlan(id));
     }
 
     @Test
@@ -189,10 +222,85 @@ class TripPlanServiceTestSuite {
 
     @Test
     void createTripPlansFromFavouriteRoutesAndHolidayPlans() {
+        //Given
+        User user = new User("username4", "userEmail4", "userPassword4");
+        Route route1 = new Route(
+                new Airport("Poland", "Warsaw", "WAW"),
+                new Airport("Portugal", "Lisbon", "LIS"),
+                Set.of(DayOfWeek.MONDAY, DayOfWeek.FRIDAY),
+                true,
+                user
+        );
+        Route route2 = new Route(
+                new Airport("Poland", "Modlin", "WMI"),
+                new Airport("Portugal", "Lisbon", "LIS"),
+                Set.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY),
+                true,
+                user
+        );
+        when(routeRepository.findByUser(user)).thenReturn(List.of(route1, route2));
+        HolidayPlan userHolidayPlan = new HolidayPlan(
+                LocalDate.of(2023, 11, 6),
+                LocalDate.of(2023, 11, 8)
+        );
+        when(calendarService.getHolidayPlansByUser(user)).thenReturn(List.of(userHolidayPlan));
+        when(tripPlanRepository.findByUser(user)).thenReturn(new ArrayList<>());
+
+        //When
+        List<TripPlan> createdTripPlans = tripPlanService.createTripPlansFromFavouriteRoutesAndHolidayPlans(
+                user,
+                1
+        );
+        System.out.println(createdTripPlans);
+
+        //Then
+        assertFalse(createdTripPlans.isEmpty());
+        assertEquals(1, createdTripPlans.size());
     }
 
     @Test
-    void getWeatherForTripPlanDestination() {
+    void getWeatherForTripPlanDestination() throws Exception {
+        //Given
+        String destinationIata = "WAW";
+        TripPlan tripPlan = new TripPlan(
+                "RAD",
+                destinationIata,
+                LocalDate.of(2030, 05, 01),
+                LocalDate.of(2030, 05, 02),
+                1
+        );
+        Airport destinationAirport = new Airport("Poland", "Warsaw", "WAW");
+        when(airportService.getAirportByIata(destinationIata)).thenReturn(
+                destinationAirport
+        );
+        when(airportService.getWeatherForAirport(destinationAirport)).thenReturn("15");
+
+        //When
+        String resultWeather = tripPlanService.getWeatherForTripPlanDestination(tripPlan);
+
+        //Then
+        assertEquals("15", resultWeather);
+    }
+
+    @Test
+    void getWeatherForTripPlanDestination_notFound() throws Exception {
+        //Given
+        String destinationIata = "WAW";
+        TripPlan tripPlan = new TripPlan(
+                "RAD",
+                destinationIata,
+                LocalDate.of(2030, 05, 01),
+                LocalDate.of(2030, 05, 02),
+                1
+        );
+        Airport destinationAirport = new Airport("Poland", "Warsaw", "WAW");
+        when(airportService.getAirportByIata(destinationIata)).thenThrow(new AirportNotFoundException());
+
+        //When
+        String resultWeather = tripPlanService.getWeatherForTripPlanDestination(tripPlan);
+
+        //Then
+        assertEquals("Not found", resultWeather);
     }
 
     @Test
