@@ -78,7 +78,7 @@ public class TripPlanService {
         List<TripPlan> tripPlans = new ArrayList<>();
         for (Route route : routes) {
             for (HolidayPlan holidayPlan : holidayPlans) {
-                if (checkMatchingRoutesAndTripPlans(route, holidayPlan)) {
+                if (checkMatchingRouteAndHolidayPlan(route, holidayPlan)) {
                     TripPlan newTripPlan = TripPlan.builder()
                             .originIata(route.getOrigin().getIataCode())
                             .destinationIata(route.getDestination().getIataCode())
@@ -97,7 +97,7 @@ public class TripPlanService {
                 .collect(Collectors.toList());
     }
 
-    private boolean checkMatchingRoutesAndTripPlans(Route route, HolidayPlan holidayPlan) {
+    private boolean checkMatchingRouteAndHolidayPlan(Route route, HolidayPlan holidayPlan) {
         return ((route.getDaysOfWeek().contains(holidayPlan.getBeginDate().getDayOfWeek()))
                 && (route.getDaysOfWeek().contains(holidayPlan.getEndDate().getDayOfWeek())))
                 && (route.isFavourite());
