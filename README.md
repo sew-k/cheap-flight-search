@@ -4,12 +4,23 @@
 
 The main purpose of this application is to practice building and development of application based on REST API services with implementation of various tools and integration data from external sources.
 
-Application features:
+### Application features:
 - multiple searching for cheapest, direct itineraries to user's favourites destinations based on user's annual holiday plan and weather in specified destinations
 - managing stored data, including holiday plans, favourite routes, purchased (or not purchased) itineraries
 - (*in future*) searching for travel basing on weather data
 - (*in future*) scheduling - regular (for example daily) searching for itineraries for choosing cheapest ones
 - (*in future*) scheduling - possibility to get email with reminder of purchased itinerary with weather forecast data on arrival day to destination
+
+### Technologies used:
+- Java JDK 17
+- Spring Boot v2.7.7
+- Spring Security v3.1.2
+- Lombok v1.18.24
+- slf4j v1.7.36
+- Swagger v3.0.0
+- Vaadin v23.3.16
+- JUnit v5.9.1
+- Selenium WebDriver v4.10.0
 
 ## Getting started
 
