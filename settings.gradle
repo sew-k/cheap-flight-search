@@ -1,1 +1,3 @@
 rootProject.name = 'cheapflightsearch'
+include 'cheapflightsearch-testing'
+
