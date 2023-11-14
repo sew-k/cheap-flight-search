@@ -39,7 +39,21 @@ public class RouteService {
     }
 
     public Route createRoute(Route route) {
-        return routeRepository.save(route);
+        if (!routeExists(route)) {
+            return routeRepository.save(route);
+        } else {
+            routeRepository.findByUser(route.getUser()).stream()
+                    .filter(r -> r.equals(route))
+                    .forEach(r -> {
+                        routeRepository.delete(r);
+                    });
+            return routeRepository.save(route);
+        }
+    }
+
+    private boolean routeExists(Route route) {
+        return routeRepository.findByUser(route.getUser()).stream()
+                .anyMatch(r -> r.equals(route));
     }
 
     public List<Route> getFavouriteRoutes() {
